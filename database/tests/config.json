@@ -1,0 +1,46 @@
+{
+  "tests": [
+    {
+      "sql_index": "test1/test1_index.sql",
+      "sql_noindex": "test1/test1_noindex.sql",
+      "log_index": "test1/test1_index.log",
+      "log_noindex": "test1/test1_noindex.log",
+      "md": "test1/test1.md"
+    },
+    {
+      "sql_index": "test2/test2_index.sql",
+      "sql_noindex": "test2/test2_noindex.sql",
+      "log_index": "test2/test2_index.log",
+      "log_noindex": "test2/test2_noindex.log",
+      "md": "test2/test2.md"
+    },
+    {
+      "sql_index": "test3/test3_index.sql",
+      "sql_noindex": "test3/test3_noindex.sql",
+      "log_index": "test3/test3_index.log",
+      "log_noindex": "test3/test3_noindex.log",
+      "md": "test3/test3.md"
+    },
+    {
+      "sql_index": "test4/test4_index.sql",
+      "sql_noindex": "test4/test4_noindex.sql",
+      "log_index": "test4/test4_index.log",
+      "log_noindex": "test4/test4_noindex.log",
+      "md": "test4/test4.md"
+    },
+    {
+      "sql_index": "test5/test5_index.sql",
+      "sql_noindex": "test5/test5_noindex.sql",
+      "log_index": "test5/test5_index.log",
+      "log_noindex": "test5/test5_noindex.log",
+      "md": "test5/test5.md"
+    },
+    {
+      "sql_index": "test6/test6_index.sql",
+      "sql_noindex": "test6/test6_noindex.sql",
+      "log_index": "test6/test6_index.log",
+      "log_noindex": "test6/test6_noindex.log",
+      "md": "test6/test6.md"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+USE PETCAREX
+GO
+
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+SET NOCOUNT ON;
+
+-- Create index
+IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_HOSOBENHAN_NgayTaiKham')
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_HOSOBENHAN_NgayTaiKham
+    ON HOSOBENHAN(ngaytaikham)
+    INCLUDE (mathucung, trieuchung); -- Include để hiển thị thông tin nhắc nhở
+END
+GO
+
+-- Clear cache for fair testing
+CHECKPOINT;
+DBCC DROPCLEANBUFFERS; -- Clear data cache
+DBCC FREEPROCCACHE;    -- Clear plan cache
+GO
+
+SET STATISTICS IO ON;   -- Bật thống kê về đọc/ghi ổ cứng và RAM
+SET STATISTICS TIME ON; -- Bật thống kê về thời gian thực thi
+SET STATISTICS PROFILE ON; -- Bật chế độ xem chiến thuật
+
+PRINT '=== TEST 3: IX_HOSOBENHAN_NgayTaiKham - WITH INDEX ===';
+
+-- TODO: Put your test query here (same as above)
+SELECT ngaytaikham, mathucung, trieuchung 
+FROM HOSOBENHAN
+WHERE ngaytaikham = GETDATE();
+
+SET STATISTICS PROFILE OFF; -- Tắt thống kê về đọc/ghi ổ cứng và RAM
+SET STATISTICS TIME OFF; -- Tắt thống kê về thời gian thực thi
+SET STATISTICS IO OFF; -- Tắt thống kê về thời gian thực thi
+GO
