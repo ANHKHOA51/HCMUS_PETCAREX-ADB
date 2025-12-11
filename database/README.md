@@ -18,9 +18,36 @@ The `init-database` folder contains the core SQL scripts required to build the d
 *   **`procedure.sql`**: Contains Stored Procedures and Triggers used for business logic (e.g., `sp_KhoiTaoHoaDon`, `sp_KeToaThuoc`).
 *   **`backup.sql` / `backup/`**: Resources for backing up and restoring the database state.
 
-To initialize the database, execute these scripts in your SQL Server environment in the following order:
+### Option 1: Initialize from Scratch
+
+To initialize the database structure from zero, execute these scripts in your SQL Server environment in the following order:
 1.  `init.sql`
 2.  `procedure.sql`
+
+### Option 2: Restore from Backup
+
+If you prefer to restore a pre-populated database state (including data), you can use the provided backup file.
+
+**Requirements:**
+*   **SQL Server Version**: Must match the version defined in `docker-compose.yml` (currently `mcr.microsoft.com/mssql/server:2022-latest`).
+*   **Backup File**: The file `PETCAREX_FULL.bak` must be present in the `database/init-database/backup/` directory.
+    *   *Note*: If the `.bak` file is missing, please check `database/init-database/backup/install.txt` for the download link.
+
+**Steps:**
+1.  Ensure the `backup` folder is mounted to the container (e.g., mapped to `/script_backup`).
+2.  Execute the restore command found in `backup.sql`:
+    ```sql
+    USE master
+    GO
+
+    RESTORE DATABASE PETCAREX
+    FROM DISK = '/script_backup/PETCAREX_FULL.bak'
+    WITH 
+        MOVE 'PETCAREX' TO '/var/opt/mssql/data/PETCAREX_Data.mdf',
+        MOVE 'PETCAREX_log' TO '/var/opt/mssql/data/PETCAREX_Log.ldf',
+        RECOVERY,
+        REPLACE;
+    ```
 
 ---
 
