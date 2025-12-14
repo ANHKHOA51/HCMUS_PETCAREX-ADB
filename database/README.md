@@ -41,7 +41,7 @@ If you prefer to restore a pre-populated database state (including data), you ca
     GO
 
     RESTORE DATABASE PETCAREX
-    FROM DISK = '/script_backup/PETCAREX_FULL.bak'
+    FROM DISK = '/backups/PETCAREX_FULL.bak'
     WITH 
         MOVE 'PETCAREX' TO '/var/opt/mssql/data/PETCAREX_Data.mdf',
         MOVE 'PETCAREX_log' TO '/var/opt/mssql/data/PETCAREX_Log.ldf',
