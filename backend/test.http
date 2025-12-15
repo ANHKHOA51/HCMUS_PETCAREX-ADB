@@ -4,6 +4,38 @@
 ### Search pets (example)
 GET {{baseUrl}}/search/search-pets?name=Jane&num=10
 
+### Auth - Register customer (KHACHHANG)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+	"HoVaTen": "Nguyễn Văn A",
+	"SoDienThoai": "0900000001",
+	"MatKhau": "123456",
+	"NgaySinh": "2000-01-01",
+	"DiaChi": "HCM"
+}
+
+### Auth - Login customer
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+	"Role": "customer",
+	"SoDienThoai": "0900000001",
+	"MatKhau": "123456"
+}
+
+### Auth - Login employee
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+	"Role": "employee",
+	"SoDienThoai": "0900000002",
+	"MatKhau": "123456"
+}
+
 ### 1) sp_DatLichKham
 POST {{baseUrl}}/api/dat-lich-kham
 Content-Type: application/json

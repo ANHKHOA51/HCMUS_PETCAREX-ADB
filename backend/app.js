@@ -2,6 +2,7 @@ import express from 'express';
 import db from './db.js';
 import searchRouter from './routes/search.route.js';
 import procedureRouter from './routes/procedure.route.js';
+import authRouter from './routes/auth.route.js';
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.get('/', async (req, res) => {
 
 app.use('/search', searchRouter);
 app.use('/api', procedureRouter);
+app.use('/auth', authRouter);
 
 export default app;
