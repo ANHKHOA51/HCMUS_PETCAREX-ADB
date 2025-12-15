@@ -3,6 +3,7 @@ import db from "../db.js";
 import sql from "mssql";
 import { generatePrimaryKey } from "../utils/keyGenerator.js";
 import { requireFields } from "../utils/checkValid.js";
+import { parseSqlDate } from "../utils/dateTime.js";
 
 const router = express.Router();
 
@@ -13,6 +14,13 @@ router.post("/register", async (req, res) => {
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
 
     try {
+        let parsedNgaySinh = null;
+        try {
+            parsedNgaySinh = parseSqlDate(NgaySinh, "NgaySinh");
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+
         const existed = await db
             .request()
             .input("sdt", sql.Char(10), SoDienThoai)
@@ -28,7 +36,7 @@ router.post("/register", async (req, res) => {
             .request()
             .input("makhachhang", sql.Char(15), MaKhachHang)
             .input("hovaten", sql.NVarChar(50), HoVaTen)
-            .input("ngaysinh", sql.Date, NgaySinh ? new Date(NgaySinh) : null)
+            .input("ngaysinh", sql.Date, parsedNgaySinh)
             .input("diachi", sql.NVarChar(200), DiaChi ?? null)
             .input("sodienthoai", sql.Char(10), SoDienThoai)
             .input("matkhau", sql.VarChar(50), MatKhau)

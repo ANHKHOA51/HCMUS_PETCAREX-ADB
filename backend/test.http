@@ -37,7 +37,7 @@ Content-Type: application/json
 }
 
 ### 1) sp_DatLichKham
-POST {{baseUrl}}/booking/dat-lich-kham
+POST {{baseUrl}}/examine/dat-lich-kham
 Content-Type: application/json
 
 {
@@ -54,7 +54,7 @@ Content-Type: application/json
 
 {
 	"MaThuCung": "TC0000000000001",
-	"MaBacSi": "BS0000000000001",
+	"MaBacSi": "NV0000000000001",
 	"TrieuChung": "Sốt nhẹ, bỏ ăn",
 	"ChuanDoan": "Viêm đường hô hấp",
 	"NgayKham": "2025-12-15",
@@ -182,7 +182,7 @@ Content-Type: application/json
 	"MaThuCung": "TC0000000000001",
 	"MaNhanVien": "NV0000000000001",
 	"MaChiNhanh": "CN0000000000001",
-	"MaChiTiet": "CTGT000000000001"
+	"MaChiTiet": "CG0000000000001"
 }
 
 ### Note: response returns generated "MaLichSu" (prefix LT)
@@ -197,4 +197,4 @@ GET {{baseUrl}}/report/bao-cao/doanh-thu-dich-vu?NgayBatDau=2025-01-01T00:00:00.
 GET {{baseUrl}}/report/bao-cao/tong-doanh-thu?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
 
 ### 20) sp_TopDichVu (optional MaChiNhanh)
-GET {{baseUrl}}/report/bao-cao/top-dich-vu?MaChiNhanh=CN0000000000001
+GET {{baseUrl}}/report/bao-cao/top-dich-vu?MaChiNhanh=CN0000000000003
