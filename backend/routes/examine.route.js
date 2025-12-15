@@ -3,8 +3,9 @@ import db from "../db.js";
 import sql from "mssql";
 import { generatePrimaryKey } from "../utils/keyGenerator.js";
 import { asNullIfEmpty, requireFields } from "../utils/checkValid.js";
+import { parseSqlDate, parseSqlTime } from "../utils/dateTime.js";
 
-const router = express.Router();  
+const router = express.Router();
 
 // 1) sp_DatLichKham
 router.post("/dat-lich-kham", async (req, res) => {
@@ -13,13 +14,20 @@ router.post("/dat-lich-kham", async (req, res) => {
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
 
     try {
+        let parsedThoiGianHen;
+        try {
+            parsedThoiGianHen = parseSqlTime(ThoiGianHen, "ThoiGianHen");
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+
         const MaPhieuDatLich = await generatePrimaryKey("PD");
         const result = await db
             .request()
             .input("MaPhieuDatLich", sql.Char(15), MaPhieuDatLich)
             .input("MaThuCung", sql.Char(15), MaThuCung)
             .input("MaChiNhanh", sql.Char(15), MaChiNhanh)
-            .input("ThoiGianHen", sql.Time(0), ThoiGianHen)
+            .input("ThoiGianHen", sql.Time(0), parsedThoiGianHen)
             .execute("sp_DatLichKham");
 
         res.json({ MaPhieuDatLich, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
@@ -54,6 +62,15 @@ router.post("/ghi-nhan-kham", async (req, res) => {
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
 
     try {
+        let parsedNgayKham;
+        let parsedNgayTaiKham;
+        try {
+            parsedNgayKham = parseSqlDate(NgayKham, "NgayKham");
+            parsedNgayTaiKham = parseSqlDate(NgayTaiKham, "NgayTaiKham");
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+
         const MaHoSo = await generatePrimaryKey("HS");
         const result = await db
             .request()
@@ -62,8 +79,8 @@ router.post("/ghi-nhan-kham", async (req, res) => {
             .input("MaBacSi", sql.Char(15), MaBacSi)
             .input("TrieuChung", sql.NVarChar(200), TrieuChung)
             .input("ChuanDoan", sql.NVarChar(200), ChuanDoan)
-            .input("NgayKham", sql.Date, new Date(NgayKham))
-            .input("NgayTaiKham", sql.Date, new Date(NgayTaiKham))
+            .input("NgayKham", sql.Date, parsedNgayKham)
+            .input("NgayTaiKham", sql.Date, parsedNgayTaiKham)
             .input("MaToaThuoc", sql.Char(15), asNullIfEmpty(MaToaThuoc))
             .input("MaChiNhanh", sql.Char(15), MaChiNhanh)
             .execute("sp_GhiNhanKham");
