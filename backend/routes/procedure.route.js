@@ -2,19 +2,9 @@ import express from "express";
 import db from "../db.js";
 import sql from "mssql";
 import { generatePrimaryKey } from "../utils/keyGenerator.js";
+import { asNullIfEmpty, requireFields } from "../utils/checkValid.js";
 
 const router = express.Router();
-
-const asNullIfEmpty = (value) => {
-    if (value === undefined || value === null) return null;
-    if (typeof value === "string" && value.trim() === "") return null;
-    return value;
-};
-
-const requireFields = (obj, fields) => {
-    const missing = fields.filter((f) => obj?.[f] === undefined || obj?.[f] === null || obj?.[f] === "");
-    return missing;
-};
 
 // 1) sp_DatLichKham
 router.post("/dat-lich-kham", async (req, res) => {
@@ -229,6 +219,7 @@ router.post("/hoa-don/thanh-toan", async (req, res) => {
     }
 });
 
+// 10) Tra cứu hồ sơ bệnh án
 router.get('/tra-cuu-ho-so-benh-an', async (req, res) => {
     const pet_name = req.query.name;
     const num = req.query.num;

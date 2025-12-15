@@ -2,13 +2,9 @@ import express from "express";
 import db from "../db.js";
 import sql from "mssql";
 import { generatePrimaryKey } from "../utils/keyGenerator.js";
+import { requireFields } from "../utils/checkValid.js";
 
 const router = express.Router();
-
-const requireFields = (obj, fields) => {
-    const missing = fields.filter((f) => obj?.[f] === undefined || obj?.[f] === null || obj?.[f] === "");
-    return missing;
-};
 
 // Register customer (KHACHHANG) - no hashing (plain text) as requested
 router.post("/register", async (req, res) => {
