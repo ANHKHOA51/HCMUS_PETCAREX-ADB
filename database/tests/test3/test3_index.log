@@ -1,0 +1,21 @@
+Changed database context to 'PETCAREX'.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+=== TEST 3: IX_HOSOBENHAN_NgayTaiKham - WITH INDEX ===
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+Table 'HOSOBENHAN'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+0 1 SELECT ngaytaikham, mathucung, trieuchung 
+FROM HOSOBENHAN
+WHERE ngaytaikham = GETDATE() 1 1 0 NULL NULL NULL NULL 1.0 NULL NULL NULL 0.0032831 NULL NULL SELECT 0 NULL
+0 1   |--Index Seek(OBJECT:([PETCAREX].[dbo].[HOSOBENHAN].[IX_HOSOBENHAN_NgayTaiKham]), SEEK:([PETCAREX].[dbo].[HOSOBENHAN].[ngaytaikham]=getdate()) ORDERED FORWARD) 1 2 1 Index Seek Index Seek OBJECT:([PETCAREX].[dbo].[HOSOBENHAN].[IX_HOSOBENHAN_NgayTaiKham]), SEEK:([PETCAREX].[dbo].[HOSOBENHAN].[ngaytaikham]=getdate()) ORDERED FORWARD [PETCAREX].[dbo].[HOSOBENHAN].[mathucung], [PETCAREX].[dbo].[HOSOBENHAN].[trieuchung], [PETCAREX].[dbo].[HOSOBENHAN].[ngaytaikham] 1.0 0.003125 0.0001581 229 0.0032831 [PETCAREX].[dbo].[HOSOBENHAN].[mathucung], [PETCAREX].[dbo].[HOSOBENHAN].[trieuchung], [PETCAREX].[dbo].[HOSOBENHAN].[ngaytaikham] NULL PLAN_ROW 0 1.0
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.

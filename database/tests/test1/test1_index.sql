@@ -20,8 +20,8 @@ DBCC DROPCLEANBUFFERS; -- Clear data cache
 DBCC FREEPROCCACHE;    -- Clear plan cache
 GO
 
-SET STATISTICS IO ON;   -- Bật thống kê về đọc/ghi ổ cứng và RAM
-SET STATISTICS TIME ON; -- Bật thống kê về thời gian thực thi
+-- SET STATISTICS IO ON;   -- Bật thống kê về đọc/ghi ổ cứng và RAM
+-- SET STATISTICS TIME ON; -- Bật thống kê về thời gian thực thi
 SET STATISTICS PROFILE ON; -- Bật chế độ xem chiến thuật
 
 PRINT '=== TEST 1: IX_HOADON_TrangThai_Active - WITH INDEX ===';
@@ -31,7 +31,7 @@ SELECT mahoadon, makhachhang, machinhanh
 FROM HOADON 
 WHERE trangthai = 0; -- Processing
 
-SET STATISTICS PROFILE OFF; -- Tắt thống kê về đọc/ghi ổ cứng và RAM
-SET STATISTICS TIME OFF; -- Tắt thống kê về thời gian thực thi
+-- SET STATISTICS PROFILE OFF; -- Tắt thống kê về đọc/ghi ổ cứng và RAM
+-- SET STATISTICS TIME OFF; -- Tắt thống kê về thời gian thực thi
 SET STATISTICS IO OFF; -- Tắt thống kê về thời gian thực thi
 GO
