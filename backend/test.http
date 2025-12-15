@@ -10,6 +10,9 @@ GET {{baseUrl}}/search/tra-cuu-thu-cung-khach-hang?phone=0900000001
 ### Search - Tra cứu hồ sơ bệnh án (theo mã thú cưng)
 GET {{baseUrl}}/search/tra-cuu-ho-so-benh-an?id=TC0000000000001&num=5
 
+### Search - Tra cứu thuốc
+GET {{baseUrl}}/search/tra-cuu-thuoc?name=dieutri&num=10
+
 ### Auth - Register customer (KHACHHANG)
 POST {{baseUrl}}/auth/register
 Content-Type: application/json

@@ -35,4 +35,20 @@ router.get('/tra-cuu-ho-so-benh-an', async (req, res) => {
     }
 });
 
+router.get('/tra-cuu-thuoc', async (req, res) => {
+    const name = req.query.name;
+    const num = req.query.num || 20;
+    try {
+        const result = await db.request()
+            .input('Ten', sql.NVarChar(100), name)
+            .input('SoLuong', sql.Int, num)
+            .execute('sp_TimThuocTheoTen');
+
+        res.json(result.recordsets);
+    } catch (err) {
+        console.error("Error searching medicines:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 export default router;
