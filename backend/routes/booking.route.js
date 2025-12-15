@@ -1,19 +1,33 @@
-import db from '../db.js';
 import express from "express";
+import db from "../db.js";
+import sql from "mssql";
+import { generatePrimaryKey } from "../utils/keyGenerator.js";
+import { asNullIfEmpty, requireFields } from "../utils/checkValid.js";
 
-router = express.Router();
+const router = express.Router();
 
-// Example route to get all bookings
-router.get('/create-booking', async (req, res) => {
-  try {
-    const result = await db.input('CustomerID', sql.Int, req.query.customerId)
-      .input('ServiceID', sql.Int, req.query.serviceId)
-      .input('BookingDate', sql.DateTime, new Date(req.query.bookingDate))
-      .execute()
-  } catch (err) {
-    console.error("Error fetching bookings:", err);
-    res.status(500).send("Internal Server Error");
-  }
+// 1) sp_DatLichKham
+router.post("/dat-lich-kham", async (req, res) => {
+    const { MaThuCung, MaChiNhanh, ThoiGianHen } = req.body;
+    const missing = requireFields(req.body, ["MaThuCung", "MaChiNhanh", "ThoiGianHen"]);
+    if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
+
+    try {
+        const MaPhieuDatLich = await generatePrimaryKey("PD");
+        const result = await db
+            .request()
+            .input("MaPhieuDatLich", sql.Char(15), MaPhieuDatLich)
+            .input("MaThuCung", sql.Char(15), MaThuCung)
+            .input("MaChiNhanh", sql.Char(15), MaChiNhanh)
+            .input("ThoiGianHen", sql.Time(0), ThoiGianHen)
+            .execute("sp_DatLichKham");
+
+        res.json({ MaPhieuDatLich, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
+    } catch (err) {
+        console.error("Error sp_DatLichKham:", err);
+        res.status(500).send("Internal Server Error");
+    }
 });
+
 
 export default router;

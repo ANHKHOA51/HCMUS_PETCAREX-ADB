@@ -1,11 +1,11 @@
 import express from "express";
-import db from '../db.js';
-import sql from 'mssql';
+import db from "../db.js";
+import sql from "mssql";
 
 const router = express.Router();
 
-// Example route to search for pets by name
-router.get('/search-pets', async (req, res) => {
+// 10) Tra cứu hồ sơ bệnh án
+router.get('/tra-cuu-ho-so-benh-an', async (req, res) => {
     const pet_name = req.query.name;
     const num = req.query.num;
     try {

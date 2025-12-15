@@ -1,8 +1,12 @@
 import express from 'express';
 import db from './db.js';
 import searchRouter from './routes/search.route.js';
-import procedureRouter from './routes/procedure.route.js';
 import authRouter from './routes/auth.route.js';
+import bookingRouter from './routes/booking.route.js';
+import examineRouter from './routes/examine.route.js';
+import receiptRouter from './routes/receipt.route.js';
+import reportRouter from './routes/report.route.js';
+import vaccineRouter from './routes/vaccine.route.js';
 
 const app = express();
 
@@ -23,7 +27,11 @@ app.get('/', async (req, res) => {
 });
 
 app.use('/search', searchRouter);
-app.use('/api', procedureRouter);
 app.use('/auth', authRouter);
+app.use('/booking', bookingRouter);
+app.use('/examine', examineRouter);
+app.use('/receipt', receiptRouter);
+app.use('/report', reportRouter);
+app.use('/vaccine', vaccineRouter);
 
 export default app;

@@ -37,7 +37,7 @@ Content-Type: application/json
 }
 
 ### 1) sp_DatLichKham
-POST {{baseUrl}}/api/dat-lich-kham
+POST {{baseUrl}}/booking/dat-lich-kham
 Content-Type: application/json
 
 {
@@ -49,7 +49,7 @@ Content-Type: application/json
 ### Note: response returns generated "MaPhieuDatLich" (prefix PD)
 
 ### 2) sp_GhiNhanKham
-POST {{baseUrl}}/api/ghi-nhan-kham
+POST {{baseUrl}}/examine/ghi-nhan-kham
 Content-Type: application/json
 
 {
@@ -66,7 +66,7 @@ Content-Type: application/json
 ### Note: response returns generated "MaHoSo" (prefix HS)
 
 ### 3) sp_KeToaThuoc
-POST {{baseUrl}}/api/ke-toa-thuoc
+POST {{baseUrl}}/examine/ke-toa-thuoc
 Content-Type: application/json
 
 {
@@ -79,7 +79,7 @@ Content-Type: application/json
 ### Note: if "MaToa" is null/empty, server generates new "MaToa" (prefix TT)
 
 ### 4) sp_KhoiTaoHoaDon
-POST {{baseUrl}}/api/khoi-tao-hoa-don
+POST {{baseUrl}}/receipt/khoi-tao-hoa-don
 Content-Type: application/json
 
 {
@@ -91,7 +91,7 @@ Content-Type: application/json
 ### Note: response returns generated "MaHoaDon" (prefix HD)
 
 ### 5) sp_ThemChiTietHoaDon_BanLe
-POST {{baseUrl}}/api/hoa-don/them-chi-tiet/ban-le
+POST {{baseUrl}}/receipt/hoa-don/them-chi-tiet/ban-le
 Content-Type: application/json
 
 {
@@ -103,7 +103,7 @@ Content-Type: application/json
 ### Note: response returns generated "MaChiTiet" (prefix CT)
 
 ### 6) sp_ThemChiTietHoaDon_KhamBenh
-POST {{baseUrl}}/api/hoa-don/them-chi-tiet/kham-benh
+POST {{baseUrl}}/receipt/hoa-don/them-chi-tiet/kham-benh
 Content-Type: application/json
 
 {
@@ -115,7 +115,7 @@ Content-Type: application/json
 ### Note: response returns generated "MaChiTiet" (prefix CT)
 
 ### 7) sp_ThemChiTietHoaDon_GoiTiem
-POST {{baseUrl}}/api/hoa-don/them-chi-tiet/goi-tiem
+POST {{baseUrl}}/receipt/hoa-don/them-chi-tiet/goi-tiem
 Content-Type: application/json
 
 {
@@ -126,7 +126,7 @@ Content-Type: application/json
 ### Note: response returns generated "MaChiTiet" (prefix CT)
 
 ### 8) sp_ChotHoaDon
-POST {{baseUrl}}/api/hoa-don/chot
+POST {{baseUrl}}/receipt/hoa-don/chot
 Content-Type: application/json
 
 {
@@ -134,7 +134,7 @@ Content-Type: application/json
 }
 
 ### 9) sp_HoanTatThanhToan
-POST {{baseUrl}}/api/hoa-don/thanh-toan
+POST {{baseUrl}}/receipt/hoa-don/thanh-toan
 Content-Type: application/json
 
 {
@@ -142,13 +142,13 @@ Content-Type: application/json
 }
 
 ### 11) sp_NhacLichTaiKhamNgayMai
-GET {{baseUrl}}/api/nhac-lich/tai-kham-ngay-mai
+GET {{baseUrl}}/examine/nhac-lich/tai-kham-ngay-mai
 
 ### 12) sp_NhacLichTiemChungSapToi
-GET {{baseUrl}}/api/nhac-lich/tiem-chung-sap-toi
+GET {{baseUrl}}/vaccine/nhac-lich/tiem-chung-sap-toi
 
 ### 13) sp_KhoiTaoGoiTiem
-POST {{baseUrl}}/api/goi-tiem/khoi-tao
+POST {{baseUrl}}/vaccine/goi-tiem/khoi-tao
 Content-Type: application/json
 
 {
@@ -161,7 +161,7 @@ Content-Type: application/json
 ### Note: response returns generated "MaGoi" (prefix GT)
 
 ### 14) sp_ThemChiTietGoiTiem
-POST {{baseUrl}}/api/goi-tiem/them-chi-tiet
+POST {{baseUrl}}/vaccine/goi-tiem/them-chi-tiet
 Content-Type: application/json
 
 {
@@ -172,10 +172,10 @@ Content-Type: application/json
 ### Note: response returns generated "MaChiTiet" (prefix CG)
 
 ### 15) sp_TraCuuTinhTrangGoiTiem
-GET {{baseUrl}}/api/goi-tiem/tinh-trang?MaThuCung=TC0000000000001
+GET {{baseUrl}}/vaccine/goi-tiem/tinh-trang?MaThuCung=TC0000000000001
 
 ### 16) sp_ThucHienTiem
-POST {{baseUrl}}/api/tiem/thuc-hien
+POST {{baseUrl}}/vaccine/tiem/thuc-hien
 Content-Type: application/json
 
 {
@@ -188,13 +188,13 @@ Content-Type: application/json
 ### Note: response returns generated "MaLichSu" (prefix LT)
 
 ### 17) sp_BaoCaoDoanhThuChiNhanh
-GET {{baseUrl}}/api/bao-cao/doanh-thu-chi-nhanh?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
+GET {{baseUrl}}/report/bao-cao/doanh-thu-chi-nhanh?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
 
 ### 18) sp_BaoCaoDoanhThuDichVu
-GET {{baseUrl}}/api/bao-cao/doanh-thu-dich-vu?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
+GET {{baseUrl}}/report/bao-cao/doanh-thu-dich-vu?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
 
 ### 19) sp_TongDoanhThu
-GET {{baseUrl}}/api/bao-cao/tong-doanh-thu?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
+GET {{baseUrl}}/report/bao-cao/tong-doanh-thu?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
 
 ### 20) sp_TopDichVu (optional MaChiNhanh)
-GET {{baseUrl}}/api/bao-cao/top-dich-vu?MaChiNhanh=CN0000000000001
+GET {{baseUrl}}/report/bao-cao/top-dich-vu?MaChiNhanh=CN0000000000001
