@@ -1,0 +1,21 @@
+Changed database context to 'PETCAREX'.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+=== TEST 1: IX_HOADON_TrangThai_Active - WITHOUT INDEX ===
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 0 ms.
+Table 'HOADON'. Scan count 1, logical reads 2129, physical reads 3, page server reads 0, read-ahead reads 2125, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+0 1 SELECT [mahoadon],[makhachhang],[machinhanh] FROM [HOADON] WHERE [trangthai]=@1 1 1 0 NULL NULL NULL NULL 1.0091627 NULL NULL NULL 1.7730672 NULL NULL SELECT 0 NULL
+0 1   |--Clustered Index Scan(OBJECT:([PETCAREX].[dbo].[HOADON].[PK__HOADON__8C708E0C58190A7C]), WHERE:([PETCAREX].[dbo].[HOADON].[trangthai]=[@1])) 1 2 1 Clustered Index Scan Clustered Index Scan OBJECT:([PETCAREX].[dbo].[HOADON].[PK__HOADON__8C708E0C58190A7C]), WHERE:([PETCAREX].[dbo].[HOADON].[trangthai]=[@1]) [PETCAREX].[dbo].[HOADON].[mahoadon], [PETCAREX].[dbo].[HOADON].[makhachhang], [PETCAREX].[dbo].[HOADON].[machinhanh] 1.0091627 1.5683101 0.204757 53 1.7730672 [PETCAREX].[dbo].[HOADON].[mahoadon], [PETCAREX].[dbo].[HOADON].[makhachhang], [PETCAREX].[dbo].[HOADON].[machinhanh] NULL PLAN_ROW 0 1.0
+
+ SQL Server Execution Times:
+   CPU time = 29 ms,  elapsed time = 32 ms.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.

@@ -12,8 +12,7 @@ services:
       - "1433:1433"
     volumes:
       - sqlserverdata:/var/opt/mssql
-      - ./data:/backups
-      - ./csdlnc/project/script/backup:/script_backup
+      - ./database/init-database/backup/:/backups
     networks:
       - sqlnet
 
