@@ -4,6 +4,12 @@
 ### Search pets (example)
 GET {{baseUrl}}/search/search-pets?name=Jane&num=10
 
+### Search - Tra cứu thú cưng theo SĐT khách hàng
+GET {{baseUrl}}/search/tra-cuu-thu-cung-khach-hang?phone=0900000001
+
+### Search - Tra cứu hồ sơ bệnh án (theo mã thú cưng)
+GET {{baseUrl}}/search/tra-cuu-ho-so-benh-an?id=TC0000000000001&num=5
+
 ### Auth - Register customer (KHACHHANG)
 POST {{baseUrl}}/auth/register
 Content-Type: application/json
@@ -21,9 +27,9 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-	"Role": "customer",
+	"Role": "employee",
 	"SoDienThoai": "0900000001",
-	"MatKhau": "123456"
+	"MatKhau": "admin"
 }
 
 ### Auth - Login employee
@@ -33,7 +39,7 @@ Content-Type: application/json
 {
 	"Role": "employee",
 	"SoDienThoai": "0900000002",
-	"MatKhau": "123456"
+	"MatKhau": "admin"
 }
 
 ### 1) sp_DatLichKham
@@ -140,6 +146,9 @@ Content-Type: application/json
 {
 	"MaHoaDon": "HD0000000000001"
 }
+
+### 10) sp_TraCuuHosoBenhAn
+GET {{baseUrl}}/examine/tra-cuu-ho-so-benh-an?id=TC0000000000001&num=5
 
 ### 11) sp_NhacLichTaiKhamNgayMai
 GET {{baseUrl}}/examine/nhac-lich/tai-kham-ngay-mai
