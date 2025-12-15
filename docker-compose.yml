@@ -1,0 +1,24 @@
+version: "3.0"
+# i want to add username and password for sql server
+services:
+  sqlserverdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserverdb
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=Truong123@
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+      - ./data:/backups
+      - ./csdlnc/project/script/backup:/script_backup
+    networks:
+      - sqlnet
+
+volumes:
+  sqlserverdata:
+networks:
+  sqlnet:
+    driver: bridge
