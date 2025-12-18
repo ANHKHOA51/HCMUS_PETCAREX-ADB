@@ -371,11 +371,13 @@ router.get("/bao-cao/doanh-thu-dich-vu", async (req, res) => {
     try {
         const result = await db
             .request()
-            .input("NgayBatDau", sql.DateTime, new Date(NgayBatDau))
-            .input("NgayKetThuc", sql.DateTime, new Date(NgayKetThuc))
-            .execute("sp_BaoCaoDoanhThuDichVu");
-
-        res.json(result.recordset ?? result.recordsets);
+            // .input("NgayBatDau", sql.DateTime, new Date(NgayBatDau))
+            // .input("NgayKetThuc", sql.DateTime, new Date(NgayKetThuc))
+            .input("NgayBatDau", sql.DateTime, NgayBatDau)
+            .input("NgayKetThuc", sql.DateTime, NgayKetThuc)
+            //.execute("sp_BaoCaoDoanhThuDichVu");
+            .execute("sp_TongDoanhThuTheoLoaiDichVu");
+        res.json(result.recordset ?? []);
     } catch (err) {
         console.error("Error sp_BaoCaoDoanhThuDichVu:", err);
         res.status(500).send("Internal Server Error");
@@ -387,15 +389,14 @@ router.get("/bao-cao/tong-doanh-thu", async (req, res) => {
     const { NgayBatDau, NgayKetThuc } = req.query;
     if (!NgayBatDau || !NgayKetThuc)
         return res.status(400).json({ message: "Missing query params: NgayBatDau, NgayKetThuc" });
-
     try {
         const result = await db
             .request()
-            .input("NgayBatDau", sql.DateTime, new Date(NgayBatDau))
-            .input("NgayKetThuc", sql.DateTime, new Date(NgayKetThuc))
+            .input("NgayBatDau", sql.DateTime, NgayBatDau)
+            .input("NgayKetThuc", sql.DateTime, NgayKetThuc)
             .execute("sp_TongDoanhThu");
-
-        res.json(result.recordset ?? result.recordsets);
+        //res.json(result.recordset ?? result.recordsets);
+        res.json(result.recordset[0] ?? {});
     } catch (err) {
         console.error("Error sp_TongDoanhThu:", err);
         res.status(500).send("Internal Server Error");
@@ -417,6 +418,10 @@ router.get("/bao-cao/top-dich-vu", async (req, res) => {
         console.error("Error sp_TopDichVu:", err);
         res.status(500).send("Internal Server Error");
     }
+});
+
+router.get("/test", (req, res) => {
+  res.send("OK ROUTE WORKS");
 });
 
 export default router;

@@ -6,9 +6,14 @@ import examineRouter from './routes/examine.route.js';
 import receiptRouter from './routes/receipt.route.js';
 import reportRouter from './routes/report.route.js';
 import vaccineRouter from './routes/vaccine.route.js';
+import procedureRouter from './routes/procedure.route.js';///
+import cors from 'cors';///
 
 const app = express();
-
+app.use(cors({
+  origin: "http://localhost:5173", // frontend Vite
+  credentials: true,
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
@@ -31,5 +36,5 @@ app.use('/examine', examineRouter);
 app.use('/receipt', receiptRouter);
 app.use('/report', reportRouter);
 app.use('/vaccine', vaccineRouter);
-
+app.use('/procedure', procedureRouter);/////
 export default app;

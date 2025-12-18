@@ -514,7 +514,7 @@ BEGIN
 END;
 GO
 
--- 18. Báo cáo doanh thu theo dịch vụ [cite: 16]
+--18. Báo cáo doanh thu theo dịch vụ [cite: 16]
 GO
 CREATE OR ALTER PROCEDURE sp_BaoCaoDoanhThuDichVu
     @NgayBatDau DATETIME,
@@ -525,7 +525,8 @@ BEGIN
         cn.tenchinhanh AS [Tên chi nhánh], 
         cn.machinhanh AS [Mã chi nhánh], 
         dv.loaidichvu AS [Tên dịch vụ], 
-        SUM(ct.giamoidonvi * ct.soluong) AS [Doanh thu]
+        --SUM(ct.giamoidonvi * ct.soluong) AS [Doanh thu]
+        SUM(CAST(ct.giamoidonvi * ct.soluong AS BIGINT)) AS [Doanh thu]
     FROM HOADON hd 
     JOIN CHITIETHOADON ct ON ct.mahoadon = hd.mahoadon 
     JOIN CHINHANH cn ON hd.machinhanh = cn.machinhanh
@@ -536,6 +537,59 @@ BEGIN
     GROUP BY cn.tenchinhanh, cn.machinhanh, dv.loaidichvu, dv.madichvu;
 END;
 GO
+--Viết thêm để tính tổng doanh thu dịch vụ từ sp_BaoCaoDoanhThuDichVu
+GO
+CREATE OR ALTER PROCEDURE sp_TongDoanhThuDichVu
+    @NgayBatDau DATETIME,
+    @NgayKetThuc DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- 1. Bảng tạm để chứa kết quả procedure cũ
+    DECLARE @BaoCao TABLE (
+        [Tên chi nhánh] NVARCHAR(255),
+        [Mã chi nhánh] NVARCHAR(50),
+        [Tên dịch vụ] NVARCHAR(255),
+        [Doanh thu] BIGINT
+    );
+
+    -- 2. Gọi procedure cũ
+    INSERT INTO @BaoCao
+    EXEC sp_BaoCaoDoanhThuDichVu 
+        @NgayBatDau = @NgayBatDau,
+        @NgayKetThuc = @NgayKetThuc;
+
+    -- 3. Tính tổng
+    SELECT 
+        SUM([Doanh thu]) AS TongDoanhThu
+    FROM @BaoCao;
+END;
+GO
+
+GO
+CREATE OR ALTER PROCEDURE sp_TongDoanhThuTheoLoaiDichVu
+    @NgayBatDau DATETIME,
+    @NgayKetThuc DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        dv.loaidichvu AS [TenDichVu],
+        SUM(CAST(ct.giamoidonvi * ct.soluong AS BIGINT)) AS [TongDoanhThu]
+    FROM HOADON hd 
+    JOIN CHITIETHOADON ct 
+        ON ct.mahoadon = hd.mahoadon 
+    JOIN DICHVU dv 
+        ON dv.madichvu = ct.loai
+    WHERE hd.trangthai = 2 
+      AND hd.ngaylap BETWEEN @NgayBatDau AND @NgayKetThuc
+    GROUP BY dv.loaidichvu
+    ORDER BY [TongDoanhThu] DESC;
+END;
+GO
+
 
 -- 19. Tổng doanh thu hệ thống [cite: 17]
 GO
@@ -544,7 +598,8 @@ CREATE OR ALTER PROCEDURE sp_TongDoanhThu
     @NgayKetThuc DATETIME
 AS
 BEGIN
-    SELECT SUM(hd.sotienphaitra) AS [Tổng doanh thu]
+    --SELECT SUM(hd.sotienphaitra) AS [Tổng doanh thu]
+    SELECT SUM(CAST(hd.sotienphaitra AS BIGINT)) AS TongDoanhThu
     FROM HOADON hd
     WHERE hd.trangthai = 2 
       AND hd.ngaylap BETWEEN @NgayBatDau AND @NgayKetThuc;
@@ -561,13 +616,39 @@ BEGIN
 
     SELECT TOP 1 
         ct.loai AS [Loại Dịch Vụ], -- Tạm dùng cột loại
-        SUM(ct.soluong * ct.giamoidonvi) AS [Tổng doanh thu]
+        --SUM(ct.soluong * ct.giamoidonvi) AS [Tổng doanh thu]
+        SUM(CAST(ct.soluong * ct.giamoidonvi AS BIGINT)) AS [Tổng Doanh thu]
     FROM HOADON hd 
     JOIN CHITIETHOADON ct ON ct.mahoadon = hd.mahoadon 
     WHERE hd.ngaylap >= @SixMonthsAgo 
       AND hd.trangthai = 2 
       AND (@MaChiNhanh IS NULL OR hd.machinhanh = @MaChiNhanh)
     GROUP BY ct.loai
-    ORDER BY SUM(ct.soluong * ct.giamoidonvi) DESC;
+    --ORDER BY SUM(ct.soluong * ct.giamoidonvi) DESC; 
+    ORDER BY SUM(CAST(ct.soluong * ct.giamoidonvi AS BIGINT)) DESC;
 END;
 GO
+
+-- ===========================
+
+SELECT mahoadon, ngaylap, tongtien
+FROM HOADON
+ORDER BY ngaylap;
+
+--TEST PROCEDURE
+EXEC sp_TongDoanhThu '2025-01-01', '2025-12-31'
+
+SELECT * FROM HOADON WHERE mahoadon = 'HD2512170237721'
+
+EXEC sp_BaoCaoDoanhThuDichVu '2025-01-01', '2025-12-31'
+GO
+EXEC sp_TongDoanhThuDichVu '2025-01-01', '2025-12-31'
+GO
+EXEC sp_TongDoanhThuTheoLoaiDichVu '2025-01-01', '2025-12-31'
+GO
+EXEC sp_TopDichVu 'CN2512170236002'
+ 
+
+GO
+
+
