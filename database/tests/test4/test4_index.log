@@ -1,0 +1,21 @@
+Changed database context to 'PETCAREX'.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+=== TEST 4: IX_CHITIETGOITIEM_ScanLich - WITH INDEX ===
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 0 ms.
+Table 'CHITIETGOITIEM'. Scan count 0, logical reads 0, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+0 1 SELECT [magoitiem],[masanpham],[ngaytiemdukien],[trangthai] FROM [CHITIETGOITIEM] WHERE [trangthai]=@1 AND [ngaytiemdukien]=getdate() 1 1 0 NULL NULL NULL NULL 1.0 NULL NULL NULL 0.0032831 NULL NULL SELECT 0 NULL
+0 1   |--Index Seek(OBJECT:([PETCAREX].[dbo].[CHITIETGOITIEM].[IX_CHITIETGOITIEM_ScanLich]), SEEK:([PETCAREX].[dbo].[CHITIETGOITIEM].[trangthai]=[@1] AND [PETCAREX].[dbo].[CHITIETGOITIEM].[ngaytiemdukien]=getdate()) ORDERED FORWARD) 1 2 1 Index Seek Index Seek OBJECT:([PETCAREX].[dbo].[CHITIETGOITIEM].[IX_CHITIETGOITIEM_ScanLich]), SEEK:([PETCAREX].[dbo].[CHITIETGOITIEM].[trangthai]=[@1] AND [PETCAREX].[dbo].[CHITIETGOITIEM].[ngaytiemdukien]=getdate()) ORDERED FORWARD [PETCAREX].[dbo].[CHITIETGOITIEM].[ngaytiemdukien], [PETCAREX].[dbo].[CHITIETGOITIEM].[trangthai], [PETCAREX].[dbo].[CHITIETGOITIEM].[magoitiem], [PETCAREX].[dbo].[CHITIETGOITIEM].[masanpham] 1.0 0.003125 0.0001581 41 0.0032831 [PETCAREX].[dbo].[CHITIETGOITIEM].[ngaytiemdukien], [PETCAREX].[dbo].[CHITIETGOITIEM].[trangthai], [PETCAREX].[dbo].[CHITIETGOITIEM].[magoitiem], [PETCAREX].[dbo].[CHITIETGOITIEM].[masanpham] NULL PLAN_ROW 0 1.0
+
+ SQL Server Execution Times:
+   CPU time = 1 ms,  elapsed time = 0 ms.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.

@@ -1,0 +1,21 @@
+--- FULL BACKUP
+USE master
+GO
+
+BACKUP DATABASE PETCAREX
+TO DISK = '/backups/PETCAREX_FULL.bak'
+WITH INIT, SKIP, STATS = 10;
+GO
+
+-- RESTORE FULL BACKUP
+USE master
+GO
+
+RESTORE DATABASE PETCAREX
+FROM DISK = '/backups/PETCAREX_FULL.bak'
+WITH 
+    MOVE 'PETCAREX' TO '/var/opt/mssql/data/PETCAREX_Data.mdf',
+    MOVE 'PETCAREX_log' TO '/var/opt/mssql/data/PETCAREX_Log.ldf',
+    RECOVERY,
+    REPLACE;
+GO

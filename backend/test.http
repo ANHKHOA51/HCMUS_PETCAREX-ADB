@@ -1,0 +1,212 @@
+### Tải REST Client extension cho VSCode nếu bạn chưa có
+@baseUrl = http://localhost:3000
+
+### Search pets (example)
+GET {{baseUrl}}/search/search-pets?name=Jane&num=10
+
+### Search - Tra cứu thú cưng theo SĐT khách hàng
+GET {{baseUrl}}/search/tra-cuu-thu-cung-khach-hang?phone=0900000001
+
+### Search - Tra cứu hồ sơ bệnh án (theo mã thú cưng)
+GET {{baseUrl}}/search/tra-cuu-ho-so-benh-an?id=TC0000000000001&num=5
+
+### Search - Tra cứu thuốc
+GET {{baseUrl}}/search/tra-cuu-thuoc?name=dieutri&num=10
+
+### Auth - Register customer (KHACHHANG)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+	"HoVaTen": "Nguyễn Văn A",
+	"SoDienThoai": "0900000001",
+	"MatKhau": "123456",
+	"NgaySinh": "2000-01-01",
+	"DiaChi": "HCM"
+}
+
+### Auth - Login customer
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+	"Role": "employee",
+	"SoDienThoai": "0900000001",
+	"MatKhau": "admin"
+}
+
+### Auth - Login employee
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+	"Role": "employee",
+	"SoDienThoai": "0900000002",
+	"MatKhau": "admin"
+}
+
+### 1) sp_DatLichKham
+POST {{baseUrl}}/examine/dat-lich-kham
+Content-Type: application/json
+
+{
+	"MaThuCung": "TC0000000000001",
+	"MaChiNhanh": "CN0000000000001",
+	"ThoiGianHen": "14:30:00"
+}
+
+### Note: response returns generated "MaPhieuDatLich" (prefix PD)
+
+### 2) sp_GhiNhanKham
+POST {{baseUrl}}/examine/ghi-nhan-kham
+Content-Type: application/json
+
+{
+	"MaThuCung": "TC0000000000001",
+	"MaBacSi": "NV0000000000001",
+	"TrieuChung": "Sốt nhẹ, bỏ ăn",
+	"ChuanDoan": "Viêm đường hô hấp",
+	"NgayKham": "2025-12-15",
+	"NgayTaiKham": "2025-12-22",
+	"MaToaThuoc": null,
+	"MaChiNhanh": "CN0000000000001"
+}
+
+### Note: response returns generated "MaHoSo" (prefix HS)
+
+### 3) sp_KeToaThuoc
+POST {{baseUrl}}/examine/ke-toa-thuoc
+Content-Type: application/json
+
+{
+	"MaToa": null,
+	"MaThuoc": "SP0000000000001",
+	"SoLuong": 2,
+	"GhiChu": "Uống sau ăn"
+}
+
+### Note: if "MaToa" is null/empty, server generates new "MaToa" (prefix TT)
+
+### 4) sp_KhoiTaoHoaDon
+POST {{baseUrl}}/receipt/khoi-tao-hoa-don
+Content-Type: application/json
+
+{
+	"MaNhanVien": "NV0000000000001",
+	"MaKhachHang": "KH0000000000001",
+	"MaChiNhanh": "CN0000000000001"
+}
+
+### Note: response returns generated "MaHoaDon" (prefix HD)
+
+### 5) sp_ThemChiTietHoaDon_BanLe
+POST {{baseUrl}}/receipt/hoa-don/them-chi-tiet/ban-le
+Content-Type: application/json
+
+{
+	"MaHoaDon": "HD0000000000001",
+	"MaSanPham": "SP0000000000002",
+	"SoLuong": 1
+}
+
+### Note: response returns generated "MaChiTiet" (prefix CT)
+
+### 6) sp_ThemChiTietHoaDon_KhamBenh
+POST {{baseUrl}}/receipt/hoa-don/them-chi-tiet/kham-benh
+Content-Type: application/json
+
+{
+	"MaHoaDon": "HD0000000000001",
+	"MaHoSoBenhAn": "HS0000000000001",
+	"GiaTien": 150000
+}
+
+### Note: response returns generated "MaChiTiet" (prefix CT)
+
+### 7) sp_ThemChiTietHoaDon_GoiTiem
+POST {{baseUrl}}/receipt/hoa-don/them-chi-tiet/goi-tiem
+Content-Type: application/json
+
+{
+	"MaHoaDon": "HD0000000000001",
+	"MaGoiTiem": "GT0000000000001"
+}
+
+### Note: response returns generated "MaChiTiet" (prefix CT)
+
+### 8) sp_ChotHoaDon
+POST {{baseUrl}}/receipt/hoa-don/chot
+Content-Type: application/json
+
+{
+	"MaHoaDon": "HD0000000000001"
+}
+
+### 9) sp_HoanTatThanhToan
+POST {{baseUrl}}/receipt/hoa-don/thanh-toan
+Content-Type: application/json
+
+{
+	"MaHoaDon": "HD0000000000001"
+}
+
+### 10) sp_TraCuuHosoBenhAn
+GET {{baseUrl}}/examine/tra-cuu-ho-so-benh-an?id=TC0000000000001&num=5
+
+### 11) sp_NhacLichTaiKhamNgayMai
+GET {{baseUrl}}/examine/nhac-lich/tai-kham-ngay-mai
+
+### 12) sp_NhacLichTiemChungSapToi
+GET {{baseUrl}}/vaccine/nhac-lich/tiem-chung-sap-toi
+
+### 13) sp_KhoiTaoGoiTiem
+POST {{baseUrl}}/vaccine/goi-tiem/khoi-tao
+Content-Type: application/json
+
+{
+	"NgayHetHan": "2026-12-15",
+	"PhanTramGiamGia": 10,
+	"MaThuCung": "TC0000000000001",
+	"MaChiNhanh": "CN0000000000001"
+}
+
+### Note: response returns generated "MaGoi" (prefix GT)
+
+### 14) sp_ThemChiTietGoiTiem
+POST {{baseUrl}}/vaccine/goi-tiem/them-chi-tiet
+Content-Type: application/json
+
+{
+	"MaGoi": "GT0000000000001",
+	"MaSanPham": "SP0000000000003"
+}
+
+### Note: response returns generated "MaChiTiet" (prefix CG)
+
+### 15) sp_TraCuuTinhTrangGoiTiem
+GET {{baseUrl}}/vaccine/goi-tiem/tinh-trang?MaThuCung=TC0000000000001
+
+### 16) sp_ThucHienTiem
+POST {{baseUrl}}/vaccine/tiem/thuc-hien
+Content-Type: application/json
+
+{
+	"MaThuCung": "TC0000000000001",
+	"MaNhanVien": "NV0000000000001",
+	"MaChiNhanh": "CN0000000000001",
+	"MaChiTiet": "CG0000000000001"
+}
+
+### Note: response returns generated "MaLichSu" (prefix LT)
+
+### 17) sp_BaoCaoDoanhThuChiNhanh
+GET {{baseUrl}}/report/bao-cao/doanh-thu-chi-nhanh?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
+
+### 18) sp_BaoCaoDoanhThuDichVu
+GET {{baseUrl}}/report/bao-cao/doanh-thu-dich-vu?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
+
+### 19) sp_TongDoanhThu
+GET {{baseUrl}}/report/bao-cao/tong-doanh-thu?NgayBatDau=2025-01-01T00:00:00.000Z&NgayKetThuc=2025-12-31T23:59:59.000Z
+
+### 20) sp_TopDichVu (optional MaChiNhanh)
+GET {{baseUrl}}/report/bao-cao/top-dich-vu?MaChiNhanh=CN0000000000003

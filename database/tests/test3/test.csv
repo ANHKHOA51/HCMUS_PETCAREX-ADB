@@ -1,0 +1,5 @@
+Rows,Executes,StmtText,StmtId,NodeId,Parent,PhysicalOp,LogicalOp,Argument,DefinedValues,EstimateRows,EstimateIO,EstimateCPU,AvgRowSize,TotalSubtreeCost,OutputList,Warnings,Type,Parallel,EstimateExecutions
+0,1,"SELECT ngaytaikham, mathucung, trieuchung 
+FROM HOSOBENHAN
+WHERE ngaytaikham = GETDATE()",1,1,0,NULL,NULL,NULL,NULL,134.96806,NULL,NULL,NULL,1.6258746,NULL,NULL,SELECT,0,NULL
+0,1,"  |--Clustered Index Scan(OBJECT:([PETCAREX].[dbo].[HOSOBENHAN].[PK__HOSOBENH__69D3E1648F53DF21]), WHERE:([PETCAREX].[dbo].[HOSOBENHAN].[ngaytaikham]=getdate()))",1,2,1,Clustered Index Scan,Clustered Index Scan,"OBJECT:([PETCAREX].[dbo].[HOSOBENHAN].[PK__HOSOBENH__69D3E1648F53DF21]), WHERE:([PETCAREX].[dbo].[HOSOBENHAN].[ngaytaikham]=getdate())","[PETCAREX].[dbo].[HOSOBENHAN].[mathucung], [PETCAREX].[dbo].[HOSOBENHAN].[trieuchung], [PETCAREX].[dbo].[HOSOBENHAN].[ngaytaikham]",134.96806,1.5157176,0.110157,229,1.6258746,"[PETCAREX].[dbo].[HOSOBENHAN].[mathucung], [PETCAREX].[dbo].[HOSOBENHAN].[trieuchung], [PETCAREX].[dbo].[HOSOBENHAN].[ngaytaikham]",NULL,PLAN_ROW,0,1

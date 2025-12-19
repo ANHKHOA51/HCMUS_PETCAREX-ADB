@@ -1,0 +1,24 @@
+Changed database context to 'PETCAREX'.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+=== TEST 2: IX_CHITIETHOADON_MaHoaDon_Calc - WITHOUT INDEX ===
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 0 ms.
+CT2512101806000 1 16000
+CT2512101806001 1 88000
+CT2512101806002 1 200000
+Table 'CHITIETHOADON'. Scan count 1, logical reads 3872, physical reads 3, page server reads 0, read-ahead reads 3868, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+3 1 SELECT [machitiethoadon],[soluong],[giamoidonvi] FROM [CHITIETHOADON] WHERE [mahoadon]=@1 1 1 0 NULL NULL NULL NULL 3.4299307 NULL NULL NULL 3.5620301 NULL NULL SELECT 0 NULL
+3 1   |--Clustered Index Scan(OBJECT:([PETCAREX].[dbo].[CHITIETHOADON].[PK__CHITIETH__06FE9401DFFEC9C1]), WHERE:([PETCAREX].[dbo].[CHITIETHOADON].[mahoadon]=[@1])) 1 2 1 Clustered Index Scan Clustered Index Scan OBJECT:([PETCAREX].[dbo].[CHITIETHOADON].[PK__CHITIETH__06FE9401DFFEC9C1]), WHERE:([PETCAREX].[dbo].[CHITIETHOADON].[mahoadon]=[@1]) [PETCAREX].[dbo].[CHITIETHOADON].[machitiethoadon], [PETCAREX].[dbo].[CHITIETHOADON].[giamoidonvi], [PETCAREX].[dbo].[CHITIETHOADON].[soluong] 3.4299307 2.8512731 0.71075702 45 3.5620301 [PETCAREX].[dbo].[CHITIETHOADON].[machitiethoadon], [PETCAREX].[dbo].[CHITIETHOADON].[giamoidonvi], [PETCAREX].[dbo].[CHITIETHOADON].[soluong] NULL PLAN_ROW 0 1.0
+
+ SQL Server Execution Times:
+   CPU time = 82 ms,  elapsed time = 96 ms.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.

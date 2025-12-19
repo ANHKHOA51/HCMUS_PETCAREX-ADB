@@ -3,14 +3,14 @@
 
 const MOCK_PETS = [
   {
-    id: 1,
-    name: "Max",
-    species: "Dog",
-    breed: "Golden Retriever",
+    mathucung: 1,
+    ten: "Max",
+    loai: "Dog",
+    giong: "Golden Retriever",
     age: 3,
     gender: "Male",
     weight: 30,
-    ownerId: 1,
+    makhachhang: 1,
     image: "/golden-retriever.png",
     medicalHistory: [
       {
@@ -30,14 +30,14 @@ const MOCK_PETS = [
     ],
   },
   {
-    id: 2,
-    name: "Luna",
-    species: "Cat",
-    breed: "Persian",
+    mathucung: 2,
+    ten: "Luna",
+    loai: "Cat",
+    giong: "Persian",
     age: 2,
     gender: "Female",
     weight: 4,
-    ownerId: 1,
+    makhachhang: 1,
     image: "/fluffy-persian-cat.png",
     medicalHistory: [
       {
@@ -58,13 +58,13 @@ export const petService = {
   // Get all pets for a user
   getPets: async (ownerId) => {
     await delay(500);
-    return MOCK_PETS.filter((pet) => pet.ownerId === ownerId);
+    return MOCK_PETS.filter((pet) => pet.makhachhang === ownerId);
   },
 
   // Get single pet details
   getPetDetails: async (petId) => {
     await delay(400);
-    const pet = MOCK_PETS.find((p) => p.id === Number.parseInt(petId));
+    const pet = MOCK_PETS.find((p) => p.mathucung === Number.parseInt(petId));
     if (!pet) {
       throw new Error("Pet not found");
     }
@@ -75,12 +75,12 @@ export const petService = {
   addPet: async (petData) => {
     await delay(600);
     const newPet = {
-      id: MOCK_PETS.length + 1,
+      mathucung: MOCK_PETS.length + 1,
       ...petData,
       medicalHistory: [],
       vaccinations: [],
       image:
-        petData.species === "Dog"
+        petData.loai === "Dog"
           ? "/golden-retriever.png"
           : "/fluffy-persian-cat.png",
     };
@@ -91,7 +91,7 @@ export const petService = {
   // Update pet
   updatePet: async (petId, updates) => {
     await delay(500);
-    const index = MOCK_PETS.findIndex((p) => p.id === Number.parseInt(petId));
+    const index = MOCK_PETS.findIndex((p) => p.mathucung === Number.parseInt(petId));
     if (index === -1) {
       throw new Error("Pet not found");
     }
@@ -105,8 +105,8 @@ export const petService = {
     const lowerQuery = query.toLowerCase();
     return MOCK_PETS.filter(
       (pet) =>
-        pet.name.toLowerCase().includes(lowerQuery) ||
-        pet.breed.toLowerCase().includes(lowerQuery)
+        pet.ten.toLowerCase().includes(lowerQuery) ||
+        pet.giong.toLowerCase().includes(lowerQuery)
     );
   },
 
@@ -114,13 +114,13 @@ export const petService = {
   createPet: async (petData) => {
     await delay(600);
     const newPet = {
-      id: MOCK_PETS.length + 1,
+      mathucung: MOCK_PETS.length + 1,
       ...petData,
-      ownerId: 1, // Mock owner ID
+      makhachhang: 1, // Mock owner ID
       medicalHistory: [],
       vaccinations: [],
       image:
-        petData.species === "dog"
+        petData.loai === "dog"
           ? "/golden-retriever.png"
           : "/fluffy-persian-cat.png",
     };
@@ -131,7 +131,7 @@ export const petService = {
   // Delete pet
   deletePet: async (petId) => {
     await delay(400);
-    const index = MOCK_PETS.findIndex((p) => p.id === Number.parseInt(petId));
+    const index = MOCK_PETS.findIndex((p) => p.mathucung === Number.parseInt(petId));
     if (index === -1) {
       throw new Error("Pet not found");
     }

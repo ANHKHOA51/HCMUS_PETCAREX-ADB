@@ -1,0 +1,21 @@
+Changed database context to 'PETCAREX'.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+DBCC execution completed. If DBCC printed error messages, contact your system administrator.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+=== TEST 4: IX_CHITIETGOITIEM_ScanLich - WITHOUT INDEX ===
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.
+SQL Server parse and compile time: 
+   CPU time = 0 ms, elapsed time = 0 ms.
+Table 'CHITIETGOITIEM'. Scan count 1, logical reads 215, physical reads 1, page server reads 0, read-ahead reads 213, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+0 1 SELECT [magoitiem],[masanpham],[ngaytiemdukien],[trangthai] FROM [CHITIETGOITIEM] WHERE [trangthai]=@1 AND [ngaytiemdukien]=getdate() 1 1 0 NULL NULL NULL NULL 1.0 NULL NULL NULL 0.18506904 NULL NULL SELECT 0 NULL
+0 1   |--Clustered Index Scan(OBJECT:([PETCAREX].[dbo].[CHITIETGOITIEM].[PK__CHITIETG__307FF7B1FB19FF87]), WHERE:([PETCAREX].[dbo].[CHITIETGOITIEM].[trangthai]=[@1] AND [PETCAREX].[dbo].[CHITIETGOITIEM].[ngaytiemdukien]=getdate())) 1 2 1 Clustered Index Scan Clustered Index Scan OBJECT:([PETCAREX].[dbo].[CHITIETGOITIEM].[PK__CHITIETG__307FF7B1FB19FF87]), WHERE:([PETCAREX].[dbo].[CHITIETGOITIEM].[trangthai]=[@1] AND [PETCAREX].[dbo].[CHITIETGOITIEM].[ngaytiemdukien]=getdate()) [PETCAREX].[dbo].[CHITIETGOITIEM].[ngaytiemdukien], [PETCAREX].[dbo].[CHITIETGOITIEM].[trangthai], [PETCAREX].[dbo].[CHITIETGOITIEM].[magoitiem], [PETCAREX].[dbo].[CHITIETGOITIEM].[masanpham] 1.0 0.16016203 0.024907 41 0.18506904 [PETCAREX].[dbo].[CHITIETGOITIEM].[ngaytiemdukien], [PETCAREX].[dbo].[CHITIETGOITIEM].[trangthai], [PETCAREX].[dbo].[CHITIETGOITIEM].[magoitiem], [PETCAREX].[dbo].[CHITIETGOITIEM].[masanpham] NULL PLAN_ROW 0 1.0
+
+ SQL Server Execution Times:
+   CPU time = 4 ms,  elapsed time = 4 ms.
+
+ SQL Server Execution Times:
+   CPU time = 0 ms,  elapsed time = 0 ms.

@@ -1,0 +1,124 @@
+# Test {TEST_NUMBER}: {INDEX_NAME} - {INDEX_TYPE}
+
+## Index Definition
+```sql
+{INDEX_DEFINITION}
+```
+
+**Index Type:** {INDEX_TYPE_FULL}  
+**Purpose:** {INDEX_PURPOSE}  
+**Filter Condition:** {FILTER_CONDITION_OR_NA}
+
+---
+
+## Test Query
+```sql
+{TEST_QUERY}
+```
+
+---
+
+## Performance Comparison
+
+### ❌ WITHOUT INDEX
+
+**I/O Statistics:**
+- **Logical Reads:** {NOINDEX_LOGICAL_READS} pages
+- **Physical Reads:** {NOINDEX_PHYSICAL_READS} pages
+- **Read-Ahead Reads:** {NOINDEX_READAHEAD_READS} pages
+
+**Execution Time:**
+- **CPU Time:** {NOINDEX_CPU_TIME} ms
+- **Elapsed Time:** {NOINDEX_ELAPSED_TIME} ms
+
+**Execution Plan:**
+- **Operation:** {NOINDEX_OPERATION}
+- **Cost:** {NOINDEX_COST}
+- **Rows:** {NOINDEX_ROWS_RETURNED} returned (EstimateRows: {NOINDEX_ESTIMATE_ROWS})
+
+**Execution Details:**
+1. **{NOINDEX_EXECUTION_STEP_1_NAME}** (Cost: {NOINDEX_EXECUTION_STEP_1_COST})
+   - {NOINDEX_EXECUTION_STEP_1_DESCRIPTION}
+2. **{NOINDEX_EXECUTION_STEP_2_NAME}** (Cost: {NOINDEX_EXECUTION_STEP_2_COST})
+   - {NOINDEX_EXECUTION_STEP_2_DESCRIPTION}
+3. **{NOINDEX_EXECUTION_STEP_3_NAME}** (Cost: {NOINDEX_EXECUTION_STEP_3_COST})
+   - {NOINDEX_EXECUTION_STEP_3_DESCRIPTION}
+
+**Analysis:**
+- {NOINDEX_ANALYSIS_POINT_1}
+- {NOINDEX_ANALYSIS_POINT_2}
+- {NOINDEX_ANALYSIS_POINT_3}
+
+---
+
+### ✅ WITH INDEX
+
+**I/O Statistics:**
+- **Logical Reads:** {INDEX_LOGICAL_READS} pages
+- **Physical Reads:** {INDEX_PHYSICAL_READS} pages
+- **Read-Ahead Reads:** {INDEX_READAHEAD_READS} pages
+
+**Execution Time:**
+- **CPU Time:** {INDEX_CPU_TIME} ms
+- **Elapsed Time:** {INDEX_ELAPSED_TIME} ms
+
+**Execution Plan:**
+- **Operation:** {INDEX_OPERATION}
+- **Cost:** {INDEX_COST}
+- **Rows:** {INDEX_ROWS_RETURNED} returned (EstimateRows: {INDEX_ESTIMATE_ROWS})
+
+**Execution Details:**
+1. **{EXECUTION_STEP_1_NAME}** (Cost: {EXECUTION_STEP_1_COST})
+   - {EXECUTION_STEP_1_DESCRIPTION}
+2. **{EXECUTION_STEP_2_NAME}** (Cost: {EXECUTION_STEP_2_COST})
+   - {EXECUTION_STEP_2_DESCRIPTION}
+3. **{EXECUTION_STEP_3_NAME}** (Cost: {EXECUTION_STEP_3_COST})
+   - {EXECUTION_STEP_3_DESCRIPTION}
+
+**Analysis:**
+- {INDEX_ANALYSIS_POINT_1}
+- {INDEX_ANALYSIS_POINT_2}
+- {INDEX_ANALYSIS_POINT_3}
+
+---
+
+## Performance Improvement
+
+| Metric | Without Index | With Index | Improvement |
+|--------|---------------|------------|-------------|
+| **Logical Reads** | {NOINDEX_LOGICAL_READS} pages | {INDEX_LOGICAL_READS} pages | **{LOGICAL_READS_IMPROVEMENT}** {IMPROVEMENT_ICON_1} |
+| **Physical Reads** | {NOINDEX_PHYSICAL_READS} pages | {INDEX_PHYSICAL_READS} pages | **{PHYSICAL_READS_IMPROVEMENT}** {IMPROVEMENT_ICON_2} |
+| **CPU Time** | {NOINDEX_CPU_TIME} ms | {INDEX_CPU_TIME} ms | **{CPU_TIME_IMPROVEMENT}** {IMPROVEMENT_ICON_3} |
+| **Elapsed Time** | {NOINDEX_ELAPSED_TIME} ms | {INDEX_ELAPSED_TIME} ms | **{ELAPSED_TIME_IMPROVEMENT}** {IMPROVEMENT_ICON_4} |
+| **Query Cost** | {NOINDEX_COST} | {INDEX_COST} | **{COST_IMPROVEMENT}** {IMPROVEMENT_ICON_5} |
+| **Operation** | {NOINDEX_OPERATION_SHORT} | {INDEX_OPERATION_SHORT} | **{OPERATION_IMPROVEMENT}** {IMPROVEMENT_ICON_6} |
+
+---
+
+## Key Findings
+
+### ✅ Advantages
+1. **{ADVANTAGE_1_TITLE}:** {ADVANTAGE_1_DESCRIPTION}
+2. **{ADVANTAGE_2_TITLE}:** {ADVANTAGE_2_DESCRIPTION}
+3. **{ADVANTAGE_3_TITLE}:** {ADVANTAGE_3_DESCRIPTION}
+4. **{ADVANTAGE_4_TITLE}:** {ADVANTAGE_4_DESCRIPTION}
+5. **{ADVANTAGE_5_TITLE}:** {ADVANTAGE_5_DESCRIPTION}
+
+### 📊 Why So Effective
+- **{EFFECTIVE_REASON_1_TITLE}:** {EFFECTIVE_REASON_1_DESCRIPTION}
+- **{EFFECTIVE_REASON_2_TITLE}:** {EFFECTIVE_REASON_2_DESCRIPTION}
+- **{EFFECTIVE_REASON_3_TITLE}:** {EFFECTIVE_REASON_3_DESCRIPTION}
+- **{EFFECTIVE_REASON_4_TITLE}:** {EFFECTIVE_REASON_4_DESCRIPTION}
+
+### 💡 Recommendations
+1. {RECOMMENDATION_STATUS_1} **{RECOMMENDATION_1}**
+2. {RECOMMENDATION_2}
+3. {RECOMMENDATION_3}
+4. {RECOMMENDATION_4}
+
+---
+
+## Conclusion
+**Status:** {CONCLUSION_STATUS_ICON} **{CONCLUSION_STATUS_TEXT}**
+
+{CONCLUSION_SUMMARY}

@@ -26,13 +26,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const mockPatients = [
   {
-    id: "PET001",
-    name: "Max",
-    species: "Dog",
-    breed: "Golden Retriever",
+    mathucung: "PET001",
+    ten: "Max",
+    loai: "Dog",
+    giong: "Golden Retriever",
     owner: "John Smith",
     ownerPhone: "+1 (555) 123-4567",
-    birthdate: "2020-05-15",
+    ngaysinh: "2020-05-15",
     allergies: ["Penicillin"],
     lastVisit: "2024-12-01",
     avatar: "/golden-retriever.png",
@@ -50,13 +50,13 @@ const mockPatients = [
     ],
   },
   {
-    id: "PET002",
-    name: "Luna",
-    species: "Cat",
-    breed: "Persian",
+    mathucung: "PET002",
+    ten: "Luna",
+    loai: "Cat",
+    giong: "Persian",
     owner: "Emily Johnson",
     ownerPhone: "+1 (555) 234-5678",
-    birthdate: "2021-08-22",
+    ngaysinh: "2021-08-22",
     allergies: [],
     lastVisit: "2024-11-28",
     avatar: "/fluffy-persian-cat.png",
@@ -71,20 +71,20 @@ const mockPatients = [
 ];
 
 const mockMedicines = [
-  { id: "1", name: "Amoxicillin", stock: 45, unit: "tablets" },
-  { id: "2", name: "Cephalexin", stock: 32, unit: "capsules" },
-  { id: "3", name: "Prednisone", stock: 28, unit: "tablets" },
-  { id: "4", name: "Metronidazole", stock: 19, unit: "tablets" },
-  { id: "5", name: "Carprofen", stock: 56, unit: "tablets" },
-  { id: "6", name: "Doxycycline", stock: 0, unit: "capsules" },
+  { masanpham: "1", ten: "Amoxicillin", soluongtonkho: 45, unit: "tablets" },
+  { masanpham: "2", ten: "Cephalexin", soluongtonkho: 32, unit: "capsules" },
+  { masanpham: "3", ten: "Prednisone", soluongtonkho: 28, unit: "tablets" },
+  { masanpham: "4", ten: "Metronidazole", soluongtonkho: 19, unit: "tablets" },
+  { masanpham: "5", ten: "Carprofen", soluongtonkho: 56, unit: "tablets" },
+  { masanpham: "6", ten: "Doxycycline", soluongtonkho: 0, unit: "capsules" },
 ];
 
 type Prescription = {
   id: string;
-  medicine: string;
-  quantity: number;
-  instructions: string;
-  stock: number;
+  masanpham: string;
+  soluong: number;
+  ghichu: string;
+  soluongtonkho: number;
 };
 
 export function DoctorPortal() {
@@ -100,8 +100,8 @@ export function DoctorPortal() {
   const handleSearch = () => {
     const found = mockPatients.find(
       (p) =>
-        p.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.mathucung.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.ten.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.ownerPhone.includes(searchQuery)
     );
     setSelectedPatient(found || null);
@@ -114,7 +114,7 @@ export function DoctorPortal() {
     const newId = Date.now().toString();
     setPrescriptions([
       ...prescriptions,
-      { id: newId, medicine: "", quantity: 1, instructions: "", stock: 0 },
+      { id: newId, masanpham: "", soluong: 1, ghichu: "", soluongtonkho: 0 },
     ]);
   };
 
@@ -126,10 +126,16 @@ export function DoctorPortal() {
     setPrescriptions(
       prescriptions.map((p) => {
         if (p.id === id) {
-          if (field === "medicine") {
-            const medicineValue = String(value);
-            const med = mockMedicines.find((m) => m.name === medicineValue);
-            return { ...p, [field]: medicineValue, stock: med?.stock || 0 };
+          if (field === "masanpham") {
+            const masanphamValue = String(value);
+            const med = mockMedicines.find(
+              (m) => m.masanpham === masanphamValue || m.ten === masanphamValue
+            );
+            return {
+              ...p,
+              masanpham: med?.masanpham || masanphamValue,
+              soluongtonkho: med?.soluongtonkho || 0,
+            };
           }
           return { ...p, [field]: value };
         }
@@ -143,7 +149,7 @@ export function DoctorPortal() {
   };
 
   const filteredMedicines = mockMedicines.filter((m) =>
-    m.name.toLowerCase().includes(medicineSearch.toLowerCase())
+    m.ten.toLowerCase().includes(medicineSearch.toLowerCase())
   );
 
   return (
@@ -193,19 +199,21 @@ export function DoctorPortal() {
                   <Avatar className="h-20 w-20">
                     <AvatarImage
                       src={selectedPatient.avatar || "/placeholder.svg"}
-                      alt={selectedPatient.name}
+                      alt={selectedPatient.ten}
                     />
-                    <AvatarFallback>{selectedPatient.name[0]}</AvatarFallback>
+                    <AvatarFallback>{selectedPatient.ten[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-xl">
-                        {selectedPatient.name}
+                        {selectedPatient.ten}
                       </h3>
-                      <Badge variant="outline">{selectedPatient.id}</Badge>
+                      <Badge variant="outline">
+                        {selectedPatient.mathucung}
+                      </Badge>
                     </div>
                     <p className="text-muted-foreground">
-                      {selectedPatient.breed} • {selectedPatient.species}
+                      {selectedPatient.giong} • {selectedPatient.loai}
                     </p>
                   </div>
                 </div>
@@ -229,7 +237,7 @@ export function DoctorPortal() {
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span className="text-muted-foreground">Birthdate:</span>
                     <span className="font-medium">
-                      {new Date(selectedPatient.birthdate).toLocaleDateString()}
+                      {new Date(selectedPatient.ngaysinh).toLocaleDateString()}
                     </span>
                   </div>
                   {selectedPatient.allergies.length > 0 && (
@@ -343,12 +351,22 @@ export function DoctorPortal() {
                               <Label className="text-xs">Medicine Name</Label>
                               <Input
                                 placeholder="Search medicine..."
-                                value={prescription.medicine}
+                                value={
+                                  prescription.masanpham
+                                    ? mockMedicines.find(
+                                        (m) =>
+                                          m.masanpham === prescription.masanpham
+                                      )?.ten || prescription.masanpham
+                                    : ""
+                                }
                                 onChange={(e) => {
+                                  const med = mockMedicines.find(
+                                    (m) => m.ten === e.target.value
+                                  );
                                   updatePrescription(
                                     prescription.id,
-                                    "medicine",
-                                    e.target.value
+                                    "masanpham",
+                                    med?.masanpham || e.target.value
                                   );
                                   setMedicineSearch(e.target.value);
                                 }}
@@ -356,17 +374,18 @@ export function DoctorPortal() {
                               />
                               <datalist id={`medicines-${prescription.id}`}>
                                 {filteredMedicines.map((med) => (
-                                  <option key={med.id} value={med.name} />
+                                  <option key={med.masanpham} value={med.ten} />
                                 ))}
                               </datalist>
-                              {prescription.medicine && (
+                              {prescription.masanpham && (
                                 <div className="mt-1">
-                                  {prescription.stock > 0 ? (
+                                  {prescription.soluongtonkho > 0 ? (
                                     <Badge
                                       variant="outline"
                                       className="border-success text-success text-xs"
                                     >
-                                      Stock: {prescription.stock} available
+                                      Stock: {prescription.soluongtonkho}{" "}
+                                      available
                                     </Badge>
                                   ) : (
                                     <Badge
@@ -384,11 +403,11 @@ export function DoctorPortal() {
                               <Input
                                 type="number"
                                 min="1"
-                                value={prescription.quantity}
+                                value={prescription.soluong}
                                 onChange={(e) =>
                                   updatePrescription(
                                     prescription.id,
-                                    "quantity",
+                                    "soluong",
                                     Number.parseInt(e.target.value) || 1
                                   )
                                 }
@@ -400,11 +419,11 @@ export function DoctorPortal() {
                               </Label>
                               <Input
                                 placeholder="e.g., 1 tablet twice daily after meals"
-                                value={prescription.instructions}
+                                value={prescription.ghichu}
                                 onChange={(e) =>
                                   updatePrescription(
                                     prescription.id,
-                                    "instructions",
+                                    "ghichu",
                                     e.target.value
                                   )
                                 }
