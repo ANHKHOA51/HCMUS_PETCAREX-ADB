@@ -1,27 +1,20 @@
+import axiosClient from "../../../api/axiosClient";
+
 const API_URL = "/product";
 
 export const productService = {
-  getProducts: async ({ search, limit = 10, cursor, type }) => {
-    const params = new URLSearchParams();
-    if (search) params.append("search", search);
-    if (limit) params.append("limit", limit);
-    if (cursor) params.append("cursor", cursor);
-    if (type !== undefined && type !== null && type !== "") params.append("type", type);
+  getProducts: ({ search, limit = 10, cursor, type }) => {
+    const params = {
+      limit,
+      cursor,
+    };
+    if (search) params.search = search;
+    if (type !== undefined && type !== null && type !== "") params.type = type;
 
-    const response = await fetch(`${API_URL}?${params.toString()}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch products");
-    }
-    const data = await response.json();
-    console.log(data);
-    return data;
+    return axiosClient.get(API_URL, { params });
   },
 
-  getProductById: async (id) => {
-    const response = await fetch(`${API_URL}/${id}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch product details");
-    }
-    return await response.json();
+  getProductById: (id) => {
+    return axiosClient.get(`${API_URL}/${id}`);
   },
 };
