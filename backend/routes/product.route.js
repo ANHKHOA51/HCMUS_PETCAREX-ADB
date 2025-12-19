@@ -4,6 +4,23 @@ import sql from "mssql";
 
 const router = express.Router();
 
+// 10) sp_TimThuocTheoTen -> Search Medicines (Moved from search.route.js)
+router.get('/medicines/search', async (req, res) => {
+  const name = req.query.name;
+  const num = req.query.num || 20;
+  try {
+    const result = await db.request()
+      .input('Ten', sql.NVarChar(100), name)
+      .input('SoLuong', sql.Int, num)
+      .execute('sp_TimThuocTheoTen');
+
+    res.json(result.recordsets);
+  } catch (err) {
+    console.error("Error GET /medicines/search:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // GET /?search=&limit=&cursor=&type=
 router.get("/", async (req, res) => {
   try {

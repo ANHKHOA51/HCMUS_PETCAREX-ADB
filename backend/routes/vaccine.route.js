@@ -2,24 +2,24 @@ import express from "express";
 import db from "../db.js";
 import sql from "mssql";
 import { generatePrimaryKey } from "../utils/keyGenerator.js";
-import { asNullIfEmpty, requireFields } from "../utils/checkValid.js";
+import { requireFields } from "../utils/checkValid.js";
 import { parseSqlDate } from "../utils/dateTime.js";
 
 const router = express.Router();
 
-// 12) sp_NhacLichTiemChungSapToi
-router.get("/nhac-lich/tiem-chung-sap-toi", async (_req, res) => {
+// 12) sp_NhacLichTiemChungSapToi -> Upcoming Vaccine Reminders
+router.get("/reminders", async (_req, res) => {
     try {
         const result = await db.request().execute("sp_NhacLichTiemChungSapToi");
         res.json(result.recordset ?? result.recordsets);
     } catch (err) {
-        console.error("Error sp_NhacLichTiemChungSapToi:", err);
+        console.error("Error GET /reminders:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 13) sp_KhoiTaoGoiTiem
-router.post("/goi-tiem/khoi-tao", async (req, res) => {
+// 13) sp_KhoiTaoGoiTiem -> Create Vaccine Package
+router.post("/packages", async (req, res) => {
     const { NgayHetHan, PhanTramGiamGia, MaThuCung, MaChiNhanh } = req.body;
     const missing = requireFields(req.body, ["NgayHetHan", "PhanTramGiamGia", "MaThuCung", "MaChiNhanh"]);
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
@@ -44,13 +44,13 @@ router.post("/goi-tiem/khoi-tao", async (req, res) => {
 
         res.json({ MaGoi, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
     } catch (err) {
-        console.error("Error sp_KhoiTaoGoiTiem:", err);
+        console.error("Error POST /packages:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 14) sp_ThemChiTietGoiTiem
-router.post("/goi-tiem/them-chi-tiet", async (req, res) => {
+// 14) sp_ThemChiTietGoiTiem -> Add Item to Package
+router.post("/packages/items", async (req, res) => {
     const { MaGoi, MaSanPham } = req.body;
     const missing = requireFields(req.body, ["MaGoi", "MaSanPham"]);
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
@@ -66,13 +66,13 @@ router.post("/goi-tiem/them-chi-tiet", async (req, res) => {
 
         res.json({ MaChiTiet, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
     } catch (err) {
-        console.error("Error sp_ThemChiTietGoiTiem:", err);
+        console.error("Error POST /packages/items:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 15) sp_TraCuuTinhTrangGoiTiem
-router.get("/goi-tiem/tinh-trang", async (req, res) => {
+// 15) sp_TraCuuTinhTrangGoiTiem -> Check Package Status
+router.get("/packages/status", async (req, res) => {
     const { MaThuCung } = req.query;
     if (!MaThuCung) return res.status(400).json({ message: "Missing query param: MaThuCung" });
 
@@ -80,13 +80,13 @@ router.get("/goi-tiem/tinh-trang", async (req, res) => {
         const result = await db.request().input("MaThuCung", sql.Char(15), MaThuCung).execute("sp_TraCuuTinhTrangGoiTiem");
         res.json(result.recordset ?? result.recordsets);
     } catch (err) {
-        console.error("Error sp_TraCuuTinhTrangGoiTiem:", err);
+        console.error("Error GET /packages/status:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 16) sp_ThucHienTiem
-router.post("/tiem/thuc-hien", async (req, res) => {
+// 16) sp_ThucHienTiem -> Record Vaccination
+router.post("/records", async (req, res) => {
     const { MaThuCung, MaNhanVien, MaChiNhanh, MaChiTiet } = req.body;
     const missing = requireFields(req.body, ["MaThuCung", "MaNhanVien", "MaChiNhanh", "MaChiTiet"]);
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
@@ -104,11 +104,9 @@ router.post("/tiem/thuc-hien", async (req, res) => {
 
         res.json({ MaLichSu, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
     } catch (err) {
-        console.error("Error sp_ThucHienTiem:", err);
+        console.error("Error POST /records:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-
 export default router;
-

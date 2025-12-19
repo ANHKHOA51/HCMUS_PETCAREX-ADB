@@ -1,14 +1,13 @@
 import express from "express";
 import db from "../db.js";
 import sql from "mssql";
-import { generatePrimaryKey } from "../utils/keyGenerator.js";
-import { asNullIfEmpty, requireFields } from "../utils/checkValid.js";
+import { asNullIfEmpty } from "../utils/checkValid.js";
 import { parseSqlDateTime } from "../utils/dateTime.js";
 
 const router = express.Router();
 
-// 17) sp_BaoCaoDoanhThuChiNhanh
-router.get("/bao-cao/doanh-thu-chi-nhanh", async (req, res) => {
+// 17) sp_BaoCaoDoanhThuChiNhanh -> Branch Revenue
+router.get("/revenue/branch", async (req, res) => {
     const { NgayBatDau, NgayKetThuc } = req.query;
     if (!NgayBatDau || !NgayKetThuc)
         return res.status(400).json({ message: "Missing query params: NgayBatDau, NgayKetThuc" });
@@ -41,13 +40,13 @@ router.get("/bao-cao/doanh-thu-chi-nhanh", async (req, res) => {
 
         res.json(result.recordset ?? result.recordsets);
     } catch (err) {
-        console.error("Error sp_BaoCaoDoanhThuChiNhanh:", err);
+        console.error("Error GET /revenue/branch:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 18) sp_BaoCaoDoanhThuDichVu
-router.get("/bao-cao/doanh-thu-dich-vu", async (req, res) => {
+// 18) sp_BaoCaoDoanhThuDichVu -> Service Revenue
+router.get("/revenue/service", async (req, res) => {
     const { NgayBatDau, NgayKetThuc } = req.query;
     if (!NgayBatDau || !NgayKetThuc)
         return res.status(400).json({ message: "Missing query params: NgayBatDau, NgayKetThuc" });
@@ -84,13 +83,13 @@ router.get("/bao-cao/doanh-thu-dich-vu", async (req, res) => {
 
         res.json(result.recordset ?? result.recordsets);
     } catch (err) {
-        console.error("Error sp_BaoCaoDoanhThuDichVu:", err);
+        console.error("Error GET /revenue/service:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 19) sp_TongDoanhThu
-router.get("/bao-cao/tong-doanh-thu", async (req, res) => {
+// 19) sp_TongDoanhThu -> Total Revenue
+router.get("/revenue/total", async (req, res) => {
     const { NgayBatDau, NgayKetThuc } = req.query;
     if (!NgayBatDau || !NgayKetThuc)
         return res.status(400).json({ message: "Missing query params: NgayBatDau, NgayKetThuc" });
@@ -118,13 +117,13 @@ router.get("/bao-cao/tong-doanh-thu", async (req, res) => {
 
         res.json(result.recordset ?? result.recordsets);
     } catch (err) {
-        console.error("Error sp_TongDoanhThu:", err);
+        console.error("Error GET /revenue/total:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 20) sp_TopDichVu
-router.get("/bao-cao/top-dich-vu", async (req, res) => {
+// 20) sp_TopDichVu -> Top Services
+router.get("/services/top", async (req, res) => {
     const { MaChiNhanh } = req.query;
 
     try {
@@ -135,7 +134,7 @@ router.get("/bao-cao/top-dich-vu", async (req, res) => {
 
         res.json(result.recordset ?? result.recordsets);
     } catch (err) {
-        console.error("Error sp_TopDichVu:", err);
+        console.error("Error GET /services/top:", err);
         res.status(500).send("Internal Server Error");
     }
 });

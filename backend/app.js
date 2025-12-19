@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import db from './db.js';
-import searchRouter from './routes/search.route.js';
 import authRouter from './routes/auth.route.js';
-import examineRouter from './routes/examine.route.js';
+import appointmentRouter from './routes/appointment.route.js';
+import medicalRouter from './routes/medical.route.js';
 import receiptRouter from './routes/receipt.route.js';
 import reportRouter from './routes/report.route.js';
 import vaccineRouter from './routes/vaccine.route.js';
@@ -37,9 +37,10 @@ app.get("/", async (req, res) => {
   res.json(result.recordsets);
 });
 
-app.use('/search', searchRouter);
+// app.use('/search', searchRouter); // Removed
 app.use('/auth', authRouter);
-app.use('/examine', examineRouter);
+app.use('/appointments', appointmentRouter); // Was /examine
+app.use('/medical', medicalRouter); // Was /examine
 app.use('/receipt', receiptRouter);
 app.use('/report', reportRouter);
 app.use('/vaccine', vaccineRouter);

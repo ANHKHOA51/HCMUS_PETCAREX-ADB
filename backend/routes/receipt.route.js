@@ -2,12 +2,12 @@ import express from "express";
 import db from "../db.js";
 import sql from "mssql";
 import { generatePrimaryKey } from "../utils/keyGenerator.js";
-import { asNullIfEmpty, requireFields } from "../utils/checkValid.js";
+import { requireFields } from "../utils/checkValid.js";
 
 const router = express.Router();
 
-// 4) sp_KhoiTaoHoaDon
-router.post("/khoi-tao-hoa-don", async (req, res) => {
+// 4) sp_KhoiTaoHoaDon -> Create Invoice (Receipt)
+router.post("/", async (req, res) => {
     const { MaNhanVien, MaKhachHang, MaChiNhanh } = req.body;
     const missing = requireFields(req.body, ["MaNhanVien", "MaKhachHang", "MaChiNhanh"]);
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
@@ -24,13 +24,13 @@ router.post("/khoi-tao-hoa-don", async (req, res) => {
 
         res.json({ MaHoaDon, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
     } catch (err) {
-        console.error("Error sp_KhoiTaoHoaDon:", err);
+        console.error("Error POST / (Create Receipt):", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 5) sp_ThemChiTietHoaDon_BanLe
-router.post("/hoa-don/them-chi-tiet/ban-le", async (req, res) => {
+// 5) sp_ThemChiTietHoaDon_BanLe -> Add Retail Items
+router.post("/items/retail", async (req, res) => {
     const { MaHoaDon, MaSanPham, SoLuong } = req.body;
     const missing = requireFields(req.body, ["MaHoaDon", "MaSanPham", "SoLuong"]);
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
@@ -47,13 +47,13 @@ router.post("/hoa-don/them-chi-tiet/ban-le", async (req, res) => {
 
         res.json({ MaChiTiet, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
     } catch (err) {
-        console.error("Error sp_ThemChiTietHoaDon_BanLe:", err);
+        console.error("Error POST /items/retail:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 6) sp_ThemChiTietHoaDon_KhamBenh
-router.post("/hoa-don/them-chi-tiet/kham-benh", async (req, res) => {
+// 6) sp_ThemChiTietHoaDon_KhamBenh -> Add Examination Items
+router.post("/items/examination", async (req, res) => {
     const { MaHoaDon, MaHoSoBenhAn, GiaTien } = req.body;
     const missing = requireFields(req.body, ["MaHoaDon", "MaHoSoBenhAn", "GiaTien"]);
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
@@ -70,13 +70,13 @@ router.post("/hoa-don/them-chi-tiet/kham-benh", async (req, res) => {
 
         res.json({ MaChiTiet, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
     } catch (err) {
-        console.error("Error sp_ThemChiTietHoaDon_KhamBenh:", err);
+        console.error("Error POST /items/examination:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 7) sp_ThemChiTietHoaDon_GoiTiem
-router.post("/hoa-don/them-chi-tiet/goi-tiem", async (req, res) => {
+// 7) sp_ThemChiTietHoaDon_GoiTiem -> Add Vaccine Package Items
+router.post("/items/vaccine-package", async (req, res) => {
     const { MaHoaDon, MaGoiTiem } = req.body;
     const missing = requireFields(req.body, ["MaHoaDon", "MaGoiTiem"]);
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
@@ -92,13 +92,13 @@ router.post("/hoa-don/them-chi-tiet/goi-tiem", async (req, res) => {
 
         res.json({ MaChiTiet, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
     } catch (err) {
-        console.error("Error sp_ThemChiTietHoaDon_GoiTiem:", err);
+        console.error("Error POST /items/vaccine-package:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 8) sp_ChotHoaDon
-router.post("/hoa-don/chot", async (req, res) => {
+// 8) sp_ChotHoaDon -> Finalize Receipt
+router.post("/finalize", async (req, res) => {
     const { MaHoaDon } = req.body;
     const missing = requireFields(req.body, ["MaHoaDon"]);
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
@@ -107,13 +107,13 @@ router.post("/hoa-don/chot", async (req, res) => {
         const result = await db.request().input("MaHoaDon", sql.Char(15), MaHoaDon).execute("sp_ChotHoaDon");
         res.json({ rowsAffected: result.rowsAffected, recordsets: result.recordsets });
     } catch (err) {
-        console.error("Error sp_ChotHoaDon:", err);
+        console.error("Error POST /finalize:", err);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// 9) sp_HoanTatThanhToan
-router.post("/hoa-don/thanh-toan", async (req, res) => {
+// 9) sp_HoanTatThanhToan -> Complete Payment
+router.post("/payment", async (req, res) => {
     const { MaHoaDon } = req.body;
     const missing = requireFields(req.body, ["MaHoaDon"]);
     if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
@@ -122,7 +122,7 @@ router.post("/hoa-don/thanh-toan", async (req, res) => {
         const result = await db.request().input("MaHoaDon", sql.Char(15), MaHoaDon).execute("sp_HoanTatThanhToan");
         res.json({ rowsAffected: result.rowsAffected, recordsets: result.recordsets });
     } catch (err) {
-        console.error("Error sp_HoanTatThanhToan:", err);
+        console.error("Error POST /payment:", err);
         res.status(500).send("Internal Server Error");
     }
 });
