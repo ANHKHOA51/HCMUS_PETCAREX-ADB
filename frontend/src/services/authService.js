@@ -12,24 +12,24 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const authService = {
   // Login user
-  login: async (sodienthoai, matkhau) => {
-    await delay(800)
+  // login: async (sodienthoai, matkhau) => {
+  //   await delay(800)
 
-    const user = MOCK_USERS.find((u) => u.sodienthoai === sodienthoai && u.matkhau === matkhau)
+  //   const user = MOCK_USERS.find((u) => u.sodienthoai === sodienthoai && u.matkhau === matkhau)
 
-    if (!user) {
-      throw new Error("Invalid phone number or password")
-    }
+  //   if (!user) {
+  //     throw new Error("Invalid phone number or password")
+  //   }
 
-    const { matkhau: _, ...userWithoutPassword } = user
-    const token = `mock_token_${user.id}_${Date.now()}`
+  //   const { matkhau: _, ...userWithoutPassword } = user
+  //   const token = `mock_token_${user.id}_${Date.now()}`
 
-    // Store in localStorage
-    localStorage.setItem("token", token)
-    localStorage.setItem("user", JSON.stringify(userWithoutPassword))
+  //   // Store in localStorage
+  //   localStorage.setItem("token", token)
+  //   localStorage.setItem("user", JSON.stringify(userWithoutPassword))
 
-    return { user: userWithoutPassword, token }
-  },
+  //   return { user: userWithoutPassword, token }
+  // },
 
   // Register new user
   register: async (sodienthoai, matkhau, hovaten, role = "client") => {

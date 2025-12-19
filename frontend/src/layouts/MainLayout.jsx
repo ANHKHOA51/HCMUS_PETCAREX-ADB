@@ -16,7 +16,7 @@ const MainLayout = () => {
 
   // Navigation items based on role
   const getNavItems = () => {
-    if (user?.role === "client") {
+    if (user?.role === "customer") {
       return [
         { path: "/client/dashboard", icon: PawPrint, label: "My Pets" },
         { path: "/client/booking", icon: Calendar, label: "Book Appointment" },
