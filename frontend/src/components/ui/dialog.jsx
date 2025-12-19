@@ -8,6 +8,12 @@ const DialogContext = createContext()
 export const Dialog = ({ children, open, onOpenChange }) => {
   const [isOpen, setIsOpen] = useState(open || false)
 
+  React.useEffect(() => {
+    if (open !== undefined) {
+      setIsOpen(open)
+    }
+  }, [open])
+
   const handleOpenChange = (newOpen) => {
     setIsOpen(newOpen)
     onOpenChange?.(newOpen)

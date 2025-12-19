@@ -1,6 +1,6 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom"
 import { authService } from "../services/authService"
-import { LogOut, Calendar, PawPrint, Stethoscope, BarChart3, Menu, X } from "lucide-react"
+import { LogOut, Calendar, PawPrint, Stethoscope, BarChart3, Menu, X, Box } from "lucide-react"
 import { useState } from "react"
 
 const MainLayout = () => {
@@ -20,6 +20,7 @@ const MainLayout = () => {
       return [
         { path: "/client/dashboard", icon: PawPrint, label: "My Pets" },
         { path: "/client/booking", icon: Calendar, label: "Book Appointment" },
+        { path: "/client/products", icon: Box, label: "Products" },
       ]
     } else if (user?.role === "doctor") {
       return [{ path: "/doctor/exam", icon: Stethoscope, label: "Patient Examination" }]

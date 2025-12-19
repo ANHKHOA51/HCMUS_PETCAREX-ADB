@@ -12,4 +12,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      '/product': 'http://localhost:3000',
+      '/auth': 'http://localhost:3000',
+      '/search': 'http://localhost:3000',
+      '/examine': 'http://localhost:3000',
+      '/receipt': 'http://localhost:3000',
+      '/report': 'http://localhost:3000',
+      '/vaccine': 'http://localhost:3000',
+    }
+  }
 })

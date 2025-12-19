@@ -8,6 +8,7 @@ import BookingPage from "../pages/BookingPage";
 import DoctorExamPage from "../pages/DoctorExamPage";
 import DoctorPrescriptionPage from "../pages/doctor/DoctorPrescriptionPage";
 import AdminDashboardPage from "../pages/AdminDashboardPage";
+import ProductList from "../features/product/components/ProductList";
 
 // Layouts
 import MainLayout from "../layouts/MainLayout";
@@ -46,6 +47,7 @@ const AppRoutes = () => {
         <Route index element={<ClientDashboardPage />} />
         <Route path="dashboard" element={<ClientDashboardPage />} />
         <Route path="booking" element={<BookingPage />} />
+        <Route path="products" element={<ProductList />} />
       </Route>
 
       {/* Doctor Routes */}
