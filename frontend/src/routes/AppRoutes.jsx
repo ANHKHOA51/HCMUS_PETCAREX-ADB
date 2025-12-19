@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { authService } from "../features/auth/services/authService";
+import { ROLES } from "../features/auth/constants/roles";
 
 // Pages
 import LoginPage from "../pages/LoginPage";
@@ -7,9 +8,11 @@ import GuestDashboardPage from "../pages/guest/GuestDashboardPage";
 import BookingPage from "../pages/guest/BookingPage";
 import ProductPage from "../pages/guest/ProductPage";
 import BranchPage from "../pages/guest/BranchPage";
-import DoctorExamPage from "../pages/DoctorExamPage";
+import DoctorExamPage from "../pages/doctor/DoctorExamPage";
 import DoctorPrescriptionPage from "../pages/doctor/DoctorPrescriptionPage";
-import AdminDashboardPage from "../pages/AdminDashboardPage";
+import ManagerDashboardPage from "../pages/manager/ManagerDashboardPage";
+import ReceptionistDashboardPage from "../pages/receptionist/ReceptionistDashboardPage";
+import AdminDashboardPage from "../pages/AdminDashboardPage"; // Keep if still used elsewhere or delete? Only used in removed route. Retaining for safety unless specifically told to remove.
 
 // Layouts
 import MainLayout from "../layouts/MainLayout";
@@ -23,7 +26,18 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user?.role)) {
+  // Normalize user roles to an array
+  const userRoles = Array.isArray(user?.roles)
+    ? user.roles
+    : (user?.role ? [user.role] : []);
+
+  // Normalize allowedRoles to an array
+  const requiredRoles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+
+  // Check if user has at least one of the required roles
+  const hasPermission = requiredRoles.length === 0 || requiredRoles.some(role => userRoles.includes(role));
+
+  if (!hasPermission) {
     return <Navigate to="/login" replace />;
   }
 
@@ -40,7 +54,7 @@ const AppRoutes = () => {
       <Route
         path="/client/*"
         element={
-          <ProtectedRoute allowedRoles={["customer"]}>
+          <ProtectedRoute allowedRoles={[ROLES.CUSTOMER]}>
             <MainLayout />
           </ProtectedRoute>
         }
@@ -52,11 +66,11 @@ const AppRoutes = () => {
         <Route path="booking" element={<BookingPage />} />
       </Route>
 
-      {/* Doctor Routes */}
+      {/* Staff Routes */}
       <Route
         path="/doctor/*"
         element={
-          <ProtectedRoute allowedRoles={["employee"]}>
+          <ProtectedRoute allowedRoles={[ROLES.DOCTOR]}>
             <MainLayout />
           </ProtectedRoute>
         }
@@ -66,17 +80,30 @@ const AppRoutes = () => {
         <Route path="prescription" element={<DoctorPrescriptionPage />} />
       </Route>
 
-      {/* Admin Routes */}
+      {/* Manager Routes */}
       <Route
-        path="/admin/*"
+        path="/manager/*"
         element={
-          <ProtectedRoute allowedRoles={["admin"]}>
+          <ProtectedRoute allowedRoles={[ROLES.MANAGER]}>
             <MainLayout />
           </ProtectedRoute>
         }
       >
-        <Route index element={<AdminDashboardPage />} />
-        <Route path="dashboard" element={<AdminDashboardPage />} />
+        <Route index element={<ManagerDashboardPage />} />
+        <Route path="dashboard" element={<ManagerDashboardPage />} />
+      </Route>
+
+      {/* Receptionist Routes */}
+      <Route
+        path="/receptionist/*"
+        element={
+          <ProtectedRoute allowedRoles={[ROLES.RECEPTIONIST]}>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<ReceptionistDashboardPage />} />
+        <Route path="dashboard" element={<ReceptionistDashboardPage />} />
       </Route>
 
       {/* Default redirect */}

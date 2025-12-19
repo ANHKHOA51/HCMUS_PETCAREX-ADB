@@ -36,9 +36,9 @@ export const AuthProvider = ({ children }) => {
     const token = response.token || `mock_token_${response.user.makhachhang || response.user.manhanvien}_${Date.now()}`;
 
     localStorage.setItem("token", token);
-    const userWithRole = { ...response.user, role: data.Role || response.role };
+    const userWithRole = { ...response.user, roles: response.roles };
     localStorage.setItem("user", JSON.stringify(userWithRole));
-
+    console.log(userWithRole);
     setUser(userWithRole);
     return userWithRole;
   }, []);

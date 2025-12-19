@@ -4,24 +4,28 @@ import { PawPrint } from "lucide-react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
+import { ROLES } from "../constants/roles";
+
 const AuthPage = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
 
   // Success handler: Navigate based on role
   const handleSuccess = (user) => {
-    // Check role and navigate accordingly
-    // Assuming user object has 'role' property (lowercase suggested in AuthContext)
-    const role = user.role || user.Role || "customer";
+    // Normalize user roles to an array
+    const roles = Array.isArray(user.roles)
+      ? user.roles
+      : (user.role || user.Role ? [user.role || user.Role] : [ROLES.CUSTOMER]);
 
-    if (role === "customer" || role === "client") {
-      navigate("/client/dashboard");
-    } else if (role === "employee" || role === "doctor") {
-      navigate("/doctor/exam");
-    } else if (role === "admin") {
+    if (roles.includes(ROLES.ADMIN)) {
       navigate("/admin/dashboard");
+    } else if (roles.includes(ROLES.DOCTOR)) {
+      navigate("/doctor/exam");
+    } else if (roles.includes(ROLES.MANAGER)) {
+      navigate("/manager/dashboard");
+    } else if (roles.includes(ROLES.RECEPTIONIST)) {
+      navigate("/receptionist/dashboard");
     } else {
-      // Default to dashboard if role unclear
       navigate("/client/dashboard");
     }
   };
