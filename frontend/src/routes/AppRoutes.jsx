@@ -1,15 +1,15 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { authService } from "../services/authService";
+import { authService } from "../features/auth/services/authService";
 
 // Pages
 import LoginPage from "../pages/LoginPage";
-import ClientDashboardPage from "../pages/ClientDashboardPage";
-import BookingPage from "../pages/BookingPage";
+import GuestDashboardPage from "../pages/guest/GuestDashboardPage";
+import BookingPage from "../pages/guest/BookingPage";
+import ProductPage from "../pages/guest/ProductPage";
+import BranchPage from "../pages/guest/BranchPage";
 import DoctorExamPage from "../pages/DoctorExamPage";
 import DoctorPrescriptionPage from "../pages/doctor/DoctorPrescriptionPage";
 import AdminDashboardPage from "../pages/AdminDashboardPage";
-import ProductList from "../features/product/components/ProductList";
-import BranchList from "../features/branch/components/BranchList";
 
 // Layouts
 import MainLayout from "../layouts/MainLayout";
@@ -45,10 +45,10 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-        <Route index element={<ClientDashboardPage />} />
-        <Route path="dashboard" element={<ClientDashboardPage />} />
-        <Route path="products" element={<ProductList />} />
-        <Route path="branches" element={<BranchList />} />
+        <Route index element={<GuestDashboardPage />} />
+        <Route path="dashboard" element={<GuestDashboardPage />} />
+        <Route path="products" element={<ProductPage />} />
+        <Route path="branches" element={<BranchPage />} />
         <Route path="booking" element={<BookingPage />} />
       </Route>
 

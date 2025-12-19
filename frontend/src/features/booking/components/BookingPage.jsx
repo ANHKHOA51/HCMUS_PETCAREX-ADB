@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback } from "react";
 import { Plus } from "lucide-react";
-import { useAppointments } from "../features/booking/hooks/useAppointments";
-import BookingModal from "../features/booking/components/BookingModal";
-import BookingList from "../features/booking/components/BookingList";
-import { useAuth } from "../features/auth/hooks/useAuth"; // Assuming useAuth exists to get userId
+import { useAppointments } from "../hooks/useAppointments";
+import BookingModal from "./BookingModal";
+import BookingList from "./BookingList";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 const BookingPage = () => {
   const { user } = useAuth();

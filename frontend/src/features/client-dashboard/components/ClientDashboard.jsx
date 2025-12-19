@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Calendar } from "lucide-react";
-import PetList from "../features/client-dashboard/components/PetList";
-import PetFormModal from "../features/client-dashboard/components/PetFormModal";
-import { useClientPets } from "../features/client-dashboard/hooks/useClientPets";
+import PetList from "./PetList";
+import PetFormModal from "./PetFormModal";
+import { useClientPets } from "../hooks/useClientPets";
 
-const ClientDashboardPage = () => {
+const ClientDashboard = () => {
   const navigate = useNavigate();
   const { pets, loading, addPet, updatePet, deletePet } = useClientPets();
 
@@ -98,4 +98,4 @@ const ClientDashboardPage = () => {
   );
 };
 
-export default ClientDashboardPage;
+export default ClientDashboard;
