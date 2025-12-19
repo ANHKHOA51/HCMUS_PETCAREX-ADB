@@ -317,8 +317,6 @@ CREATE OR ALTER PROCEDURE sp_TraCuuThuCung_SDT
     @SDT CHAR(10)
 AS
 BEGIN
-    -- Trả về 2 result sets
-    -- 1. Hồ sơ bệnh án
     SELECT * FROM THUCUNG TC
     JOIN KHACHHANG KH ON TC.makhachhang = KH.makhachhang
     WHERE KH.sodienthoai = @SDT;
