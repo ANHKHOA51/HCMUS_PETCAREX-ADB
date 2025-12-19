@@ -11,19 +11,20 @@ CREATE OR ALTER PROCEDURE sp_DatLichKham
     @MaPhieuDatLich CHAR(15),
     @MaThuCung CHAR(15),
     @MaChiNhanh CHAR(15),
-    @ThoiGianHen TIME(0) -- Đã sửa từ TIMESTAMP sang TIME để khớp với bảng PHIEUDATLICH
+    @NgayDen DATE,
+    @ThoiGianDen TIME(0) -- Đã sửa từ TIMESTAMP sang TIME để khớp với bảng PHIEUDATLICH
 AS
 BEGIN
     -- Kiểm tra logic: Nếu đặt lịch cho ngày hôm nay mà giờ đã qua thì lỗi
-    IF @ThoiGianHen < CAST(GETDATE() AS TIME)
-    BEGIN
-        THROW 50001, N'Giờ đặt lịch không hợp lệ (nhỏ hơn giờ hiện tại).', 1;
-    END
+    -- IF @ThoiGianDen < CAST(GETDATE() AS TIMESTAMP)
+    -- BEGIN
+    --     THROW 50001, N'Giờ đặt lịch không hợp lệ (nhỏ hơn giờ hiện tại).', 1;
+    -- END
 
     -- Tạo mã phiếu (Tự động hoặc xử lý ở backend, ở đây giả sử trigger tự sinh hoặc truyền vào)
     -- Demo insert đơn giản theo source
-    INSERT INTO PHIEUDATLICH (maphieudatlich, machinhanh, mathucung, ngaydat, thoigianden)
-    VALUES (@MaPhieuDatLich, @MaChiNhanh, @MaThuCung, CAST(GETDATE() AS DATE), @ThoiGianHen);
+    INSERT INTO PHIEUDATLICH (maphieudatlich, machinhanh, mathucung, ngaydat, ngayden, thoigianden)
+    VALUES (@MaPhieuDatLich, @MaChiNhanh, @MaThuCung, CAST(GETDATE() AS DATE),  @NgayDen, @ThoiGianDen);
 END;
 GO
 

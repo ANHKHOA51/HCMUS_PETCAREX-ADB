@@ -47,9 +47,9 @@ const AppRoutes = () => {
       >
         <Route index element={<ClientDashboardPage />} />
         <Route path="dashboard" element={<ClientDashboardPage />} />
-        <Route path="booking" element={<BookingPage />} />
         <Route path="products" element={<ProductList />} />
         <Route path="branches" element={<BranchList />} />
+        <Route path="booking" element={<BookingPage />} />
       </Route>
 
       {/* Doctor Routes */}

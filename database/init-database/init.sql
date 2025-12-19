@@ -153,12 +153,14 @@ CREATE TABLE LICHSUDIEUDONG (
 GO
 
 --PHIEUDATLICH
+-- DROP TABLE PHIEUDATLICH
 CREATE TABLE PHIEUDATLICH (
     maphieudatlich CHAR(15) PRIMARY KEY,
     machinhanh CHAR(15) NOT NULL,
     mathucung CHAR(15) NOT NULL,
     ngaydat DATE,
-    thoigianden TIME(0) CHECK (thoigianden >= CAST(GETDATE() AS TIME(0))),
+    ngayden DATE,
+    thoigianden TIME(0),
     FOREIGN KEY (machinhanh) REFERENCES CHINHANH(machinhanh),
     FOREIGN KEY (mathucung) REFERENCES THUCUNG(mathucung)
 );
