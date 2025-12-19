@@ -90,7 +90,7 @@ GO
 -- NHÓM 3: QUẢN LÝ HÓA ĐƠN & THANH TOÁN
 -- =======================================================
 
--- 4. Khởi tạo hóa đơn mới [cite: 7]
+--4. Khởi tạo hóa đơn mới [cite: 7]
 GO
 CREATE OR ALTER PROCEDURE sp_KhoiTaoHoaDon
     @MaHoaDon CHAR(15),
@@ -99,8 +99,16 @@ CREATE OR ALTER PROCEDURE sp_KhoiTaoHoaDon
     @MaChiNhanh CHAR(15)
 AS
 BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @NgayLap DATE;
+     SET @NgayLap = DATEADD(
+        DAY,
+        ABS(CHECKSUM(NEWID())) % 365,
+        '2025-01-01'
+    );    
     INSERT INTO HOADON (mahoadon, ngaylap, manhanvien, makhachhang, machinhanh, trangthai)
-    VALUES (@MaHoaDon, GETDATE(), @MaNhanVien, @MaKhachHang, @MaChiNhanh, 0); -- 0: Processing
+    VALUES (@MaHoaDon, @NgayLap, @MaNhanVien, @MaKhachHang, @MaChiNhanh, 0); -- 0: Processing
 END;
 GO
 
@@ -629,26 +637,50 @@ BEGIN
 END;
 GO
 
+-- 21. Báo cáo doanh thu theo tháng [cite: 19]
+GO
+CREATE OR ALTER PROCEDURE sp_BaoCaoDoanhThuTheoThang
+    @NgayBatDau DATE,
+    @NgayKetThuc DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        YEAR(ngaylap) AS Nam,
+        MONTH(ngaylap) AS Thang,
+        SUM(CAST(sotienphaitra AS BIGINT)) AS TongDoanhThu
+    FROM HOADON
+    WHERE trangthai = 2               -- Đã thanh toán
+      AND ngaylap BETWEEN @NgayBatDau AND @NgayKetThuc
+    GROUP BY YEAR(ngaylap), MONTH(ngaylap)
+    ORDER BY Nam, Thang;
+END;
+GO
+
+EXEC sp_BaoCaoDoanhThuTheoThang
+    '2025-01-01',
+    '2025-12-31';
+
+
 -- ===========================
 
-SELECT mahoadon, ngaylap, tongtien
-FROM HOADON
-ORDER BY ngaylap;
+-- SELECT mahoadon, ngaylap, tongtien
+-- FROM HOADON
+-- ORDER BY ngaylap;
 
---TEST PROCEDURE
-EXEC sp_TongDoanhThu '2025-01-01', '2025-12-31'
+-- --TEST PROCEDURE
+-- EXEC sp_TongDoanhThu '2025-01-01', '2025-12-31'
 
-SELECT * FROM HOADON WHERE mahoadon = 'HD2512170237721'
+-- SELECT * FROM HOADON WHERE mahoadon = 'HD2512170237721'
 
-EXEC sp_BaoCaoDoanhThuDichVu '2025-01-01', '2025-12-31'
-GO
-EXEC sp_TongDoanhThuDichVu '2025-01-01', '2025-12-31'
-GO
-EXEC sp_TongDoanhThuTheoLoaiDichVu '2025-01-01', '2025-12-31'
-GO
-EXEC sp_TopDichVu 'CN2512170236002'
+-- EXEC sp_BaoCaoDoanhThuDichVu '2025-01-01', '2025-12-31'
+-- GO
+-- EXEC sp_TongDoanhThuDichVu '2025-01-01', '2025-12-31'
+-- GO
+-- EXEC sp_TongDoanhThuTheoLoaiDichVu '2025-01-01', '2025-12-31'
+-- GO
+-- EXEC sp_TopDichVu 'CN2512170236002'
  
 
-GO
-
-
+-- GO

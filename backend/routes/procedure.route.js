@@ -351,11 +351,30 @@ router.get("/bao-cao/doanh-thu-chi-nhanh", async (req, res) => {
     try {
         const result = await db
             .request()
-            .input("NgayBatDau", sql.DateTime, new Date(NgayBatDau))
-            .input("NgayKetThuc", sql.DateTime, new Date(NgayKetThuc))
+            .input("NgayBatDau", sql.Date, NgayBatDau)
+            .input("NgayKetThuc", sql.Date, NgayKetThuc)
             .execute("sp_BaoCaoDoanhThuChiNhanh");
+        // const districtMap = {
+        //     "Chi nhánh PetCareX 1": "District 1",
+        //     "Chi nhánh PetCareX 2": "District 2",
+        //     "Chi nhánh PetCareX 3": "District 3",
+        //     "Chi nhánh PetCareX 4": "District 4",
+        //     "Chi nhánh PetCareX 5": "District 5",
+        //     "Chi nhánh PetCareX 6": "District 6",
+        //     "Chi nhánh PetCareX 7": "District 7",
+        //     "Chi nhánh PetCareX 8": "District 8",
+        //     "Chi nhánh PetCareX 9": "District 9",
+        //     "Chi nhánh PetCareX 10": "District 10"
+        // };
 
-        res.json(result.recordset ?? result.recordsets);
+        const data = result.recordset.map(row => ({
+            // branchName: districtMap[row["Tên chi nhánh"]],
+            branchName: row["Tên chi nhánh"],
+            branchId: row["Mã chi nhánh"],
+            totalRevenue: row["Tổng doanh thu"]
+        }));
+        console.log("REVENUE BY BRANCH:", data);
+        res.json(data); // trả MẢNG
     } catch (err) {
         console.error("Error sp_BaoCaoDoanhThuChiNhanh:", err);
         res.status(500).send("Internal Server Error");
@@ -375,8 +394,7 @@ router.get("/bao-cao/doanh-thu-dich-vu", async (req, res) => {
             // .input("NgayKetThuc", sql.DateTime, new Date(NgayKetThuc))
             .input("NgayBatDau", sql.DateTime, NgayBatDau)
             .input("NgayKetThuc", sql.DateTime, NgayKetThuc)
-            //.execute("sp_BaoCaoDoanhThuDichVu");
-            .execute("sp_TongDoanhThuTheoLoaiDichVu");
+            .execute("sp_BaoCaoDoanhThuDichVu");
         res.json(result.recordset ?? []);
     } catch (err) {
         console.error("Error sp_BaoCaoDoanhThuDichVu:", err);
@@ -416,6 +434,52 @@ router.get("/bao-cao/top-dich-vu", async (req, res) => {
         res.json(result.recordset ?? result.recordsets);
     } catch (err) {
         console.error("Error sp_TopDichVu:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// Báo cáo doanh thu theo tháng (toàn hệ thống)
+// 21.sp_BaoCaoDoanhThuTheoThang
+router.get("/bao-cao/doanh-thu-theo-thang", async (req, res) => {
+    const { NgayBatDau, NgayKetThuc } = req.query;
+
+    if (!NgayBatDau || !NgayKetThuc)
+        return res
+            .status(400)
+            .json({ message: "Missing query params: NgayBatDau, NgayKetThuc" });
+    
+    try {
+        const result = await db
+            .request()
+            .input("NgayBatDau", sql.Date, NgayBatDau)
+            .input("NgayKetThuc", sql.Date, NgayKetThuc)
+            .execute("sp_BaoCaoDoanhThuTheoThang");
+        
+        const monthMap = {
+            1: "Jan",
+            2: "Feb",
+            3: "Mar",
+            4: "Apr",
+            5: "May",
+            6: "Jun",
+            7: "Jul",
+            8: "Aug",
+            9: "Sep",
+            10: "Oct",
+            11: "Nov",
+            12: "Dec"
+        };
+
+        const data = result.recordset.map(row => ({
+            month: monthMap[row.Thang],
+            year: row.Nam,
+            totalRevenue: row.TongDoanhThu
+        }));
+        res.json(data); // trả MẢNG
+        console.log("DB row:", row.Thang, row.Nam, row.TongDoanhThu);
+
+    } catch (err) {
+        console.error("Error sp_BaoCaoDoanhThuTheoThang:", err);
         res.status(500).send("Internal Server Error");
     }
 });

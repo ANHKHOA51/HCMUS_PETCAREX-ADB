@@ -20,23 +20,7 @@ import {
   ResponsiveContainer,
 } from "recharts"
 
-// Mock analytics data
-const revenueData = [
-  { month: "Jan", revenue: 45000000, appointments: 120 },
-  { month: "Feb", revenue: 52000000, appointments: 145 },
-  { month: "Mar", revenue: 48000000, appointments: 135 },
-  { month: "Apr", revenue: 61000000, appointments: 170 },
-  { month: "May", revenue: 55000000, appointments: 155 },
-  { month: "Jun", revenue: 67000000, appointments: 185 },
-]
-
-// const serviceData = [
-//   { name: "Consultation", value: 35, color: "#3b82f6" },
-//   { name: "Vaccination", value: 25, color: "#10b981" },
-//   { name: "Surgery", value: 20, color: "#f59e0b" },
-//   { name: "Grooming", value: 15, color: "#8b5cf6" },
-//   { name: "Other", value: 5, color: "#ef4444" },
-// ]
+// Colors for service distribution pie chart
 const SERVICE_COLORS = [
   //"#3b82f6",
   "#f59e0b",
@@ -46,13 +30,14 @@ const SERVICE_COLORS = [
 ];
 
 
-const branchData = [
-  { branch: "District 1", revenue: 180000000, patients: 450 },
-  { branch: "District 3", revenue: 165000000, patients: 420 },
-  { branch: "District 5", revenue: 142000000, patients: 380 },
-  { branch: "District 7", revenue: 158000000, patients: 410 },
-]
+// const branchData = [
+//   { branch: "District 1", revenue: 180000000, patients: 450 },
+//   { branch: "District 3", revenue: 165000000, patients: 420 },
+//   { branch: "District 5", revenue: 142000000, patients: 380 },
+//   { branch: "District 7", revenue: 158000000, patients: 410 },
+// ]
 
+// DateFilter Component
 const DateFilter = ({ startDate, endDate, onChange }) => (
   <div className="flex items-center gap-2">
     <input
@@ -96,16 +81,8 @@ const DateFilter = ({ startDate, endDate, onChange }) => (
 const AdminDashboardPage = () => {
   
 
-  // const formatCurrency = (amount) => {
-  //   return new Intl.NumberFormat("vi-VN", {
-  //     style: "currency",
-  //     currency: "VND",
-  //   }).format(amount)
-  // }
-
-
   const formatCurrency = (amount) => {
-    if (isNaN(amount)) return "₫0";
+    if (isNaN(amount)) return "VND";
     return amount.toLocaleString("vi-VN", {
       style: "currency",
       currency: "VND",
@@ -117,6 +94,7 @@ const AdminDashboardPage = () => {
     startDate: "2025-01-01",
     endDate: new Date().toISOString().slice(0, 10),
     value: 0,
+    error: "",
     loading: false,
   });
 
@@ -125,12 +103,77 @@ const [serviceCard, setServiceCard] = useState({
   startDate: "2025-01-01",
   endDate: new Date().toISOString().slice(0, 10),
   data: [],
+  error: "",
   loading: false,
 });
 
+// ===== REVENUE TREND STATE =====
+const [revenueTrendCard, setRevenueTrendCard] = useState({
+  startDate: "2025-01-01",
+  endDate: new Date().toISOString().slice(0, 10),
+  loading: false,
+  error: "",
+});
 
+// ===== BRANCH PERFORMANCE STATE =====
+const [branchFilter, setBranchFilter] = useState({
+  startDate: "2025-01-01",
+  endDate: new Date().toISOString().slice(0,10),
+  data: [],
+  loading: false,
+  error: ""
+});
+// ===== GROUP DATA STATE =====
+const [groupDataFilter, setGroupDataFilter] = useState({
+  startDate: "2025-01-01",
+  endDate: new Date().toISOString().slice(0, 10),
+  data: [],
+  services: [], // Để lưu danh sách các dịch vụ duy nhất nhằm vẽ cột
+  loading: false
+});
+
+// ===== FETCH REVENUE TREND =====
+const fetchRevenueTrend = async () => {
+  if (new Date(revenueTrendCard.startDate) > new Date(revenueTrendCard.endDate)) {
+    alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+    return;
+  }
+
+  setRevenueTrendCard(prev => ({ ...prev, loading: true, error: "" }));
+
+  try {
+    const res = await axios.get(
+      "http://localhost:3000/procedure/bao-cao/doanh-thu-theo-thang",
+      {
+        params: {
+          NgayBatDau: revenueTrendCard.startDate,
+          NgayKetThuc: revenueTrendCard.endDate,
+        },
+      }
+    );
+
+    const chartData = res.data.map(item => ({
+        month: item.month,
+        revenue: Number(item.totalRevenue || 0),
+      }))
+    console.log("CHART DATA:", chartData);
+    setRevenueTrendCard(prev => ({ ...prev, data: chartData }));
+  } catch (err) {
+    console.error("Error fetching revenue trend:", err);
+    setRevenueTrendCard(prev => ({ ...prev, error: "Lỗi khi lấy dữ liệu" }));
+  } finally {
+    setRevenueTrendCard(prev => ({ ...prev, loading: false }));
+  }
+};
+
+  // ===== FETCH DATA EFFECT =====
   const fetchRevenue = async () => {
     console.log("Filter:", revenueCard.startDate, revenueCard.endDate);
+    if (new Date(revenueCard.startDate) > new Date(revenueCard.endDate)) {
+      alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+      return;
+    }
+    setRevenueCard(prev => ({ ...prev, error: ""}));
     try {
       setRevenueCard(prev => ({ ...prev, loading: true }));
 
@@ -154,10 +197,16 @@ const [serviceCard, setServiceCard] = useState({
     }
   };
 
+  
   const fetchServiceDistribution = async () => {
-    try {
-      setServiceCard(prev => ({ ...prev, loading: true }));
+    if (new Date(serviceCard.startDate) > new Date(serviceCard.endDate)) {
+      alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+      return;
+    }
 
+    setServiceCard(prev => ({ ...prev, error: "", loading: true }));
+
+    try {
       const res = await axios.get(
         "http://localhost:3000/procedure/bao-cao/doanh-thu-dich-vu",
         {
@@ -169,24 +218,33 @@ const [serviceCard, setServiceCard] = useState({
       );
 
       const rawData = Array.isArray(res.data) ? res.data : [];
+      console.log("1. RAW DATA FROM SQL:");
+      console.table(rawData);
+      // Bước 1: Gộp doanh thu theo từng dịch vụ
+      const revenueByService = rawData.reduce((acc, item) => {
+        const serviceName = item["Tên dịch vụ"] || "Khác";
+        const revenue = Number(item["Doanh thu"] || 0);
+        acc[serviceName] = (acc[serviceName] || 0) + revenue;
+        return acc;
+      }, {});
+      console.log("2. GROUPED REVENUE (MAP):", revenueByService);
 
-      const totalRevenue = rawData.reduce(
-        (sum, item) => sum + Number(item.TongDoanhThu || item.DoanhThu || 0),
-      0
-      );
-      // 2️⃣ Map sang dạng PieChart cần (%)
-      const chartData = rawData.map((item, index) => ({
-        name: item.TenDichVu,
-        value: totalRevenue > 0
-          ? Number(((Number(item.TongDoanhThu) / totalRevenue) * 100).toFixed(1))
-          : 0,
-        color: SERVICE_COLORS[index % SERVICE_COLORS.length],
-      }));
+      // Bước 2: Tính tổng doanh thu toàn bộ (Grand Total)
+      const totalRevenue = Object.values(revenueByService).reduce((sum, val) => sum + val, 0);
+      console.log(`3. TOTAL REVENUE: ${totalRevenue.toLocaleString()} VND`);
+      // Bước 3: Chuyển thành mảng chứa phần trăm
+      const chartData = Object.entries(revenueByService).map(([name, value], index) => {
+        // Tính phần trăm (tránh chia cho 0)
+        const percentage = totalRevenue > 0 ? (value / totalRevenue) * 100 : 0;
+        
+        return {
+          name,
+          value: parseFloat(percentage.toFixed(2)), // Làm tròn 2 chữ số thập phân
+          color: SERVICE_COLORS[index % SERVICE_COLORS.length],
+        };
+      });
 
-      console.log("RAW API DATA:", res.data);
-      console.log("RAW DATA:", rawData);
-      console.log("TOTAL REVENUE:", totalRevenue);
-      console.log("CHART DATA:", chartData);
+      console.log("CHART DATA (PERCENTAGE):", chartData);
 
       setServiceCard(prev => ({
         ...prev,
@@ -197,9 +255,104 @@ const [serviceCard, setServiceCard] = useState({
       console.error(error);
       setServiceCard(prev => ({ ...prev, loading: false }));
     }
+};
+
+
+
+  //FETCH BRANCH DATA
+  const fetchBranchData = async () => {
+    if (new Date(branchFilter.startDate) > new Date(branchFilter.endDate)) {
+      alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+      return;
+    }
+
+    try {
+      setBranchFilter(prev => ({ ...prev, loading: true }));
+
+      const res = await axios.get("http://localhost:3000/procedure/bao-cao/doanh-thu-chi-nhanh", {
+        params: {
+          NgayBatDau: branchFilter.startDate,
+          NgayKetThuc: branchFilter.endDate
+        }
+      });
+      
+      const data = res.data.map(item => ({
+        branch: item.branchName, 
+        revenue: Number(item.totalRevenue || 0),
+      }));
+
+      const sortedBranchData = data.slice().sort((a, b) => {
+        const numA = parseInt(a.branch.replace(/[^\d]/g, ""), 10);
+        const numB = parseInt(b.branch.replace(/[^\d]/g, ""), 10);
+        return numA - numB;
+      });
+
+
+      setBranchFilter(prev => ({ ...prev, data: sortedBranchData, loading: false }));
+      
+
+      console.log("Branch Data:", data); // kiểm tra dữ liệu
+    } catch (err) {
+      console.error("Error fetching branch data:", err);
+      setBranchFilter(prev => ({ ...prev, loading: false }));
+    }
   };
+  //FETCH GROUPED DATA
+  const fetchGroupedData = async () => {
+    if (new Date(groupDataFilter.startDate) > new Date(groupDataFilter.endDate)) {
+      alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+      return;
+    }
 
+    setGroupDataFilter(prev => ({ ...prev, loading: true }));
 
+    try {
+      const res = await axios.get("http://localhost:3000/procedure/bao-cao/doanh-thu-dich-vu", {
+        params: {
+          NgayBatDau: groupDataFilter.startDate,
+          NgayKetThuc: groupDataFilter.endDate
+        }
+      });
+
+      const rawData = Array.isArray(res.data) ? res.data : [];
+      console.log("Raw Data for Grouped:", rawData);
+      // Bước 1: Dùng Map để nhóm dữ liệu theo Chi Nhánh
+      const grouped = rawData.reduce((acc, item) => {
+        const branch = item["Tên chi nhánh"];
+        const service = item["Tên dịch vụ"];
+        const revenue = Number(item["Doanh thu"] || 0);
+
+        if (!acc[branch]) {
+          acc[branch] = { name: branch };
+        }
+
+        // Cộng dồn doanh thu cho dịch vụ cụ thể trong chi nhánh đó
+        acc[branch][service] = (acc[branch][service] || 0) + revenue;
+        return acc;
+      }, {});
+
+      // Bước 2: Lấy danh sách tất cả các loại dịch vụ xuất hiện (để tạo cột Bar)
+      const allServices = [...new Set(rawData.map(item => item["Tên dịch vụ"]))];
+
+      // Bước 3: Chuyển object thành mảng và Sort theo tên chi nhánh (giống card trước của bạn)
+      const finalData = Object.values(grouped).sort((a, b) => {
+        const numA = parseInt(a.name.replace(/[^\d]/g, ""), 10) || 0;
+        const numB = parseInt(b.name.replace(/[^\d]/g, ""), 10) || 0;
+        return numA - numB;
+      });
+
+      setGroupDataFilter(prev => ({
+        ...prev,
+        data: finalData,
+        services: allServices,
+        loading: false
+      }));
+
+    } catch (error) {
+      console.error("Error:", error);
+      setGroupDataFilter(prev => ({ ...prev, loading: false }));
+    }
+  };
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -221,7 +374,7 @@ const [serviceCard, setServiceCard] = useState({
                 startDate={revenueCard.startDate}
                 endDate={revenueCard.endDate}
                 onChange={(field, value) =>
-                  setRevenueCard(prev => ({ ...prev, [field]: value }))
+                  setRevenueCard(prev => ({ ...prev, [field]: value, error: ""}))
                 }
               />
 
@@ -250,20 +403,40 @@ const [serviceCard, setServiceCard] = useState({
 
         {/* Charts Row 1 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Revenue Trend Chart */}
           <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Revenue Trend (6 Months)</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">Revenue Trend</h2>
+              <div className="flex items-center gap-2">
+                <DateFilter
+                  startDate={revenueTrendCard.startDate}
+                  endDate={revenueTrendCard.endDate}
+                  onChange={(field, value) =>
+                    setRevenueTrendCard(prev => ({ ...prev, [field]: value, error: "" }))
+                  }
+                />
+                <button
+                  onClick={fetchRevenueTrend}
+                  className="bg-blue-600 text-white px-3 rounded text-sm h-[36px]"
+                >
+                  Lọc
+                </button>
+              </div>
+            </div>
+
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={revenueData}>
+              <LineChart data={revenueTrendCard.data}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
-                <YAxis tickFormatter={(value) => `${value / 1000000}M`} />
-                <Tooltip
-                  formatter={(value) => formatCurrency(value)}
-                  contentStyle={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "8px" }}
-                />
+                <YAxis tickFormatter={value => `${value / 1000000}M`} />
+                <Tooltip formatter={value => formatCurrency(value)} />
                 <Legend />
-                <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={3} name="Revenue (VND)" />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#3b82f6"
+                  strokeWidth={3}
+                  name="Revenue (VND)"
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -280,7 +453,7 @@ const [serviceCard, setServiceCard] = useState({
                   startDate={serviceCard.startDate}
                   endDate={serviceCard.endDate}
                   onChange={(field, value) =>
-                    setServiceCard(prev => ({ ...prev, [field]: value }))
+                    setServiceCard(prev => ({ ...prev, [field]: value, error: ""}))
                   }
                 />
 
@@ -316,23 +489,114 @@ const [serviceCard, setServiceCard] = useState({
         </div>
 
         {/* Charts Row 2 */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Branch Performance Comparison</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={branchData}>
+        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900">Branch Performance Comparison</h2>
+
+            <div className="flex items-center gap-2">
+              <DateFilter
+                startDate={branchFilter.startDate}
+                endDate={branchFilter.endDate}
+                onChange={(field, value) =>
+                  setBranchFilter(prev => ({ ...prev, [field]: value }))
+                }
+              />
+              <button
+                onClick={fetchBranchData}
+                className="bg-blue-600 text-white px-3 rounded text-sm h-[36px]"
+              >
+                Lọc
+              </button>
+            </div>
+          </div>
+
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart data={branchFilter.data} margin={{ top: 20, right: 30, left: 20, bottom: 40 }}>
+              
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="branch" />
-              <YAxis tickFormatter={(value) => `${value / 1000000}M`} />
+              {/* <XAxis dataKey="branch" /> */}
+              <XAxis 
+                dataKey="branch"
+                interval={0}
+                angle={-30}
+                textAnchor="end"
+                height ={60}
+              />
+
+              <YAxis tickFormatter={(value) => `${(value / 1000000)}M`} />
               <Tooltip
-                formatter={(value, name) => {
-                  if (name === "Revenue (VND)") return formatCurrency(value)
-                  return value
-                }}
+                formatter={(value) =>
+                  value.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
+                }
                 contentStyle={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "8px" }}
               />
-              <Legend />
+              {/* <Legend /> */}
+              <Legend verticalAlign="bottom" 
+                align="center" 
+                wrapperStyle={{ 
+                  paddingTop: "60px", // Khoảng cách giữa nhãn chi nhánh và Legend
+                  marginTop: "20px" 
+                }}
+              />
               <Bar dataKey="revenue" fill="#3b82f6" name="Revenue (VND)" />
-              <Bar dataKey="patients" fill="#10b981" name="Total Patients" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900">Service Revenue by Branch</h2>
+
+            <div className="flex items-center gap-2">
+              <DateFilter
+                startDate={groupDataFilter.startDate}
+                endDate={groupDataFilter.endDate}
+                onChange={(field, value) =>
+                  setGroupDataFilter(prev => ({ ...prev, [field]: value }))
+                }
+              />
+              <button
+                onClick={fetchGroupedData}
+                className="bg-blue-600 text-white px-3 rounded text-sm h-[36px]"
+              >
+                Lọc
+              </button>
+            </div>
+          </div>
+
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart data={groupDataFilter.data} margin={{ top: 20, right: 30, left: 20, bottom: 40 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="name"  /* Sửa từ "branch" thành "name" */
+                interval={0}
+                angle={-30}
+                textAnchor="end"
+                height={60}
+              />
+              <YAxis tickFormatter={(value) => `${(value / 10000000)}M`} />
+              <Tooltip
+                formatter={(value) => value.toLocaleString("vi-VN") + " VND"}
+                contentStyle={{ backgroundColor: "white", border: "1px solid #e5e7eb", borderRadius: "8px" }}
+              />
+              <Legend verticalAlign="bottom" 
+                align="center" 
+                wrapperStyle={{ 
+                  paddingTop: "60px", // Khoảng cách giữa nhãn chi nhánh và Legend
+                  marginTop: "20px" 
+                }}
+              />
+              
+              {/* QUAN TRỌNG: Render cột động dựa trên danh sách dịch vụ */}
+              {groupDataFilter.services.map((serviceName, index) => (
+                <Bar 
+                  key={serviceName} 
+                  dataKey={serviceName} 
+                  name={serviceName} 
+                  fill={SERVICE_COLORS[index % SERVICE_COLORS.length]} 
+                  radius={[4, 4, 0, 0]}
+                />
+              ))}
             </BarChart>
           </ResponsiveContainer>
         </div>
