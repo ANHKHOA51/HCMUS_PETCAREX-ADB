@@ -1,6 +1,6 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom"
 import { authService } from "../services/authService"
-import { LogOut, Calendar, PawPrint, Stethoscope, BarChart3, Menu, X, Box } from "lucide-react"
+import { LogOut, Calendar, PawPrint, Stethoscope, BarChart3, Menu, X, Box, MapPin } from "lucide-react"
 import { useState } from "react"
 
 const MainLayout = () => {
@@ -21,6 +21,7 @@ const MainLayout = () => {
         { path: "/client/dashboard", icon: PawPrint, label: "My Pets" },
         { path: "/client/booking", icon: Calendar, label: "Book Appointment" },
         { path: "/client/products", icon: Box, label: "Products" },
+        { path: "/client/branches", icon: MapPin, label: "Branches" },
       ]
     } else if (user?.role === "doctor") {
       return [{ path: "/doctor/exam", icon: Stethoscope, label: "Patient Examination" }]
@@ -36,11 +37,10 @@ const MainLayout = () => {
     <div className="flex h-screen overflow-hidden bg-gray-100">
       {/* Sidebar - Fixed on mobile, static on desktop */}
       <aside
-        className={`w-64 bg-white border-r border-gray-200 shrink-0 h-full transform transition-transform duration-200 ${
-          sidebarOpen
+        className={`w-64 bg-white border-r border-gray-200 shrink-0 h-full transform transition-transform duration-200 ${sidebarOpen
             ? "translate-x-0 fixed inset-y-0 left-0 z-50 lg:static lg:z-auto"
             : "-translate-x-full fixed inset-y-0 left-0 z-50 lg:translate-x-0 lg:static lg:z-auto"
-        }`}
+          }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
@@ -68,9 +68,8 @@ const MainLayout = () => {
                     navigate(item.path)
                     setSidebarOpen(false)
                   }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                    isActive ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${isActive ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-gray-100"
+                    }`}
                 >
                   <Icon className="w-5 h-5" />
                   <span className="font-medium">{item.label}</span>

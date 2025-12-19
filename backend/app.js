@@ -7,6 +7,7 @@ import receiptRouter from './routes/receipt.route.js';
 import reportRouter from './routes/report.route.js';
 import vaccineRouter from './routes/vaccine.route.js';
 import productRouter from './routes/product.route.js';
+import branchRouter from './routes/branch.route.js';
 
 const app = express();
 
@@ -33,5 +34,6 @@ app.use('/receipt', receiptRouter);
 app.use('/report', reportRouter);
 app.use('/vaccine', vaccineRouter);
 app.use('/product', productRouter);
+app.use('/branch', branchRouter);
 
 export default app;

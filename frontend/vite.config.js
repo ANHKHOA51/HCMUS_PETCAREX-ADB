@@ -15,6 +15,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/product': 'http://localhost:3000',
+      '/branch': 'http://localhost:3000',
       '/auth': 'http://localhost:3000',
       '/search': 'http://localhost:3000',
       '/examine': 'http://localhost:3000',

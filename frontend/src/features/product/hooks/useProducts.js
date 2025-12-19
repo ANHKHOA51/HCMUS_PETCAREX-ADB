@@ -8,7 +8,10 @@ export const useProducts = ({ search, type }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasMore, setHasMore] = useState(true);
+
   const cursorRef = useRef(null);
+  const loadingRef = useRef(false);
+  const abortControllerRef = useRef(null);
 
   // Cache structure: { [key: string]: { data: Product[], cursor: string, timestamp: number } }
   const cacheRef = useRef({});
@@ -19,6 +22,7 @@ export const useProducts = ({ search, type }) => {
     setProducts([]);
     setHasMore(true);
     cursorRef.current = null;
+    // We don't reset loadingRef here because a fetch might be about to start or running
   }, []);
 
   const fetchProducts = useCallback(async (isLoadMore = false) => {
@@ -35,22 +39,36 @@ export const useProducts = ({ search, type }) => {
       }
     }
 
-    if (loading) return;
+    if (loadingRef.current) return;
+    loadingRef.current = true;
     setLoading(true);
     setError(null);
 
+    // Abort previous request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
     try {
-      // Use current cursor if loading more, otherwise null (start fresh)
       const currentCursor = isLoadMore ? cursorRef.current : null;
 
       const res = await productService.getProducts({
         search,
         type,
         cursor: currentCursor,
-        limit: 10
+        limit: 10,
+        signal: abortControllerRef.current.signal // Pass signal if service supports it (or for future)
       });
 
-      setProducts(prev => isLoadMore ? [...prev, ...res.items] : res.items);
+      setProducts(prev => {
+        // If we are loading more, append. If new filter/search, replace.
+        // However, this function is called with isLoadMore based on user action.
+        // But if search changed, we called resetList() before.
+        // So 'prev' should be empty if !isLoadMore, but let's be safe.
+        return isLoadMore ? [...prev, ...res.items] : res.items;
+      });
+
       cursorRef.current = res.nextCursor;
       setHasMore(!!res.nextCursor);
 
@@ -61,15 +79,14 @@ export const useProducts = ({ search, type }) => {
           cursor: res.nextCursor,
           timestamp: Date.now()
         };
-      } else {
-        // If loading more, invalidate specific cache or update it (complex, easiest to just invalidate for simplicity or append)
-        // For infinite scroll, appending to cache is tricky if not contiguous. 
-        // Simple strategy: Only cache the FIRST page results for quick navigation back.
       }
 
     } catch (err) {
-      setError(err.message);
+      if (err.name !== 'AbortError') {
+        setError(err.message);
+      }
     } finally {
+      loadingRef.current = false;
       setLoading(false);
     }
   }, [search, type, getCacheKey]);
@@ -78,13 +95,21 @@ export const useProducts = ({ search, type }) => {
   useEffect(() => {
     resetList();
     fetchProducts(false);
+
+    return () => {
+      // Cleanup: abort request if component unmounts or deps change
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      loadingRef.current = false;
+    };
   }, [search, type, resetList, fetchProducts]);
 
   const loadMore = useCallback(() => {
-    if (hasMore && !loading) {
+    if (hasMore && !loadingRef.current) {
       fetchProducts(true);
     }
-  }, [hasMore, loading, fetchProducts]);
+  }, [hasMore, fetchProducts]);
 
   return { products, loading, error, hasMore, loadMore };
 };
@@ -96,18 +121,24 @@ export const useProduct = (id) => {
 
   useEffect(() => {
     if (!id) return;
+    let mounted = true;
+
     const fetch = async () => {
       try {
         setLoading(true);
         const data = await productService.getProductById(id);
-        setProduct(data);
+        if (mounted) setProduct(data);
       } catch (err) {
-        setError(err.message);
+        if (mounted) setError(err.message);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
     fetch();
+
+    return () => {
+      mounted = false;
+    };
   }, [id]);
 
   return { product, loading, error };

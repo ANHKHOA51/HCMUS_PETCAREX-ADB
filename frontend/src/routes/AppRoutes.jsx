@@ -9,6 +9,7 @@ import DoctorExamPage from "../pages/DoctorExamPage";
 import DoctorPrescriptionPage from "../pages/doctor/DoctorPrescriptionPage";
 import AdminDashboardPage from "../pages/AdminDashboardPage";
 import ProductList from "../features/product/components/ProductList";
+import BranchList from "../features/branch/components/BranchList";
 
 // Layouts
 import MainLayout from "../layouts/MainLayout";
@@ -48,6 +49,7 @@ const AppRoutes = () => {
         <Route path="dashboard" element={<ClientDashboardPage />} />
         <Route path="booking" element={<BookingPage />} />
         <Route path="products" element={<ProductList />} />
+        <Route path="branches" element={<BranchList />} />
       </Route>
 
       {/* Doctor Routes */}

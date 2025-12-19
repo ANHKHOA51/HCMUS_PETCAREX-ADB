@@ -47,22 +47,32 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /:id
+// Get product by ID
 router.get("/:id", async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
     const result = await db
       .request()
       .input("id", sql.Char(15), id)
-      .query("SELECT * FROM SANPHAM WHERE masanpham = @id");
+      .query(`
+                SELECT * FROM SANPHAM WHERE masanpham = @id;
+                
+                SELECT cn.tenchinhanh, cn.diachi, stk.soluongtonkho 
+                FROM SANPHAMTONKHO stk
+                JOIN CHINHANH cn ON stk.machinhanh = cn.machinhanh
+                WHERE stk.masanpham = @id;
+            `);
 
-    if (!result.recordset.length) {
+    if (!result.recordsets[0].length) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    res.json(result.recordset[0]);
+    const product = result.recordsets[0][0];
+    const stock = result.recordsets[1] || [];
+
+    res.json({ ...product, stock });
   } catch (err) {
-    console.error("Error GET /products/:id:", err);
+    console.error("Error /product/:id:", err);
     res.status(500).send("Internal Server Error");
   }
 });
