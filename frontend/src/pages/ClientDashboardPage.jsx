@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { petService } from "../services/petService";
 import { Plus, Edit2, Trash2, Calendar, PawPrint } from "lucide-react";
-import authService from "../services/authService.js"
+import { authService } from "../services/authService.js"
 import cusAPI from "../api/cusAPI.js";
 
 const ClientDashboardPage = () => {
@@ -23,12 +23,14 @@ const ClientDashboardPage = () => {
   useEffect(() => {
     loadPets();
   }, []);
-  const userStr = localStorage.getItem("user");
+  const userStr = JSON.parse(localStorage.getItem("user"));
 
   const loadPets = async () => {
     setLoading(true);
     try {
-      const data = await cusAPI.getPetsByPhone(userStr.)
+      const data = await cusAPI.getPetsByPhone(userStr.phone)
+      setPets(data);
+      console.log(data);
     } catch (error) {
       console.error("Failed to load pets:", error);
     } finally {
