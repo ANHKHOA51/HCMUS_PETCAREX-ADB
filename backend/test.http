@@ -55,6 +55,18 @@ Content-Type: application/json
 	"ThoiGianHen": "14:30:00"
 }
 
+###
+POST {{baseUrl}}/examine/dang-ky-thu-cung
+Content-Type: application/json
+
+{
+  "Ten": "Bông",
+  "NgaySinh": "2022-05-10",
+  "Loai": "Chó",
+  "Giong": "Phốc sóc",
+  "MaKhachHang": "KH2512101257000"
+}
+
 ### Note: response returns generated "MaPhieuDatLich" (prefix PD)
 
 ### 2) sp_GhiNhanKham

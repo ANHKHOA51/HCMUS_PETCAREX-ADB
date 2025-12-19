@@ -86,6 +86,26 @@ BEGIN
 END;
 GO
 
+GO
+CREATE OR ALTER PROCEDURE sp_TimThuocTheoTen
+    @Ten NVARCHAR(100),
+    @SoLuong INT = 20
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @SoLuong IS NULL OR @SoLuong <= 0 SET @SoLuong = 20;
+
+    -- Chỉ tìm trong THUOC (subset của SANPHAM)
+    SELECT TOP (@SoLuong) *
+    FROM SANPHAM sp
+    INNER JOIN THUOC t ON t.masanpham = sp.masanpham
+    WHERE (@Ten IS NULL OR LTRIM(RTRIM(@Ten)) = N'')
+          OR sp.ten LIKE N'%' + @Ten + N'%'
+    ORDER BY sp.ten ASC;
+END;
+GO
+
 -- =======================================================
 -- NHÓM 3: QUẢN LÝ HÓA ĐƠN & THANH TOÁN
 -- =======================================================
@@ -291,18 +311,25 @@ GO
 -- NHÓM 4: TRA CỨU & NHẮC NHỞ
 -- =======================================================
 
--- 10. Tra cứu lịch sử khám bệnh & tiêm [cite: 4]
+-- 10.1. Tra cứu lịch sử khám bệnh & tiêm [cite: 4]
+GO
+CREATE OR ALTER PROCEDURE sp_TraCuuThuCung_SDT
+    @SDT CHAR(10)
+AS
+BEGIN
+    SELECT * FROM THUCUNG TC
+    JOIN KHACHHANG KH ON TC.makhachhang = KH.makhachhang
+    WHERE KH.sodienthoai = @SDT;
+END;
+GO
+
+-- 10.2. Tra cứu lịch sử khám bệnh & tiêm [cite: 4]
 GO
 CREATE OR ALTER PROCEDURE sp_TraCuuHosoBenhAn
-    @TenThuCung NVARCHAR(50),
+    @MaThuCung CHAR(15),
     @SoLuongHoso INT
 AS
 BEGIN
-    DECLARE @MaThuCung CHAR(15);
-    
-    -- Lấy mã thú cưng đầu tiên tìm thấy (Giả định đơn giản)
-    SELECT TOP 1 @MaThuCung = mathucung FROM THUCUNG WHERE ten LIKE '%' + @TenThuCung + '%';
-
     -- Trả về 2 result sets
     -- 1. Hồ sơ bệnh án
     SELECT TOP (@SoLuongHoso) * FROM HOSOBENHAN 
@@ -569,5 +596,35 @@ BEGIN
       AND (@MaChiNhanh IS NULL OR hd.machinhanh = @MaChiNhanh)
     GROUP BY ct.loai
     ORDER BY SUM(ct.soluong * ct.giamoidonvi) DESC;
+END;
+GO
+
+-- =======================================================
+-- NHÓM X: ĐĂNG KÝ THÚ CƯNG
+-- =======================================================
+
+GO
+CREATE OR ALTER PROCEDURE sp_DangKyThuCung
+    @MaThuCung CHAR(15),
+    @Ten NVARCHAR(50),
+    @NgaySinh DATE = NULL,
+    @Loai NVARCHAR(50),
+    @Giong NVARCHAR(50),
+    @MaKhachHang CHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM KHACHHANG WHERE makhachhang = @MaKhachHang)
+        THROW 50006, N'Khách hàng không tồn tại.', 1;
+
+    IF @NgaySinh IS NOT NULL AND @NgaySinh > CAST(GETDATE() AS DATE)
+        THROW 50007, N'Ngày sinh thú cưng không hợp lệ (lớn hơn ngày hiện tại).', 1;
+
+    IF EXISTS (SELECT 1 FROM THUCUNG WHERE mathucung = @MaThuCung)
+        THROW 50008, N'Mã thú cưng đã tồn tại.', 1;
+
+    INSERT INTO THUCUNG (mathucung, ten, ngaysinh, loai, giong, ngaydangky, makhachhang)
+    VALUES (@MaThuCung, @Ten, @NgaySinh, @Loai, @Giong, CAST(GETDATE() AS DATE), @MaKhachHang);
 END;
 GO

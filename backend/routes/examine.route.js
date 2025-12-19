@@ -126,4 +126,37 @@ router.get("/nhac-lich/tai-kham-ngay-mai", async (_req, res) => {
     }
 });
 
+router.post("/dang-ky-thu-cung", async (req, res) => {
+    const { Ten, NgaySinh, Loai, Giong, MaKhachHang } = req.body;
+    const missing = requireFields(req.body, ["Ten", "MaKhachHang"]);
+    if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
+
+    try {
+        let parsedNgaySinh = null;
+        try {
+            if (NgaySinh !== undefined && NgaySinh !== null && String(NgaySinh).trim() !== "") {
+                parsedNgaySinh = parseSqlDate(NgaySinh, "NgaySinh");
+            }
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+
+        const MaThuCung = await generatePrimaryKey("TC");
+        const result = await db
+            .request()
+            .input("MaThuCung", sql.Char(15), MaThuCung)
+            .input("Ten", sql.NVarChar(50), Ten)
+            .input("NgaySinh", sql.Date, parsedNgaySinh)
+            .input("Loai", sql.NVarChar(50), Loai ?? null)
+            .input("Giong", sql.NVarChar(50), Giong ?? null)
+            .input("MaKhachHang", sql.Char(15), MaKhachHang)
+            .execute("sp_DangKyThuCung");
+
+        res.json({ MaThuCung, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
+    } catch (err) {
+        console.error("Error sp_DangKyThuCung:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 export default router;
