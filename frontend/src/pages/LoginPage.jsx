@@ -257,24 +257,6 @@ const LoginPage = () => {
               {loading ? "Loading..." : isLogin ? "Sign In" : "Sign Up"}
             </button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center mb-3">
-              Demo Credentials:
-            </p>
-            <div className="space-y-2 text-xs text-gray-600">
-              <p>
-                <strong>Client:</strong> 0901234567 / client123
-              </p>
-              <p>
-                <strong>Doctor:</strong> 0902345678 / doctor123
-              </p>
-              <p>
-                <strong>Admin:</strong> 0903456789 / admin123
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
