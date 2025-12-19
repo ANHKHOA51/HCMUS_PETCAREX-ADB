@@ -10,6 +10,13 @@ import productRouter from './routes/product.route.js';
 import branchRouter from './routes/branch.route.js';
 
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -19,7 +26,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-app.get('/', async (req, res) => {
+app.get("/", async (req, res) => {
   // const pool = await db;
   const result = await db.query`
       SELECT * FROM HOIVIEN

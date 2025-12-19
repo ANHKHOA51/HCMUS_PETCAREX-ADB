@@ -2,8 +2,16 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authService } from "../services/authService";
-import { PawPrint, Mail, Lock, User, AlertCircle } from "lucide-react";
+import authApi from "../api/authAPI";
+import {
+  PawPrint,
+  Phone,
+  Lock,
+  User,
+  AlertCircle,
+  Calendar,
+  Home,
+} from "lucide-react";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -12,10 +20,12 @@ const LoginPage = () => {
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    name: "",
-    role: "client",
+    SoDienThoai: "",
+    MatKhau: "",
+    HoVaTen: "",
+    DiaChi: "",
+    NgaySinh: "",
+    Role: "customer",
   });
 
   const handleSubmit = async (e) => {
@@ -25,25 +35,48 @@ const LoginPage = () => {
 
     try {
       if (isLogin) {
-        const { user } = await authService.login(
-          formData.email,
-          formData.password
+        const data = await authApi.login({
+          Role: formData.Role,
+          SoDienThoai: formData.SoDienThoai,
+          MatKhau: formData.MatKhau,
+        });
+        const token = `mock_token_${data.user.makhachhang}_${Date.now()}`;
+        console.log(data);
+        // // Store in localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...data.user, role: formData.Role })
         );
-        // Redirect based on role
-        if (user.role === "client") navigate("/client/dashboard");
-        else if (user.role === "doctor") navigate("/doctor/exam");
-        else if (user.role === "admin") navigate("/admin/dashboard");
+
+        if (data.role === "customer") {
+          navigate("/client/dashboard");
+        } else if (data.role === "employee") navigate("/doctor/exam");
+
+        // else if (user.Role === "admin") navigate("/admin/dashboard");
       } else {
-        const { user } = await authService.register(
-          formData.email,
-          formData.password,
-          formData.name,
-          formData.role
+        console.log(formData);
+
+        const newUser = await authApi.register({
+          SoDienThoai: formData.SoDienThoai,
+          MatKhau: formData.MatKhau,
+          HoVaTen: formData.HoVaTen,
+          DiaChi: formData.DiaChi,
+          NgaySinh: formData.NgaySinh,
+        });
+
+        console.log(newUser);
+        const token = `mock_token_${newUser.user.makhachhang}_${Date.now()}`;
+        localStorage.setItem("token", token);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...newUser.user, role: "customer" })
         );
-        // Redirect based on role
-        if (user.role === "client") navigate("/client/dashboard");
-        else if (user.role === "doctor") navigate("/doctor/exam");
-        else if (user.role === "admin") navigate("/admin/dashboard");
+
+        // Redirect based on Role
+        if (newUser.role === "customer") navigate("/client/dashboard");
+        else if (newUser.role === "employee") navigate("/doctor/exam");
+        // else if (user.Role === "admin") navigate("/admin/dashboard");
       }
     } catch (err) {
       setError(err.message);
@@ -112,9 +145,9 @@ const LoginPage = () => {
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
                   <input
                     type="text"
-                    name="name"
+                    name="HoVaTen"
                     required
-                    value={formData.name}
+                    value={formData.HoVaTen}
                     onChange={handleChange}
                     className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     placeholder="Enter your name"
@@ -125,21 +158,61 @@ const LoginPage = () => {
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Email
+                Phone Number
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
                 <input
-                  type="email"
-                  name="email"
+                  type="tel"
+                  name="SoDienThoai"
                   required
-                  value={formData.email}
+                  value={formData.SoDienThoai}
                   onChange={handleChange}
                   className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="Enter your email"
+                  placeholder="Enter your phone number"
                 />
               </div>
             </div>
+
+            {!isLogin && (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Birth
+                </label>
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+                  <input
+                    type="date"
+                    name="NgaySinh"
+                    required
+                    value={formData.NgaySinh}
+                    onChange={handleChange}
+                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    placeholder="Enter your birthday"
+                  />
+                </div>
+              </div>
+            )}
+
+            {!isLogin && (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Address
+                </label>
+                <div className="relative">
+                  <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+                  <input
+                    type="text"
+                    name="DiaChi"
+                    required
+                    value={formData.DiaChi}
+                    onChange={handleChange}
+                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    placeholder="Enter your address"
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -149,9 +222,9 @@ const LoginPage = () => {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
                 <input
                   type="password"
-                  name="password"
+                  name="MatKhau"
                   required
-                  value={formData.password}
+                  value={formData.MatKhau}
                   onChange={handleChange}
                   className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   placeholder="Enter your password"
@@ -159,20 +232,19 @@ const LoginPage = () => {
               </div>
             </div>
 
-            {!isLogin && (
+            {isLogin && (
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">
                   Role
                 </label>
                 <select
-                  name="role"
-                  value={formData.role}
+                  name="Role"
+                  value={formData.Role}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 >
-                  <option value="client">Client</option>
-                  <option value="doctor">Doctor</option>
-                  <option value="admin">Admin</option>
+                  <option value="customer">Customer</option>
+                  <option value="employee">Employee</option>
                 </select>
               </div>
             )}
@@ -185,24 +257,6 @@ const LoginPage = () => {
               {loading ? "Loading..." : isLogin ? "Sign In" : "Sign Up"}
             </button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center mb-3">
-              Demo Credentials:
-            </p>
-            <div className="space-y-2 text-xs text-gray-600">
-              <p>
-                <strong>Client:</strong> client@petcarex.com / client123
-              </p>
-              <p>
-                <strong>Doctor:</strong> doctor@petcarex.com / doctor123
-              </p>
-              <p>
-                <strong>Admin:</strong> admin@petcarex.com / admin123
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

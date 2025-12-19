@@ -19,30 +19,30 @@ import { Plus, Dog, Cat } from "lucide-react"
 
 const mockPets = [
   {
-    id: "1",
-    name: "Max",
-    species: "Dog",
-    breed: "Golden Retriever",
+    mathucung: "1",
+    ten: "Max",
+    loai: "Dog",
+    giong: "Golden Retriever",
     gender: "Male",
-    birthdate: "2020-05-15",
+    ngaysinh: "2020-05-15",
     avatar: "/golden-retriever.png",
   },
   {
-    id: "2",
-    name: "Luna",
-    species: "Cat",
-    breed: "Persian",
+    mathucung: "2",
+    ten: "Luna",
+    loai: "Cat",
+    giong: "Persian",
     gender: "Female",
-    birthdate: "2021-08-22",
+    ngaysinh: "2021-08-22",
     avatar: "/fluffy-persian-cat.png",
   },
   {
-    id: "3",
-    name: "Charlie",
-    species: "Dog",
-    breed: "Beagle",
+    mathucung: "3",
+    ten: "Charlie",
+    loai: "Dog",
+    giong: "Beagle",
     gender: "Male",
-    birthdate: "2019-03-10",
+    ngaysinh: "2019-03-10",
     avatar: "/beagle-dog.png",
   },
 ]
@@ -123,19 +123,19 @@ export function PetDashboard() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {pets.map((pet) => (
-          <Card key={pet.id} className="overflow-hidden transition-shadow hover:shadow-md">
+          <Card key={pet.mathucung} className="overflow-hidden transition-shadow hover:shadow-md">
             <CardHeader className="pb-3">
               <div className="flex items-start gap-4">
                 <Avatar className="h-16 w-16">
-                  <AvatarImage src={pet.avatar || "/placeholder.svg"} alt={pet.name} />
+                  <AvatarImage src={pet.avatar || "/placeholder.svg"} alt={pet.ten} />
                   <AvatarFallback>
-                    {pet.species === "Dog" ? <Dog className="h-8 w-8" /> : <Cat className="h-8 w-8" />}
+                    {pet.loai === "Dog" ? <Dog className="h-8 w-8" /> : <Cat className="h-8 w-8" />}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                  <CardTitle className="text-lg">{pet.name}</CardTitle>
+                  <CardTitle className="text-lg">{pet.ten}</CardTitle>
                   <p className="text-muted-foreground text-sm">
-                    {pet.breed} • {pet.species}
+                    {pet.giong} • {pet.loai}
                   </p>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export function PetDashboard() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Born:</span>
-                  <span className="font-medium">{new Date(pet.birthdate).toLocaleDateString()}</span>
+                  <span className="font-medium">{new Date(pet.ngaysinh).toLocaleDateString()}</span>
                 </div>
               </div>
               <Button variant="outline" className="mt-4 w-full bg-transparent">

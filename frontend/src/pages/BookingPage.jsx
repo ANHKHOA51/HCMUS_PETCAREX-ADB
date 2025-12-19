@@ -14,7 +14,7 @@ const BookingPage = () => {
   const [loading, setLoading] = useState(false)
 
   const [bookingData, setBookingData] = useState({
-    petId: "",
+    mathucung: "",
     branchId: "",
     serviceId: "",
     doctorId: "",
@@ -68,7 +68,7 @@ const BookingPage = () => {
   const isStepComplete = () => {
     switch (step) {
       case 1:
-        return bookingData.petId !== ""
+        return bookingData.mathucung !== ""
       case 2:
         return bookingData.branchId !== ""
       case 3:
@@ -97,7 +97,7 @@ const BookingPage = () => {
             onClick={() => {
               setStep(1)
               setBookingData({
-                petId: "",
+                mathucung: "",
                 branchId: "",
                 serviceId: "",
                 doctorId: "",
@@ -158,17 +158,17 @@ const BookingPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {pets.map((pet) => (
                   <button
-                    key={pet.id}
-                    onClick={() => setBookingData({ ...bookingData, petId: pet.id })}
+                    key={pet.mathucung}
+                    onClick={() => setBookingData({ ...bookingData, mathucung: pet.mathucung })}
                     className={`p-4 border-2 rounded-lg text-left transition-all ${
-                      bookingData.petId === pet.id
+                      bookingData.mathucung === pet.mathucung
                         ? "border-blue-600 bg-blue-50"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
-                    <h3 className="font-semibold text-lg text-gray-900">{pet.name}</h3>
+                    <h3 className="font-semibold text-lg text-gray-900">{pet.ten}</h3>
                     <p className="text-sm text-gray-600">
-                      {pet.species} - {pet.breed}
+                      {pet.loai} - {pet.giong}
                     </p>
                   </button>
                 ))}
@@ -301,7 +301,7 @@ const BookingPage = () => {
               <div className="space-y-4 bg-gray-50 rounded-lg p-6">
                 <div>
                   <p className="text-sm text-gray-600">Pet</p>
-                  <p className="font-semibold text-gray-900">{pets.find((p) => p.id === bookingData.petId)?.name}</p>
+                  <p className="font-semibold text-gray-900">{pets.find((p) => p.mathucung === bookingData.mathucung)?.ten}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Branch</p>
