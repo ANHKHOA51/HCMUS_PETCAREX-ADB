@@ -2,9 +2,9 @@
 // Simulates backend API calls for authentication
 
 const MOCK_USERS = [
-  { id: 1, email: "client@petcarex.com", password: "client123", role: "client", name: "John Doe" },
-  { id: 2, email: "doctor@petcarex.com", password: "doctor123", role: "doctor", name: "Dr. Sarah Smith" },
-  { id: 3, email: "admin@petcarex.com", password: "admin123", role: "admin", name: "Admin User" },
+  { id: 1, sodienthoai: "0901234567", matkhau: "client123", role: "client", hovaten: "John Doe" },
+  { id: 2, sodienthoai: "0902345678", matkhau: "doctor123", role: "doctor", hovaten: "Dr. Sarah Smith" },
+  { id: 3, sodienthoai: "0903456789", matkhau: "admin123", role: "admin", hovaten: "Admin User" },
 ]
 
 // Simulate API delay
@@ -12,16 +12,16 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const authService = {
   // Login user
-  login: async (email, password) => {
+  login: async (sodienthoai, matkhau) => {
     await delay(800)
 
-    const user = MOCK_USERS.find((u) => u.email === email && u.password === password)
+    const user = MOCK_USERS.find((u) => u.sodienthoai === sodienthoai && u.matkhau === matkhau)
 
     if (!user) {
-      throw new Error("Invalid email or password")
+      throw new Error("Invalid phone number or password")
     }
 
-    const { password: _, ...userWithoutPassword } = user
+    const { matkhau: _, ...userWithoutPassword } = user
     const token = `mock_token_${user.id}_${Date.now()}`
 
     // Store in localStorage
@@ -32,22 +32,22 @@ export const authService = {
   },
 
   // Register new user
-  register: async (email, password, name, role = "client") => {
+  register: async (sodienthoai, matkhau, hovaten, role = "client") => {
     await delay(800)
 
-    const existingUser = MOCK_USERS.find((u) => u.email === email)
+    const existingUser = MOCK_USERS.find((u) => u.sodienthoai === sodienthoai)
     if (existingUser) {
-      throw new Error("Email already registered")
+      throw new Error("Phone number already registered")
     }
 
     const newUser = {
       id: MOCK_USERS.length + 1,
-      email,
-      name,
+      sodienthoai,
+      hovaten,
       role,
     }
 
-    MOCK_USERS.push({ ...newUser, password })
+    MOCK_USERS.push({ ...newUser, matkhau })
 
     const token = `mock_token_${newUser.id}_${Date.now()}`
 

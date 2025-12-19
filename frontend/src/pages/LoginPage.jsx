@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../services/authService";
-import { PawPrint, Mail, Lock, User, AlertCircle } from "lucide-react";
+import { PawPrint, Phone, Lock, User, AlertCircle } from "lucide-react";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -12,9 +12,9 @@ const LoginPage = () => {
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    name: "",
+    sodienthoai: "",
+    matkhau: "",
+    hovaten: "",
     role: "client",
   });
 
@@ -26,8 +26,8 @@ const LoginPage = () => {
     try {
       if (isLogin) {
         const { user } = await authService.login(
-          formData.email,
-          formData.password
+          formData.sodienthoai,
+          formData.matkhau
         );
         // Redirect based on role
         if (user.role === "client") navigate("/client/dashboard");
@@ -35,9 +35,9 @@ const LoginPage = () => {
         else if (user.role === "admin") navigate("/admin/dashboard");
       } else {
         const { user } = await authService.register(
-          formData.email,
-          formData.password,
-          formData.name,
+          formData.sodienthoai,
+          formData.matkhau,
+          formData.hovaten,
           formData.role
         );
         // Redirect based on role
@@ -112,9 +112,9 @@ const LoginPage = () => {
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
                   <input
                     type="text"
-                    name="name"
+                    name="hovaten"
                     required
-                    value={formData.name}
+                    value={formData.hovaten}
                     onChange={handleChange}
                     className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     placeholder="Enter your name"
@@ -125,18 +125,18 @@ const LoginPage = () => {
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Email
+                Phone Number
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
                 <input
-                  type="email"
-                  name="email"
+                  type="tel"
+                  name="sodienthoai"
                   required
-                  value={formData.email}
+                  value={formData.sodienthoai}
                   onChange={handleChange}
                   className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="Enter your email"
+                  placeholder="Enter your phone number"
                 />
               </div>
             </div>
@@ -149,9 +149,9 @@ const LoginPage = () => {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
                 <input
                   type="password"
-                  name="password"
+                  name="matkhau"
                   required
-                  value={formData.password}
+                  value={formData.matkhau}
                   onChange={handleChange}
                   className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   placeholder="Enter your password"
@@ -193,13 +193,13 @@ const LoginPage = () => {
             </p>
             <div className="space-y-2 text-xs text-gray-600">
               <p>
-                <strong>Client:</strong> client@petcarex.com / client123
+                <strong>Client:</strong> 0901234567 / client123
               </p>
               <p>
-                <strong>Doctor:</strong> doctor@petcarex.com / doctor123
+                <strong>Doctor:</strong> 0902345678 / doctor123
               </p>
               <p>
-                <strong>Admin:</strong> admin@petcarex.com / admin123
+                <strong>Admin:</strong> 0903456789 / admin123
               </p>
             </div>
           </div>

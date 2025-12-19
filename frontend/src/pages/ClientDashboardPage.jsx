@@ -12,9 +12,9 @@ const ClientDashboardPage = () => {
   const [showModal, setShowModal] = useState(false)
   const [editingPet, setEditingPet] = useState(null)
   const [formData, setFormData] = useState({
-    name: "",
-    species: "dog",
-    breed: "",
+    ten: "",
+    loai: "dog",
+    giong: "",
     age: "",
     weight: "",
   })
@@ -39,7 +39,7 @@ const ClientDashboardPage = () => {
     e.preventDefault()
     try {
       if (editingPet) {
-        await petService.updatePet(editingPet.id, formData)
+        await petService.updatePet(editingPet.mathucung, formData)
       } else {
         await petService.createPet(formData)
       }
@@ -50,10 +50,10 @@ const ClientDashboardPage = () => {
     }
   }
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (mathucung) => {
     if (window.confirm("Are you sure you want to delete this pet?")) {
       try {
-        await petService.deletePet(id)
+        await petService.deletePet(mathucung)
         loadPets()
       } catch (error) {
         console.error("Failed to delete pet:", error)
@@ -65,15 +65,15 @@ const ClientDashboardPage = () => {
     if (pet) {
       setEditingPet(pet)
       setFormData({
-        name: pet.name,
-        species: pet.species,
-        breed: pet.breed,
+        ten: pet.ten,
+        loai: pet.loai,
+        giong: pet.giong,
         age: pet.age,
         weight: pet.weight,
       })
     } else {
       setEditingPet(null)
-      setFormData({ name: "", species: "dog", breed: "", age: "", weight: "" })
+      setFormData({ ten: "", loai: "dog", giong: "", age: "", weight: "" })
     }
     setShowModal(true)
   }
@@ -133,20 +133,20 @@ const ClientDashboardPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {pets.map((pet) => (
               <div
-                key={pet.id}
+                key={pet.mathucung}
                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
               >
                 <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
                   <PawPrint className="w-20 h-20 text-white opacity-50" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{pet.name}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{pet.ten}</h3>
                   <div className="space-y-1 text-sm text-gray-600 mb-4">
                     <p>
-                      <span className="font-medium">Species:</span> {pet.species}
+                      <span className="font-medium">Species:</span> {pet.loai}
                     </p>
                     <p>
-                      <span className="font-medium">Breed:</span> {pet.breed}
+                      <span className="font-medium">Breed:</span> {pet.giong}
                     </p>
                     <p>
                       <span className="font-medium">Age:</span> {pet.age} years
@@ -164,7 +164,7 @@ const ClientDashboardPage = () => {
                       <span className="text-sm font-medium">Edit</span>
                     </button>
                     <button
-                      onClick={() => handleDelete(pet.id)}
+                      onClick={() => handleDelete(pet.mathucung)}
                       className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -191,8 +191,8 @@ const ClientDashboardPage = () => {
                 <input
                   type="text"
                   required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  value={formData.ten}
+                  onChange={(e) => setFormData({ ...formData, ten: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   placeholder="e.g., Buddy"
                 />
@@ -200,8 +200,8 @@ const ClientDashboardPage = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Species</label>
                 <select
-                  value={formData.species}
-                  onChange={(e) => setFormData({ ...formData, species: e.target.value })}
+                  value={formData.loai}
+                  onChange={(e) => setFormData({ ...formData, loai: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 >
                   <option value="dog">Dog</option>
@@ -216,8 +216,8 @@ const ClientDashboardPage = () => {
                 <input
                   type="text"
                   required
-                  value={formData.breed}
-                  onChange={(e) => setFormData({ ...formData, breed: e.target.value })}
+                  value={formData.giong}
+                  onChange={(e) => setFormData({ ...formData, giong: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   placeholder="e.g., Golden Retriever"
                 />
