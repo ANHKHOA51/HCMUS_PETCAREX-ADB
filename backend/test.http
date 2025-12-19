@@ -64,7 +64,7 @@ Content-Type: application/json
   "NgaySinh": "2022-05-10",
   "Loai": "Chó",
   "Giong": "Phốc sóc",
-  "MaKhachHang": "KH0000000000001"
+  "MaKhachHang": "KH2512101257000"
 }
 
 ### Note: response returns generated "MaPhieuDatLich" (prefix PD)
