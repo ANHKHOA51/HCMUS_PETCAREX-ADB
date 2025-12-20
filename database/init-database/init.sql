@@ -75,9 +75,9 @@ CREATE TABLE DICHVU (
 );
 GO
 -- madichvu
--- 0: Bán lẻ
--- 1: Khám bệnh
--- 2: Tiêm phòng
+-- 0: Khám bệnh 
+-- 1: Tiêm phòng
+-- 2: Bán lẻ
 
 
 

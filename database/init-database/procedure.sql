@@ -120,8 +120,16 @@ CREATE OR ALTER PROCEDURE sp_KhoiTaoHoaDon
     @MaChiNhanh CHAR(15)
 AS
 BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @NgayLap DATE;
+     SET @NgayLap = DATEADD(
+        DAY,
+        ABS(CHECKSUM(NEWID())) % 365,
+        '2025-01-01'
+    );    
     INSERT INTO HOADON (mahoadon, ngaylap, manhanvien, makhachhang, machinhanh, trangthai)
-    VALUES (@MaHoaDon, GETDATE(), @MaNhanVien, @MaKhachHang, @MaChiNhanh, 0); -- 0: Processing
+    VALUES (@MaHoaDon, @NgayLap, @MaNhanVien, @MaKhachHang, @MaChiNhanh, 0); -- 0: Processing
 END;
 GO
 
@@ -553,7 +561,8 @@ BEGIN
         cn.tenchinhanh AS [Tên chi nhánh], 
         cn.machinhanh AS [Mã chi nhánh], 
         dv.loaidichvu AS [Tên dịch vụ], 
-        SUM(ct.giamoidonvi * ct.soluong) AS [Doanh thu]
+        --SUM(ct.giamoidonvi * ct.soluong) AS [Doanh thu]
+        SUM(CAST(ct.giamoidonvi * ct.soluong AS BIGINT)) AS [Doanh thu]
     FROM HOADON hd 
     JOIN CHITIETHOADON ct ON ct.mahoadon = hd.mahoadon 
     JOIN CHINHANH cn ON hd.machinhanh = cn.machinhanh
@@ -572,7 +581,8 @@ CREATE OR ALTER PROCEDURE sp_TongDoanhThu
     @NgayKetThuc DATETIME
 AS
 BEGIN
-    SELECT SUM(hd.sotienphaitra) AS [Tổng doanh thu]
+    --SELECT SUM(hd.sotienphaitra) AS [Tổng doanh thu]
+    SELECT SUM(CAST(hd.sotienphaitra AS BIGINT)) AS TongDoanhThu
     FROM HOADON hd
     WHERE hd.trangthai = 2 
       AND hd.ngaylap BETWEEN @NgayBatDau AND @NgayKetThuc;
@@ -589,7 +599,8 @@ BEGIN
 
     SELECT TOP 1 
         ct.loai AS [Loại Dịch Vụ], -- Tạm dùng cột loại
-        SUM(ct.soluong * ct.giamoidonvi) AS [Tổng doanh thu]
+        --SUM(ct.soluong * ct.giamoidonvi) AS [Tổng doanh thu]
+        SUM(CAST(ct.soluong * ct.giamoidonvi AS BIGINT)) AS [Tổng Doanh thu]
     FROM HOADON hd 
     JOIN CHITIETHOADON ct ON ct.mahoadon = hd.mahoadon 
     WHERE hd.ngaylap >= @SixMonthsAgo 

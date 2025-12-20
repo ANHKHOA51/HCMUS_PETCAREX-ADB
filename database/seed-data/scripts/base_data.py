@@ -37,7 +37,7 @@ def BaseData():
         print('2. Đang insert DICHVU...')
         cursor.executemany('''
             INSERT INTO DICHVU (madichvu, loaidichvu) VALUES (%s, %s)
-        ''', [(0, u'Bán lẻ'), (1, u'Khám bệnh'), (2, u'Tiêm phòng')])
+        ''', [(0, u'Khám bệnh'), (1, u'Tiêm phòng'), (2, u'Bán lẻ')])
 
         # =============================================
         # 3. INSERT CHI NHÁNH, NHÂN VIÊN
