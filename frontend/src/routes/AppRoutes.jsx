@@ -12,7 +12,7 @@ import DoctorExamPage from "../pages/doctor/DoctorExamPage";
 import DoctorPrescriptionPage from "../pages/doctor/DoctorPrescriptionPage";
 import ManagerDashboardPage from "../pages/manager/ManagerDashboardPage";
 import ReceptionistDashboardPage from "../pages/receptionist/ReceptionistDashboardPage";
-import AdminDashboardPage from "../pages/AdminDashboardPage"; // Keep if still used elsewhere or delete? Only used in removed route. Retaining for safety unless specifically told to remove.
+
 
 // Layouts
 import MainLayout from "../layouts/MainLayout";

@@ -541,7 +541,7 @@ BEGIN
     SELECT 
         cn.tenchinhanh AS [Tên chi nhánh], 
         cn.machinhanh AS [Mã chi nhánh], 
-        SUM(hd.sotienphaitra) AS [Tổng doanh thu]
+        SUM(CAST(hd.sotienphaitra AS BIGINT)) AS [Tổng doanh thu]
     FROM HOADON hd 
     JOIN CHINHANH cn ON hd.machinhanh = cn.machinhanh
     WHERE hd.trangthai = 2 -- Completed
@@ -562,7 +562,7 @@ BEGIN
         cn.machinhanh AS [Mã chi nhánh], 
         dv.loaidichvu AS [Tên dịch vụ], 
         --SUM(ct.giamoidonvi * ct.soluong) AS [Doanh thu]
-        SUM(CAST(ct.giamoidonvi * ct.soluong AS BIGINT)) AS [Doanh thu]
+        SUM(CAST(ct.giamoidonvi AS BIGINT) * CAST(ct.soluong AS BIGINT)) AS [Doanh thu]
     FROM HOADON hd 
     JOIN CHITIETHOADON ct ON ct.mahoadon = hd.mahoadon 
     JOIN CHINHANH cn ON hd.machinhanh = cn.machinhanh
@@ -586,6 +586,24 @@ BEGIN
     FROM HOADON hd
     WHERE hd.trangthai = 2 
       AND hd.ngaylap BETWEEN @NgayBatDau AND @NgayKetThuc;
+END;
+GO
+
+-- 20. Báo cáo doanh thu theo tháng (Trend) [New]
+GO
+CREATE OR ALTER PROCEDURE sp_BaoCaoDoanhThuTheoThang
+    @NgayBatDau DATETIME,
+    @NgayKetThuc DATETIME
+AS
+BEGIN
+    SELECT 
+        FORMAT(hd.ngaylap, 'yyyy-MM') AS [month], 
+        SUM(CAST(hd.sotienphaitra AS BIGINT)) AS [totalRevenue]
+    FROM HOADON hd
+    WHERE hd.trangthai = 2 
+      AND hd.ngaylap BETWEEN @NgayBatDau AND @NgayKetThuc
+    GROUP BY FORMAT(hd.ngaylap, 'yyyy-MM')
+    ORDER BY [month];
 END;
 GO
 
