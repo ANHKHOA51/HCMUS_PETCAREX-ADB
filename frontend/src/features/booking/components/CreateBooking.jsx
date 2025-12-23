@@ -200,7 +200,6 @@ const CreateBooking = () => {
             });
 
             toast.success("Đặt lịch thành công");
-            setRefreshTodayKey((prev) => prev + 1);
         } catch (e) {
             toast.error(typeof e === "string" ? e : "Đặt lịch thất bại");
         } finally {
