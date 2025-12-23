@@ -83,7 +83,7 @@ const CreateBooking = () => {
     const [todayAppointments, setTodayAppointments] = useState([]);
     const [loadingToday, setLoadingToday] = useState(false);
     const [todayError, setTodayError] = useState("");
-    const [refreshTodayKey, setRefreshTodayKey] = useState(0);
+
 
     const [petForm, setPetForm] = useState({
         Ten: "",
@@ -112,12 +112,14 @@ const CreateBooking = () => {
             const petsData = await clientService.getPetsByPhone(p);
             const list = Array.isArray(petsData) ? petsData : [];
             setPets(list);
-
+            
+            setLoadingToday(true);
             const params = { SoDienThoai: p, NgayHen: new Date() };
             const data = await bookingService.getTodayAppointments(params);
             const appointments = Array.isArray(data) ? data : [];
             setTodayAppointments(appointments);
-
+            setLoadingToday(false);
+            
             if (list.length > 0) {
                 const first = list[0];
                 setCustomer({
@@ -199,7 +201,6 @@ const CreateBooking = () => {
             });
 
             toast.success("Đặt lịch thành công");
-            setRefreshTodayKey((prev) => prev + 1);
         } catch (e) {
             toast.error(typeof e === "string" ? e : "Đặt lịch thất bại");
         } finally {
