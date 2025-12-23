@@ -124,7 +124,6 @@ router.get('/tim-toa-thuoc', async (req, res) => {
     const result = await db.request()
       .input('MaToa', sql.Char(15), maToa)
       .execute('sp_TimToaThuocTheoMa');
-    console.log(result.recordsets);
     res.json(result.recordsets);
   } catch (err) {
     console.error("Error GET /lay-toa-thuoc:", err);

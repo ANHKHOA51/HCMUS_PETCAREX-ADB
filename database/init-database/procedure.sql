@@ -7,6 +7,20 @@ GO
 
 -- 1. Tạo lịch hẹn [cite: 3]
 GO
+CREATE OR ALTER PROCEDURE sp_TraCuuLichHenTheoSDT
+    @SDT CHAR(10),  
+    @NgayHen DATE
+AS
+BEGIN
+    -- Procedure logic here
+    SELECT PDL.* FROM PHIEUDATLICH PDL
+    JOIN THUCUNG TC ON PDL.mathucung = TC.mathucung
+    JOIN KHACHHANG KH ON TC.makhachhang = KH.makhachhang
+    WHERE KH.sodienthoai = @SDT
+      AND PDL.ngayden = @NgayHen;
+END;
+
+GO
 CREATE OR ALTER PROCEDURE sp_DatLichKham
     @MaPhieuDatLich CHAR(15),
     @MaThuCung CHAR(15),
@@ -24,7 +38,7 @@ BEGIN
     -- Tạo mã phiếu (Tự động hoặc xử lý ở backend, ở đây giả sử trigger tự sinh hoặc truyền vào)
     -- Demo insert đơn giản theo source
     INSERT INTO PHIEUDATLICH (maphieudatlich, machinhanh, mathucung, ngaydat, ngayden, thoigianden)
-    VALUES (@MaPhieuDatLich, @MaChiNhanh, @MaThuCung, CAST(GETDATE() AS DATE),  @NgayDen, @ThoiGianDen);
+    VALUES (@MaPhieuDatLich, @MaChiNhanh, @MaThuCung, CAST(GETDATE() AS DATE), CAST(@NgayDen AS DATE), @ThoiGianDen);
 END;
 GO
 
