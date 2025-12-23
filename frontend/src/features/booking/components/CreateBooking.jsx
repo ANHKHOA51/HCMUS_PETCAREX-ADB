@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     AlertCircle,
+    Calendar,
     CheckCircle,
     PawPrint,
     Phone,
@@ -30,6 +31,41 @@ const getNowDateTimeStrings = () => {
     return { date, time };
 };
 
+const formatTimeDisplay = (value) => {
+    if (!value) return "--:--";
+    if (typeof value === "string") {
+        const match = value.match(/^\d{2}:\d{2}/);
+        if (match) return match[0];
+        const asDate = new Date(value);
+        if (!Number.isNaN(asDate.getTime())) {
+            return `${pad2(asDate.getHours())}:${pad2(asDate.getMinutes())}`;
+        }
+    }
+    if (typeof value === "number") {
+        const asDate = new Date(value);
+        if (!Number.isNaN(asDate.getTime())) {
+            return `${pad2(asDate.getHours())}:${pad2(asDate.getMinutes())}`;
+        }
+    }
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        return `${pad2(value.getHours())}:${pad2(value.getMinutes())}`;
+    }
+    return String(value);
+};
+
+const formatDateDisplay = (value) => {
+    if (!value) return "";
+    const asDate = new Date(value);
+    if (!Number.isNaN(asDate.getTime())) {
+        return asDate.toLocaleDateString();
+    }
+    if (typeof value === "string") {
+        const [datePart] = value.split("T");
+        return datePart || value;
+    }
+    return String(value);
+};
+
 const CreateBooking = () => {
     const { user } = useAuth();
     const branchId = useMemo(() => user?.chinhanh || user?.machinhanh || null, [user]);
@@ -43,6 +79,11 @@ const CreateBooking = () => {
     const [loadingCreatePet, setLoadingCreatePet] = useState(false);
     const [loadingBooking, setLoadingBooking] = useState(false);
     const [error, setError] = useState("");
+
+    const [todayAppointments, setTodayAppointments] = useState([]);
+    const [loadingToday, setLoadingToday] = useState(false);
+    const [todayError, setTodayError] = useState("");
+    const [refreshTodayKey, setRefreshTodayKey] = useState(0);
 
     const [petForm, setPetForm] = useState({
         Ten: "",
@@ -71,6 +112,11 @@ const CreateBooking = () => {
             const petsData = await clientService.getPetsByPhone(p);
             const list = Array.isArray(petsData) ? petsData : [];
             setPets(list);
+
+            const params = { SoDienThoai: p, NgayHen: new Date() };
+            const data = await bookingService.getTodayAppointments(params);
+            const appointments = Array.isArray(data) ? data : [];
+            setTodayAppointments(appointments);
 
             if (list.length > 0) {
                 const first = list[0];
@@ -144,7 +190,7 @@ const CreateBooking = () => {
 
         setLoadingBooking(true);
         try {
-            const date = new Date();
+            const date = new Date().toLocaleString('sv-SE');
             await bookingService.createAppointment({
                 MaThuCung: selectedPetId,
                 MaChiNhanh: branchId,
@@ -153,6 +199,7 @@ const CreateBooking = () => {
             });
 
             toast.success("Đặt lịch thành công");
+            setRefreshTodayKey((prev) => prev + 1);
         } catch (e) {
             toast.error(typeof e === "string" ? e : "Đặt lịch thất bại");
         } finally {
@@ -223,6 +270,55 @@ const CreateBooking = () => {
                             <CheckCircle className="h-5 w-5" />
                             Ready
                         </div>
+                    </div>
+                )}
+            </div>
+            {/* Today's Appointments */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <div className="p-2 bg-indigo-50 rounded-xl">
+                            <Calendar className="text-indigo-600" size={18} />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-semibold text-gray-900">Hôm nay</h2>
+                            <p className="text-sm text-gray-500">Danh sách lịch hẹn trong ngày</p>
+                        </div>
+                    </div>
+                    <div className="text-sm text-gray-500">{todayAppointments.length} lịch hẹn</div>
+                </div>
+
+                {loadingToday ? (
+                    <div className="text-sm text-gray-500">Đang tải danh sách...</div>
+                ) : todayError ? (
+                    <div className="text-sm text-red-600">{todayError}</div>
+                ) : todayAppointments.length === 0 ? (
+                    <div className="text-sm text-gray-500">Chưa có lịch hẹn nào hôm nay.</div>
+                ) : (
+                    <div className="space-y-4">
+                        {todayAppointments.map((appointment) => (
+                            <div
+                                key={appointment.maphieudatlich}
+                                className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 p-4 rounded-2xl border border-gray-100"
+                            >
+                                <div className="flex flex-col">
+                                    <div className="font-semibold text-gray-900">
+                                        {formatTimeDisplay(appointment.thoigianden)} &middot; {appointment.tenThuCung || "(Không tên)"}
+                                    </div>
+                                    <div className="text-sm text-gray-500">
+                                        {appointment.tenKhachHang || "Khách lẻ"}
+                                        {appointment.sodienthoai ? ` · ${appointment.sodienthoai}` : ""}
+                                    </div>
+                                    <div className="text-xs text-gray-400">
+                                        {formatDateDisplay(appointment.ngayden)} · {appointment.maphieudatlich}
+                                    </div>
+                                </div>
+                                <div className="text-sm text-gray-500 md:text-right">
+                                    <div>{appointment.tenchinhanh || ""}</div>
+                                    <div className="text-xs text-gray-400">{appointment.mathucung}</div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>

@@ -34,8 +34,7 @@ router.post("/", async (req, res) => {
     //   console.error("Error parsing NgayDen:", e);
     //   return res.status(400).json({ message: e.message });
     // }
-    const sqlDatetime = new Date(NgayDen).toISOString().slice(0, 19).replace('T', ' ');
-    console.log("SQL Datetime for NgayDen:", NgayDen.toISOString().split("T")[0]);
+    const sqlDatetime = new Date(NgayDen);
     const MaPhieuDatLich = await generatePrimaryKey("PD");
     const result = await db
       .request()
@@ -59,7 +58,7 @@ router.get("/tra-cuu-hen", async (req, res) => {
   try {
     const result = await db
       .request()
-      .input("SoDienThoai", sql.Char(10), SoDienThoai)
+      .input("SDT", sql.Char(10), SoDienThoai)
       .input("NgayHen", sql.Date, NgayHen)
       .execute("sp_TraCuuLichHenTheoSDT");
     res.json(result.recordset ?? result.recordsets);
