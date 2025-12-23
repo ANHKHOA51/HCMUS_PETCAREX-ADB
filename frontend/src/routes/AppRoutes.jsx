@@ -8,11 +8,10 @@ import GuestDashboardPage from "../pages/guest/GuestDashboardPage";
 import BookingPage from "../pages/guest/BookingPage";
 import ProductPage from "../pages/guest/ProductPage";
 import BranchPage from "../pages/guest/BranchPage";
-import DoctorExamPage from "../pages/doctor/DoctorExamPage";
+import DoctorExamPage from "../pages/doctor/DoctorExamPage_copy";
 import DoctorPrescriptionPage from "../pages/doctor/DoctorPrescriptionPage";
 import ManagerDashboardPage from "../pages/manager/ManagerDashboardPage";
 import ReceptionistDashboardPage from "../pages/receptionist/ReceptionistDashboardPage";
-
 
 // Layouts
 import MainLayout from "../layouts/MainLayout";
@@ -29,13 +28,19 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   // Normalize user roles to an array
   const userRoles = Array.isArray(user?.roles)
     ? user.roles
-    : (user?.role ? [user.role] : []);
+    : user?.role
+    ? [user.role]
+    : [];
 
   // Normalize allowedRoles to an array
-  const requiredRoles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+  const requiredRoles = Array.isArray(allowedRoles)
+    ? allowedRoles
+    : [allowedRoles];
 
   // Check if user has at least one of the required roles
-  const hasPermission = requiredRoles.length === 0 || requiredRoles.some(role => userRoles.includes(role));
+  const hasPermission =
+    requiredRoles.length === 0 ||
+    requiredRoles.some((role) => userRoles.includes(role));
 
   if (!hasPermission) {
     return <Navigate to="/login" replace />;
