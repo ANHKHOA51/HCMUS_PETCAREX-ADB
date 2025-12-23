@@ -112,5 +112,19 @@ router.get('/history', async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+// 12) sp_TimToaThuocTheoMa -> Get Prescription by ID
+router.get('/tim-toa-thuoc', async (req, res) => {
+  const maToa = req.query.id;
+  try {
+    const result = await db.request()
+      .input('MaToa', sql.Char(15), maToa)
+      .execute('sp_TimToaThuocTheoMa');
+    console.log(result.recordsets);
+    res.json(result.recordsets);
+  } catch (err) {
+    console.error("Error GET /lay-toa-thuoc:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 export default router;

@@ -97,6 +97,9 @@ Content-Type: application/json
 	"GhiChu": "Uống sau ăn"
 }
 
+###
+GET {{baseUrl}}/medical/tim-toa-thuoc?id=TT2512111821001
+
 ### Note: if "MaToa" is null/empty, server generates new "MaToa" (prefix TT)
 
 ### 4) sp_KhoiTaoHoaDon

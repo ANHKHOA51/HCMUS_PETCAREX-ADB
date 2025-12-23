@@ -87,6 +87,19 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE sp_TimToaThuocTheoMa
+    @MaToa CHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON; 
+    SELECT *
+    FROM TOATHUOC tt
+    LEFT JOIN CHITIETTOATHUOC ct ON tt.matoathuoc = ct.matoathuoc
+    WHERE (@MaToa IS NULL OR LTRIM(RTRIM(@MaToa)) = N'')
+          OR tt.matoathuoc = @MaToa
+    ORDER BY tt.ngayketoa DESC;
+END;  
+
 GO
 CREATE OR ALTER PROCEDURE sp_TimThuocTheoTen
     @Ten NVARCHAR(100),
