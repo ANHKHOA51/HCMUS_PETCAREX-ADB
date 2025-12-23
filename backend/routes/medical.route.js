@@ -64,25 +64,30 @@ router.post("/examinations", async (req, res) => {
 
 // 3) sp_KeToaThuoc -> Create Prescription
 router.post("/prescriptions", async (req, res) => {
-  const { MaToa, MaThuoc, SoLuong, GhiChu } = req.body;
-  const missing = requireFields(req.body, ["MaThuoc", "SoLuong", "GhiChu"]);
-  if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
+  const chitiet = req.body;
 
-  try {
-    const finalMaToa = asNullIfEmpty(MaToa) ?? (await generatePrimaryKey("TT"));
-    const result = await db
-      .request()
-      .input("MaToa", sql.Char(15), finalMaToa)
-      .input("MaThuoc", sql.Char(15), MaThuoc)
-      .input("SoLuong", sql.Int, SoLuong)
-      .input("GhiChu", sql.NVarChar(200), GhiChu)
-      .execute("sp_KeToaThuoc");
+  for (const item of chitiet) {
+    const { MaToa, MaThuoc, SoLuong, GhiChu } = item;
+    const missing = requireFields(item, ["MaThuoc", "SoLuong", "GhiChu"]);
+    if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
 
-    res.json({ MaToa: finalMaToa, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
-  } catch (err) {
-    console.error("Error POST /prescriptions:", err);
-    res.status(500).send("Internal Server Error");
+    try {
+      const finalMaToa = asNullIfEmpty(MaToa) ?? (await generatePrimaryKey("TT"));
+      const result = await db
+        .request()
+        .input("MaToa", sql.Char(15), finalMaToa)
+        .input("MaThuoc", sql.Char(15), MaThuoc)
+        .input("SoLuong", sql.Int, SoLuong)
+        .input("GhiChu", sql.NVarChar(200), GhiChu)
+        .execute("sp_KeToaThuoc");
+
+
+    } catch (err) {
+      console.error("Error POST /prescriptions:", err);
+      res.status(500).send("Internal Server Error");
+    }
   }
+  res.json({ message: "Prescriptions processed successfully", status: "ok" });
 });
 
 // 11) sp_NhacLichTaiKhamNgayMai -> Get Tomorrow Reminders
