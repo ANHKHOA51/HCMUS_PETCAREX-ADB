@@ -8,7 +8,7 @@ import GuestDashboardPage from "../pages/guest/GuestDashboardPage";
 import BookingPage from "../pages/guest/BookingPage";
 import ProductPage from "../pages/guest/ProductPage";
 import BranchPage from "../pages/guest/BranchPage";
-import DoctorExamPage from "../pages/doctor/DoctorExamPage";
+import DoctorExamPage from "../pages/doctor/DoctorExamPage_copy";
 import DoctorPrescriptionPage from "../pages/doctor/DoctorPrescriptionPage";
 import ManagerDashboardPage from "../pages/manager/ManagerDashboardPage";
 import ReceptionistDashboardPage from "../pages/receptionist/ReceptionistDashboardPage";
