@@ -10,5 +10,9 @@ export const bookingService = {
     if (cursor) params.cursor = cursor;
     const response = await axiosClient.get(`/appointments/user/${userId}`, { params });
     return response;
+  },
+
+  getTodayAppointments: (params = {}) => {
+    return axiosClient.get("/appointments/tra-cuu-hen", { params });
   }
 };
