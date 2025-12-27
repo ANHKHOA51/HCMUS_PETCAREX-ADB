@@ -2,13 +2,15 @@ import axiosClient from "@/api/axiosClient";
 
 const medicineService = {
   createPrescription: async (data) => {
-    // data: { mathucung, items: [{ masanpham, soluong, ghichu }] }
-    // Backend expects array of { MaThuoc, SoLuong, GhiChu }
+    // data: { mathucung, items: [{ masanpham, soluong, ghichu }], matoathuoc, machinhanh }
+    // Backend expects array of { MaToa, MaThuoc, SoLuong, GhiChu, MaChiNhanh }
 
     const payload = data.items.map((item) => ({
+      MaToa: data.matoathuoc,
       MaThuoc: item.masanpham,
       SoLuong: item.soluong,
       GhiChu: item.ghichu || "",
+      MaChiNhanh: data.machinhanh,
     }));
 
     const response = await axiosClient.post("/medical/prescriptions", payload);
@@ -36,6 +38,14 @@ const medicineService = {
     });
     // The backend returns recordsets, so we take the first one (which is an array of rows)
     return response[0];
+  },
+
+  getMedicines: async (params) => {
+    return await axiosClient.get("/product", { params });
+  },
+
+  getPrescriptionDetails: async (id) => {
+    return await axiosClient.get(`/medical/prescriptions/${id}`);
   },
 };
 
