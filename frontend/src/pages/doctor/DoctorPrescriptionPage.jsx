@@ -1,28 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import medicineService from "../../services/medicineService";
 import ExaminationForm from "../../features/doctor/components/ExaminationForm";
 import AddMedicineForm from "@/features/doctor/components/AddMedicineForm";
+import PrescriptionList from "@/features/doctor/components/PrescriptionList";
 import { formatCurrency } from "@/utils/format";
+import { AuthContext } from "@/features/auth/context/AuthContext";
+
 // Mock pet data (in real app, this would come from route params or context)
-const mockPetData = {
-  mathucung: "TC001",
-  ten: "Max",
-  owner: "Nguyen Van A",
-};
 
 const DoctorPrescriptionPage = () => {
+  const { user } = useContext(AuthContext);
   const [prescriptionItems, setPrescriptionItems] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-
-  const handleRemoveItem = (masanpham) => {
-    setPrescriptionItems(
-      prescriptionItems.filter((item) => item.masanpham !== masanpham)
-    );
-  };
 
   const calculateTotalPrice = () => {
     return prescriptionItems.reduce((sum, item) => sum + item.total, 0);
@@ -34,29 +27,50 @@ const DoctorPrescriptionPage = () => {
       return;
     }
 
+    if (
+      !examination.trieuchung ||
+      !examination.chandoan ||
+      !examination.ngaytaikham
+    ) {
+      setErrors({
+        submit:
+          "Please fill in all examination details (Symptoms, Diagnosis, Re-examination Date)",
+      });
+      return;
+    }
+
     setLoading(true);
     setErrors({});
     setSuccessMessage("");
 
     try {
-      const prescriptionData = {
-        mathucung: mockPetData.mathucung,
-        items: prescriptionItems.map((item) => ({
-          masanpham: item.masanpham,
-          soluong: item.soluong,
-          ghichu: item.ghichu,
+      // Prepare data for full examination creation
+      const fullExamData = {
+        MaThuCung: selectedPet?.mathucung || mockPetData.mathucung,
+        MaBacSi: user?.manhanvien || "BS001",
+        TrieuChung: examination.trieuchung,
+        ChuanDoan: examination.chandoan,
+        NgayKham: new Date().toISOString().split("T")[0], // Today
+        NgayTaiKham: examination.ngaytaikham,
+        MaChiNhanh: user?.chinhanh || "CN001",
+        PrescriptionItems: prescriptionItems.map((item) => ({
+          MaThuoc: item.masanpham,
+          SoLuong: item.soluong,
+          GhiChu: item.ghichu || "",
         })),
       };
 
-      const result = await medicineService.createPrescription(prescriptionData);
+      const result = await medicineService.createFullExamination(fullExamData);
 
       setSuccessMessage(
-        `Prescription ${result.matoathuoc} saved successfully!`
+        `Saved successfully! Medical Record: ${result.MaHoSo}${
+          result.MaToaThuoc ? `, Prescription: ${result.MaToaThuoc}` : ""
+        }`
       );
       setPrescriptionItems([]);
+      setExamination({ trieuchung: "", chandoan: "", ngaytaikham: "" });
 
       // Reload medicines to reflect updated stock
-      await loadMedicines();
     } catch (error) {
       setErrors({ submit: error.message });
     } finally {
@@ -67,12 +81,19 @@ const DoctorPrescriptionPage = () => {
   const [examination, setExamination] = useState({
     trieuchung: "",
     chandoan: "",
+    ngaytaikham: "",
   });
 
   const [selectedPet, setSelectedPet] = useState(() => {
     const saved = sessionStorage.getItem("doctor_selected_pet");
     return saved ? JSON.parse(saved) : undefined;
   });
+
+  const handleRemoveItem = (masanpham) => {
+    setPrescriptionItems((prevItems) =>
+      prevItems.filter((item) => item.masanpham !== masanpham)
+    );
+  };
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "24px" }}>
@@ -86,11 +107,12 @@ const DoctorPrescriptionPage = () => {
         }}
       >
         <h1 style={{ margin: 0, fontSize: "28px", marginBottom: "8px" }}>
-          Prescription
+          Examination
         </h1>
         <div style={{ fontSize: "16px", opacity: 0.9 }}>
-          <strong>Pet:</strong> {selectedPet.ten} | <strong>Owner:</strong>
-          {selectedPet.hovaten}
+          <strong>Pet:</strong> {selectedPet?.ten || "Unknown"} |{" "}
+          <strong>Owner:</strong>
+          {selectedPet?.hovaten || "Unknown"}
         </div>
       </div>
 
@@ -124,137 +146,7 @@ const DoctorPrescriptionPage = () => {
       />
 
       {/* Prescription List */}
-      {prescriptionItems.length > 0 && (
-        <div
-          style={{
-            background: "white",
-            borderRadius: "12px",
-            padding: "24px",
-            marginBottom: "24px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          }}
-        >
-          <h2 style={{ margin: "0 0 20px 0", fontSize: "20px", color: "#333" }}>
-            Prescription Items
-          </h2>
-
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr
-                  style={{
-                    background: "#f8f9fa",
-                    borderBottom: "2px solid #dee2e6",
-                  }}
-                >
-                  <th
-                    style={{
-                      padding: "12px",
-                      textAlign: "left",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Medicine Name
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      textAlign: "center",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Quantity
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      textAlign: "left",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Usage Instructions
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      textAlign: "right",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Unit Price
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      textAlign: "right",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Total
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      textAlign: "center",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {prescriptionItems.map((item) => (
-                  <tr
-                    key={item.masanpham}
-                    style={{ borderBottom: "1px solid #dee2e6" }}
-                  >
-                    <td style={{ padding: "12px" }}>{item.ten}</td>
-                    <td style={{ padding: "12px", textAlign: "center" }}>
-                      {item.soluong}
-                    </td>
-                    <td style={{ padding: "12px" }}>{item.ghichu}</td>
-                    <td style={{ padding: "12px", textAlign: "right" }}>
-                      {formatCurrency(item.gia)}
-                    </td>
-                    <td
-                      style={{
-                        padding: "12px",
-                        textAlign: "right",
-                        fontWeight: "600",
-                      }}
-                    >
-                      {formatCurrency(item.total)}
-                    </td>
-                    <td style={{ padding: "12px", textAlign: "center" }}>
-                      <button
-                        onClick={() => handleRemoveItem(item.masanpham)}
-                        style={{
-                          padding: "6px 12px",
-                          background: "#dc3545",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "6px",
-                          fontSize: "12px",
-                          cursor: "pointer",
-                        }}
-                        onMouseOver={(e) =>
-                          (e.target.style.background = "#c82333")
-                        }
-                        onMouseOut={(e) =>
-                          (e.target.style.background = "#dc3545")
-                        }
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+      <PrescriptionList items={prescriptionItems} onRemove={handleRemoveItem} />
 
       {/* Footer - Total & Save Button */}
       {prescriptionItems.length > 0 && (
@@ -309,19 +201,13 @@ const DoctorPrescriptionPage = () => {
             style={{
               width: "100%",
               padding: "14px",
-              background: loading ? "#6c757d" : "#28a745",
+              background: loading ? "#667eea" : "#667eea",
               color: "white",
               border: "none",
               borderRadius: "8px",
               fontSize: "16px",
               fontWeight: "600",
               cursor: loading ? "not-allowed" : "pointer",
-            }}
-            onMouseOver={(e) => {
-              if (!loading) e.target.style.background = "#218838";
-            }}
-            onMouseOut={(e) => {
-              if (!loading) e.target.style.background = "#28a745";
             }}
           >
             {loading ? "Saving..." : "Save Prescription"}

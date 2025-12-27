@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { doctorService } from "../services/doctorService";
-import DoctorExamPage from "@/pages/doctor/DoctorExamPage";
 import { formatDateVN } from "../../../utils/format.js";
 import RecordDetail from "./RecordDetail";
 import VaccineDetail from "./VaccineDetail";
@@ -113,10 +112,12 @@ const RecordList = ({ petId }) => {
         </div>
       )}
 
-      {/* <RecordDetail
-        record={selectedRecord}
-        onClose={() => setSelectedRecord(null)}
-      /> */}
+      {selectedRecord && (
+        <RecordDetail
+          record={selectedRecord}
+          onClose={() => setSelectedRecord(null)}
+        />
+      )}
       {selectedVaccine && (
         <VaccineDetail
           vaccine={selectedVaccine}

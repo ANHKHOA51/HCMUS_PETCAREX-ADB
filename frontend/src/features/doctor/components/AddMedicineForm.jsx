@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { formatCurrency } from "@/utils/format";
-import { medicalService } from "../services/medicalService";
+import medicineService from "../../doctor/services/medicalService";
 import { productService } from "../../product/services/productService";
 import { AuthContext } from "../../auth/context/AuthContext";
 import { Check, ChevronsUpDown, Pill } from "lucide-react";
@@ -42,9 +42,10 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
 
   const loadMedicines = async (search = "") => {
     try {
-      const data = await medicalService.getMedicines({
+      const data = await medicineService.getMedicines({
         search: searchTerm, // Từ khóa tìm kiếm
         limit: 20,
+        type: 0, // Only fetch medicines
       });
 
       setMedicines(data.items);
