@@ -5,14 +5,15 @@ import sql from "mssql";
 const router = express.Router();
 
 // 10) sp_TimThuocTheoTen -> Search Medicines (Moved from search.route.js)
-router.get('/medicines/search', async (req, res) => {
+router.get("/medicines/search", async (req, res) => {
   const name = req.query.name;
   const num = req.query.num || 20;
   try {
-    const result = await db.request()
-      .input('Ten', sql.NVarChar(100), name)
-      .input('SoLuong', sql.Int, num)
-      .execute('sp_TimThuocTheoTen');
+    const result = await db
+      .request()
+      .input("Ten", sql.NVarChar(100), name)
+      .input("SoLuong", sql.Int, num)
+      .execute("sp_TimThuocTheoTen");
 
     res.json(result.recordsets);
   } catch (err) {
@@ -29,7 +30,8 @@ router.get("/", async (req, res) => {
 
     const request = db.request();
 
-    let query = "SELECT TOP (@limit) masanpham, ten, gia FROM SANPHAM WHERE 1=1";
+    let query =
+      "SELECT TOP (@limit) masanpham, ten, gia FROM SANPHAM WHERE 1=1";
     request.input("limit", sql.Int, limitValue);
 
     if (search) {
@@ -68,13 +70,10 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db
-      .request()
-      .input("id", sql.Char(15), id)
-      .query(`
+    const result = await db.request().input("id", sql.Char(15), id).query(`
                 SELECT * FROM SANPHAM WHERE masanpham = @id;
                 
-                SELECT cn.tenchinhanh, cn.diachi, stk.soluongtonkho 
+                SELECT cn.tenchinhanh, cn.diachi, stk.soluongtonkho, stk.machinhanh
                 FROM SANPHAMTONKHO stk
                 JOIN CHINHANH cn ON stk.machinhanh = cn.machinhanh
                 WHERE stk.masanpham = @id;
