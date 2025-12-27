@@ -117,22 +117,40 @@ END;
 GO
 CREATE OR ALTER PROCEDURE sp_TimThuocTheoTen
     @Ten NVARCHAR(100),
+
+    -- Cursor
+    @CursorTen NVARCHAR(255) = NULL,
+    @CursorMaSanPham CHAR(15) = NULL,
+
     @SoLuong INT = 20
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF @SoLuong IS NULL OR @SoLuong <= 0 SET @SoLuong = 20;
+    IF @SoLuong IS NULL OR @SoLuong <= 0
+        SET @SoLuong = 20;
 
-    -- Chỉ tìm trong THUOC (subset của SANPHAM)
-    SELECT TOP (@SoLuong) *
+    SELECT TOP (@SoLuong)
+        sp.*
     FROM SANPHAM sp
-    INNER JOIN THUOC t ON t.masanpham = sp.masanpham
-    WHERE (@Ten IS NULL OR LTRIM(RTRIM(@Ten)) = N'')
-          OR sp.ten LIKE N'%' + @Ten + N'%'
-    ORDER BY sp.ten ASC;
+    INNER JOIN THUOC t 
+        ON t.masanpham = sp.masanpham
+    WHERE
+        (
+            @Ten IS NULL 
+            OR LTRIM(RTRIM(@Ten)) = N''
+            OR sp.ten LIKE N'%' + @Ten + N'%'
+        )
+        AND
+        (
+            @CursorTen IS NULL
+            OR sp.ten > @CursorTen
+            OR (sp.ten = @CursorTen AND sp.masanpham > @CursorMaSanPham)
+        )
+    ORDER BY sp.ten ASC, sp.masanpham ASC;
 END;
 GO
+
 
 -- =======================================================
 -- NHÓM 3: QUẢN LÝ HÓA ĐƠN & THANH TOÁN
@@ -363,21 +381,72 @@ GO
 GO
 CREATE OR ALTER PROCEDURE sp_TraCuuHosoBenhAn
     @MaThuCung CHAR(15),
-    @SoLuongHoso INT
+
+    -- Cursor theo ngày (giữ nguyên)
+    @CursorNgayKham DATE = NULL,
+    @CursorNgayTiem DATE = NULL
 AS
 BEGIN
-    -- Trả về 2 result sets
-    -- 1. Hồ sơ bệnh án
-    SELECT TOP (@SoLuongHoso) * FROM HOSOBENHAN 
-    WHERE mathucung = @MaThuCung 
+    SET NOCOUNT ON;
+
+    DECLARE @NgayKetThucKham DATE;
+    DECLARE @NgayBatDauKham DATE;
+
+    DECLARE @NgayKetThucTiem DATE;
+    DECLARE @NgayBatDauTiem DATE;
+
+    /* =========================
+       XÁC ĐỊNH CURSOR HỒ SƠ
+       ========================= */
+    IF @CursorNgayKham IS NULL
+    BEGIN
+        SELECT @NgayKetThucKham = MAX(ngaykham)
+        FROM HOSOBENHAN
+        WHERE mathucung = @MaThuCung;
+    END
+    ELSE
+    BEGIN
+        SET @NgayKetThucKham = @CursorNgayKham;
+    END
+
+    SET @NgayBatDauKham = DATEADD(DAY, -2, @NgayKetThucKham);
+
+    /* =========================
+       XÁC ĐỊNH CURSOR TIÊM
+       ========================= */
+    IF @CursorNgayTiem IS NULL
+    BEGIN
+        SELECT @NgayKetThucTiem = MAX(ngaytiem)
+        FROM LICHSUTIEM
+        WHERE mathucung = @MaThuCung;
+    END
+    ELSE
+    BEGIN
+        SET @NgayKetThucTiem = @CursorNgayTiem;
+    END
+
+    SET @NgayBatDauTiem = DATEADD(DAY, -2, @NgayKetThucTiem);
+
+    /* =========================
+       1. HỒ SƠ BỆNH ÁN (3 NGÀY)
+       ========================= */
+    SELECT *
+    FROM HOSOBENHAN
+    WHERE mathucung = @MaThuCung
+      AND ngaykham BETWEEN @NgayBatDauKham AND @NgayKetThucKham
     ORDER BY ngaykham DESC;
 
-    -- 2. Lịch sử tiêm
-    SELECT TOP (@SoLuongHoso) * FROM LICHSUTIEM 
-    WHERE mathucung = @MaThuCung 
+    /* =========================
+       2. LỊCH SỬ TIÊM (3 NGÀY)
+       ========================= */
+    SELECT *
+    FROM LICHSUTIEM
+    WHERE mathucung = @MaThuCung
+      AND ngaytiem BETWEEN @NgayBatDauTiem AND @NgayKetThucTiem
     ORDER BY ngaytiem DESC;
 END;
 GO
+
 
 -- 11. Nhắc lịch tái khám ngày mai [cite: 13]
 GO

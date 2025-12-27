@@ -4,17 +4,36 @@ import sql from "mssql";
 
 const router = express.Router();
 
-// 10) sp_TimThuocTheoTen -> Search Medicines (Moved from search.route.js)
-router.get('/medicines/search', async (req, res) => {
-  const name = req.query.name;
-  const num = req.query.num || 20;
-  try {
-    const result = await db.request()
-      .input('Ten', sql.NVarChar(100), name)
-      .input('SoLuong', sql.Int, num)
-      .execute('sp_TimThuocTheoTen');
+// 10) sp_TimThuocTheoTen -> Search Medicines with cursor pagination
+// Query:
+//   name: optional, partial medicine name
+//   limit: optional, default 20 (maps to @SoLuong)
+//   cursorTen: optional, last "ten" value from previous page
+//   cursorMaSanPham: optional, last "masanpham" from previous page
+router.get("/medicines/search", async (req, res) => {
+  const { name, limit, cursorTen, cursorMaSanPham } = req.query;
+  const pageSize = parseInt(limit, 10) || 20;
 
-    res.json(result.recordsets);
+  try {
+    const request = db.request();
+
+    request.input("Ten", sql.NVarChar(100), name ?? null);
+    request.input("CursorTen", sql.NVarChar(255), cursorTen ?? null);
+    request.input("CursorMaSanPham", sql.Char(15), cursorMaSanPham ?? null);
+    request.input("SoLuong", sql.Int, pageSize);
+
+    const result = await request.execute("sp_TimThuocTheoTen");
+    const items = result.recordset ?? result.recordsets?.[0] ?? [];
+
+    let nextCursorTen = null;
+    let nextCursorMaSanPham = null;
+    if (items.length > 0) {
+      const last = items[items.length - 1];
+      nextCursorTen = last.ten ?? null;
+      nextCursorMaSanPham = last.masanpham ?? null;
+    }
+
+    res.json({ items, nextCursorTen, nextCursorMaSanPham });
   } catch (err) {
     console.error("Error GET /medicines/search:", err);
     res.status(500).send("Internal Server Error");

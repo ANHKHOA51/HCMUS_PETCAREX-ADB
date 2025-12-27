@@ -101,17 +101,36 @@ router.get("/reminders/tomorrow", async (_req, res) => {
   }
 });
 
-// 10) sp_TraCuuHosoBenhAn -> Get Medical History (Moved from search.route.js)
-router.get('/history', async (req, res) => {
-  const pet_id = req.query.id;
-  const num = req.query.num;
-  try {
-    const result = await db.request()
-      .input('MaThuCung', sql.Char(15), pet_id)
-      .input('SoLuongHoso', sql.Int, num)
-      .execute('sp_TraCuuHosoBenhAn');
+// 10) sp_TraCuuHosoBenhAn -> Get Medical & Vaccine History
+// Query params:
+//   id: MaThuCung (required)
+//   cursorNgayKham: optional, YYYY-MM-DD, paginate medical records
+//   cursorNgayTiem: optional, YYYY-MM-DD, paginate vaccine history
+router.get("/history", async (req, res) => {
+  const { id, cursorNgayKham, cursorNgayTiem } = req.query;
 
-    res.json(result.recordsets);
+  if (!id) {
+    return res.status(400).json({ message: "Missing query param: id (MaThuCung)" });
+  }
+
+  try {
+    const request = db.request();
+    request.input("MaThuCung", sql.Char(15), id);
+
+    if (cursorNgayKham) {
+      request.input("CursorNgayKham", sql.Date, cursorNgayKham);
+    }
+
+    if (cursorNgayTiem) {
+      request.input("CursorNgayTiem", sql.Date, cursorNgayTiem);
+    }
+
+    const result = await request.execute("sp_TraCuuHosoBenhAn");
+
+    const medicalRecords = result.recordsets?.[0] ?? [];
+    const vaccineHistory = result.recordsets?.[1] ?? [];
+
+    res.json({ medicalRecords, vaccineHistory });
   } catch (err) {
     console.error("Error GET /history:", err);
     res.status(500).send("Internal Server Error");
