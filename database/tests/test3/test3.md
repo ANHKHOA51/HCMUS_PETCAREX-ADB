@@ -36,7 +36,7 @@ WHERE ngaytaikham = GETDATE();
 - **Elapsed Time:** 26 ms
 
 **Execution Plan:**
-- **Operation:** Clustered Index Scan (Full Table Scan)
+- **Operation:** Clustered Index Scan (Full Clustered index scan)
 - **Cost:** 1.626
 - **Rows:** 0 returned (EstimateRows: 134.97)
 
@@ -46,7 +46,7 @@ WHERE ngaytaikham = GETDATE();
    - WHERE predicate: ngaytaikham = GETDATE()
 
 **Analysis:**
-- Full table scan across entire medical records table
+- Full Clustered index scan across entire medical records table
 - Scanned 2,058 pages to find today's follow-up appointments
 - High I/O cost for date-based filtering without index
 
@@ -90,7 +90,7 @@ WHERE ngaytaikham = GETDATE();
 | **CPU Time** | 12 ms | 0 ms | **100% reduction** ✅ |
 | **Elapsed Time** | 26 ms | 0 ms | **100% reduction** ✅ |
 | **Query Cost** | 1.626 | 0.00328 | **99.8% reduction** ✅ |
-| **Operation** | Table Scan | Index Seek | **Optimal** ✅ |
+| **Operation** | Clustered index scan | Index Seek | **Optimal** ✅ |
 
 ---
 

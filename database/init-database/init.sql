@@ -384,15 +384,15 @@ GO
 -- 1. BẢNG HOADON: Filtered Index
 -- Mục đích: Tăng tốc kiểm tra trạng thái Processing/Pending
 -- =============================================
-IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_HOADON_TrangThai_Active')
-BEGIN
-    CREATE NONCLUSTERED INDEX IX_HOADON_TrangThai_Active
-    ON HOADON(trangthai)
-    INCLUDE (makhachhang, machinhanh) -- Include để hỗ trợ sp_HoanTatThanhToan lấy dữ liệu nhanh
-    WHERE trangthai IN (0, 1); -- Chỉ index hóa đơn đang hoạt động
+-- IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_HOADON_TrangThai_Active')
+-- BEGIN
+--     CREATE NONCLUSTERED INDEX IX_HOADON_TrangThai_Active
+--     ON HOADON(trangthai)
+--     INCLUDE (makhachhang, machinhanh) -- Include để hỗ trợ sp_HoanTatThanhToan lấy dữ liệu nhanh
+--     WHERE trangthai IN (0, 1); -- Chỉ index hóa đơn đang hoạt động
     
-    PRINT 'Da tao index IX_HOADON_TrangThai_Active';
-END
+--     PRINT 'Da tao index IX_HOADON_TrangThai_Active';
+-- END
 
 -- =============================================
 -- 2. BẢNG CHITIETHOADON: Covering Index
@@ -450,10 +450,49 @@ END
 -- 5. BẢNG CHITIETTOATHUOC: FK Index
 -- Mục đích: Tăng tốc JOIN sang TOATHUOC khi xem chi tiết toa thuốc
 -- =============================================
-IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_CHITIETTOATHUOC_matoa')
-BEGIN
-    CREATE NONCLUSTERED INDEX IX_CHITIETTOATHUOC_matoa
-    ON CHITIETTOATHUOC(matoathuoc)
+-- IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_CHITIETTOATHUOC_matoa')
+-- BEGIN
+--     CREATE NONCLUSTERED INDEX IX_CHITIETTOATHUOC_matoa
+--     ON CHITIETTOATHUOC(matoathuoc)
     
-    PRINT 'Da tao index IX_CHITIETTOATHUOC_matoa';
+--     PRINT 'Da tao index IX_CHITIETTOATHUOC_matoa';
+-- END
+
+-- =============================================
+-- 7. BẢNG THUCUNG: FK Index
+-- Mục đích: Tăng tốc tra cứu thú cưng của khách hàng (sp_TraCuuThuCung_SDT)
+-- =============================================
+IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_THUCUNG_MaKhachHang')
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_THUCUNG_MaKhachHang
+    ON THUCUNG(makhachhang);
+    
+    PRINT 'Da tao index IX_THUCUNG_MaKhachHang';
+END
+
+-- =============================================
+-- 8. BẢNG HOSOBENHAN: FK Index
+-- Mục đích: Tăng tốc tra cứu lịch sử bệnh án (sp_TraCuuHosoBenhAn)
+-- =============================================
+IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_HOSOBENHAN_MaThuCung')
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_HOSOBENHAN_MaThuCung
+    ON HOSOBENHAN(mathucung)
+    INCLUDE (ngaykham, chuandoan);
+    
+    PRINT 'Da tao index IX_HOSOBENHAN_MaThuCung';
+END
+
+-- =============================================
+-- 9. BẢNG HOADON: Reporting Index
+-- Mục đích: Tăng tốc báo cáo doanh thu (sp_TongDoanhThu, sp_BaoCaoDoanhThuChiNhanh)
+-- =============================================
+IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_HOADON_Completed_Report')
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_HOADON_Completed_Report
+    ON HOADON(ngaylap)
+    INCLUDE (sotienphaitra, machinhanh)
+    WHERE trangthai = 2; -- Chỉ index hóa đơn đã hoàn thành
+    
+    PRINT 'Da tao index IX_HOADON_Completed_Report';
 END

@@ -36,7 +36,7 @@ WHERE mahoadon = 'HD2512101806000';
 - **Elapsed Time:** 96 ms
 
 **Execution Plan:**
-- **Operation:** Clustered Index Scan (Full Table Scan)
+- **Operation:** Clustered Index Scan (Full Clustered index scan)
 - **Cost:** 3.562
 - **Rows:** 3 returned (EstimateRows: 3.43)
 
@@ -46,7 +46,7 @@ WHERE mahoadon = 'HD2512101806000';
    - WHERE predicate filters rows during scan
 
 **Analysis:**
-- Full table scan across entire CHITIETHOADON table
+- Full Clustered index scan across entire CHITIETHOADON table
 - Scanned 3,872 pages to find 3 matching rows
 - High I/O cost due to scanning all invoice detail records
 
@@ -89,7 +89,7 @@ WHERE mahoadon = 'HD2512101806000';
 | **CPU Time** | 82 ms | 0 ms | **100% reduction** ✅ |
 | **Elapsed Time** | 96 ms | 0 ms | **100% reduction** ✅ |
 | **Query Cost** | 3.562 | 0.00329 | **99.9% reduction** ✅ |
-| **Operation** | Table Scan | Index Seek | **Optimal** ✅ |
+| **Operation** | Clustered index scan | Index Seek | **Optimal** ✅ |
 
 ---
 

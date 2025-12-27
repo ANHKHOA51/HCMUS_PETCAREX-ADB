@@ -36,7 +36,7 @@ WHERE trangthai = 0 AND ngaytiemdukien = GETDATE();
 - **Elapsed Time:** 4 ms
 
 **Execution Plan:**
-- **Operation:** Clustered Index Scan (Full Table Scan)
+- **Operation:** Clustered Index Scan (Full Clustered index scan)
 - **Cost:** 0.185
 - **Rows:** 0 returned (EstimateRows: 1.0)
 
@@ -47,7 +47,7 @@ WHERE trangthai = 0 AND ngaytiemdukien = GETDATE();
    - Filters rows during scan
 
 **Analysis:**
-- Full table scan across vaccination schedule details
+- Full Clustered index scan across vaccination schedule details
 - Scanned 215 pages to find matching appointments
 - Two-condition filter without index support
 
@@ -91,7 +91,7 @@ WHERE trangthai = 0 AND ngaytiemdukien = GETDATE();
 | **CPU Time** | 4 ms | 1 ms | **75% reduction** ✅ |
 | **Elapsed Time** | 4 ms | 0 ms | **100% reduction** ✅ |
 | **Query Cost** | 0.185 | 0.00328 | **98.2% reduction** ✅ |
-| **Operation** | Table Scan | Index Seek | **Optimal** ✅ |
+| **Operation** | Clustered index scan | Index Seek | **Optimal** ✅ |
 
 ---
 

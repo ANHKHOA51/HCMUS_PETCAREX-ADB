@@ -1,0 +1,41 @@
+USE PETCAREX
+GO
+
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+SET NOCOUNT ON;
+
+-- Create index
+IF NOT EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_HOADON_Completed_Report')
+BEGIN
+    CREATE NONCLUSTERED INDEX IX_HOADON_Completed_Report
+    ON HOADON(ngaylap)
+    INCLUDE (sotienphaitra, machinhanh)
+    WHERE trangthai = 2; 
+    
+    PRINT 'Da tao index IX_HOADON_Completed_Report';
+END
+GO
+
+-- Clear cache
+CHECKPOINT;
+DBCC DROPCLEANBUFFERS; 
+DBCC FREEPROCCACHE;    
+GO
+
+SET STATISTICS IO ON;   
+SET STATISTICS TIME ON; 
+SET STATISTICS PROFILE ON; 
+
+PRINT '=== TEST 9: IX_HOADON_Completed_Report - WITH INDEX ===';
+
+-- Test query (sp_TongDoanhThu)
+SELECT SUM(CAST(hd.sotienphaitra AS BIGINT)) AS TongDoanhThu
+FROM HOADON hd
+WHERE hd.trangthai = 2 
+  AND hd.ngaylap BETWEEN '2024-01-01' AND '2025-12-31';
+
+SET STATISTICS PROFILE OFF; 
+SET STATISTICS TIME OFF; 
+SET STATISTICS IO OFF; 
+GO
