@@ -1,11 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchPets from "@/features/doctor/components/SearchPets";
 import SelectedPet from "@/features/doctor/components/SelectedPet";
 
 const DoctorExamPage = () => {
-  const [selectedPet, setSelectedPet] = useState();
+  const [selectedPet, setSelectedPet] = useState(() => {
+    const saved = sessionStorage.getItem("doctor_selected_pet");
+    return saved ? JSON.parse(saved) : undefined;
+  });
+
+  useEffect(() => {
+    if (selectedPet) {
+      sessionStorage.setItem(
+        "doctor_selected_pet",
+        JSON.stringify(selectedPet)
+      );
+    } else {
+      sessionStorage.removeItem("doctor_selected_pet");
+    }
+  }, [selectedPet]);
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">

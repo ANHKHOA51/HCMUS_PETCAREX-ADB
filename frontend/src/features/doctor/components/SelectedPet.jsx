@@ -7,35 +7,7 @@ import { calculateAge } from "../../../utils/format.js";
 
 const SelectedPet = ({ pet }) => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const [examData, setExamData] = useState({
-    trieuchung: "",
-    chandoan: "",
-    ghichu: "",
-  });
-  const [prescriptions, setPrescriptions] = useState([]);
-  const handlePatientSelect = (patient) => {
-    setSelectedPatient(patient);
-    // Reset exam data
-    setExamData({ trieuchung: "", chandoan: "", ghichu: "" });
-    setPrescriptions([]);
-  };
-
-  // const handleSaveExam = () => {
-  //   if (!examData.trieuchung || !examData.chandoan) {
-  //     alert("Please fill in symptoms and diagnosis");
-  //     return;
-  //   }
-
-  //   alert("Examination record saved successfully!");
-  //   // In real app, save to backend
-  //   console.log("Exam data:", {
-  //     patient: selectedPatient,
-  //     exam: examData,
-  //     prescriptions,
-  //   });
-  // };
+  
   return (
     <div className="lg:col-span-2">
       {pet ? (
@@ -75,6 +47,16 @@ const SelectedPet = ({ pet }) => {
                 </span>
                 <span className="ml-2 text-gray-900">{pet.sodienthoai}</span>
               </div>
+            </div>
+
+            <div className="flex justify-end mb-6">
+              <button
+                onClick={() => navigate("/doctor/prescription")}
+                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                <span className="font-medium">Create Prescription</span>
+              </button>
             </div>
           </div>
           <RecordList petId={pet.mathucung} />
