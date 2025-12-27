@@ -1,11 +1,7 @@
 import {
   Dialog,
   DialogContent,
-  DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-// import { useProduct } from "../hooks/useProducts";
-import { Loader2, Store } from "lucide-react";
 import { productService } from "@/features/product/services/productService";
 import { formatDateVN } from "@/utils/format";
 import { useEffect, useState } from "react";
