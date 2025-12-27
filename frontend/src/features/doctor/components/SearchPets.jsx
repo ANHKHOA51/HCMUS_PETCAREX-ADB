@@ -1,12 +1,40 @@
 import { Search } from "lucide-react";
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import { doctorService } from "../services/doctorService.js";
 import { Underline } from "lucide-react";
 
 const SearchPets = memo(({ onSelectedPet }) => {
-  const [search, setSearch] = useState("");
-  const [petsList, setPetsList] = useState([]);
-  const [petS, setPetS] = useState("");
+  const [search, setSearch] = useState(
+    () => sessionStorage.getItem("doctor_search_term") || ""
+  );
+  const [petsList, setPetsList] = useState(() => {
+    const saved = sessionStorage.getItem("doctor_search_results");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [petS, setPetS] = useState(() => {
+    const saved = sessionStorage.getItem("doctor_search_selected_pet");
+    return saved ? JSON.parse(saved) : "";
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("doctor_search_term", search);
+  }, [search]);
+
+  useEffect(() => {
+    sessionStorage.setItem("doctor_search_results", JSON.stringify(petsList));
+  }, [petsList]);
+
+  useEffect(() => {
+    if (petS) {
+      sessionStorage.setItem(
+        "doctor_search_selected_pet",
+        JSON.stringify(petS)
+      );
+    } else {
+      sessionStorage.removeItem("doctor_search_selected_pet");
+    }
+  }, [petS]);
+
   const onEnter = async () => {
     if (search.length === 10) {
       const pets = await doctorService.getPetsByPhone(search);

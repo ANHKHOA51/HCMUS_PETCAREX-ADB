@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import SearchBar from "@/components/SearchBar";
 import { Loader2 } from "lucide-react";
 import { doctorService } from "../services/doctorService";
 import DoctorExamPage from "@/pages/doctor/DoctorExamPage";
@@ -113,11 +112,6 @@ const RecordList = ({ petId }) => {
           <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
         </div>
       )}
-
-      {/* <ProductDetail
-        productId={selectedProductId}
-        onClose={() => setSelectedProductId(null)}
-      /> */}
 
       {/* <RecordDetail
         record={selectedRecord}
