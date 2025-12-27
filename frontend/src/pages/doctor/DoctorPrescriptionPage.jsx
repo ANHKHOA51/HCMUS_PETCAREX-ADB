@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useContext } from "react";
-import medicineService from "../../services/medicineService";
+import medicineService from "../../features/doctor/services/medicalService";
 import ExaminationForm from "../../features/doctor/components/ExaminationForm";
 import AddMedicineForm from "@/features/doctor/components/AddMedicineForm";
 import PrescriptionList from "@/features/doctor/components/PrescriptionList";
@@ -44,33 +44,39 @@ const DoctorPrescriptionPage = () => {
     setSuccessMessage("");
 
     try {
-      // Prepare data for full examination creation
-      const fullExamData = {
+      let maToaThuoc = null;
+
+      // 1. Create Prescription (if items exist)
+      if (prescriptionItems.length > 0) {
+        // Let backend generate the ID
+        const presResult = await medicineService.createPrescription({
+          items: prescriptionItems,
+          machinhanh: user?.chinhanh || "CN001",
+        });
+        maToaThuoc = presResult.matoathuoc;
+      }
+
+      // 2. Create Examination Record
+      const examData = {
         MaThuCung: selectedPet?.mathucung || mockPetData.mathucung,
         MaBacSi: user?.manhanvien || "BS001",
         TrieuChung: examination.trieuchung,
         ChuanDoan: examination.chandoan,
         NgayKham: new Date().toISOString().split("T")[0], // Today
         NgayTaiKham: examination.ngaytaikham,
+        MaToaThuoc: maToaThuoc,
         MaChiNhanh: user?.chinhanh || "CN001",
-        PrescriptionItems: prescriptionItems.map((item) => ({
-          MaThuoc: item.masanpham,
-          SoLuong: item.soluong,
-          GhiChu: item.ghichu || "",
-        })),
       };
 
-      const result = await medicineService.createFullExamination(fullExamData);
+      const result = await medicineService.createExamination(examData);
 
       setSuccessMessage(
         `Saved successfully! Medical Record: ${result.MaHoSo}${
-          result.MaToaThuoc ? `, Prescription: ${result.MaToaThuoc}` : ""
+          maToaThuoc ? `, Prescription: ${maToaThuoc}` : ""
         }`
       );
       setPrescriptionItems([]);
       setExamination({ trieuchung: "", chandoan: "", ngaytaikham: "" });
-
-      // Reload medicines to reflect updated stock
     } catch (error) {
       setErrors({ submit: error.message });
     } finally {

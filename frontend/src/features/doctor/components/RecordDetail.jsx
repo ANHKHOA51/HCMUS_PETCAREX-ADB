@@ -1,7 +1,6 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
-import medicineService from "@/services/medicineService";
-import { productService } from "@/features/product/services/productService";
+import medicineService from "../../doctor/services/medicalService";
 import { formatDateVN } from "@/utils/format";
 import { Pill } from "lucide-react";
 
@@ -22,29 +21,10 @@ const RecordDetail = ({ record, onClose }) => {
     const fetchPrescription = async () => {
       setLoadingPrescription(true);
       try {
-        // 1. Get prescription items (contains masanpham, soluong, ghichu)
-        const items = await medicineService.getPrescriptionById(
+        const items = await medicineService.getPrescriptionDetails(
           record.matoathuoc
         );
-
-        if (items && items.length > 0) {
-          // 2. Fetch product details for each item to get the name
-          const itemsWithDetails = await Promise.all(
-            items.map(async (item) => {
-              try {
-                const product = await productService.getProductById(
-                  item.masanpham
-                );
-                return { ...item, productName: product?.ten || item.masanpham };
-              } catch (e) {
-                return { ...item, productName: item.masanpham };
-              }
-            })
-          );
-          setPrescription(itemsWithDetails);
-        } else {
-          setPrescription([]);
-        }
+        setPrescription(items || []);
       } catch (error) {
         console.error("Failed to fetch prescription:", error);
       } finally {
@@ -122,7 +102,7 @@ const RecordDetail = ({ record, onClose }) => {
                   <div className="flex items-center gap-2 mb-3">
                     <Pill className="w-5 h-5 text-blue-600" />
                     <h4 className="font-bold text-lg text-gray-900">
-                      Toa thuốc ({record.matoathuoc})
+                      Toa thuốc
                     </h4>
                   </div>
 
@@ -150,7 +130,7 @@ const RecordDetail = ({ record, onClose }) => {
                           {prescription.map((item, index) => (
                             <tr key={index}>
                               <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                                {item.productName}
+                                {item.tenThuoc}
                                 <div className="text-xs text-gray-400 font-normal">
                                   {item.masanpham}
                                 </div>
