@@ -1,18 +1,13 @@
 "use client";
 
-import { useState, useEffect, useContext } from "react";
-import medicineService from "../../features/doctor/services/medicalService";
+import { useState, useEffect } from "react";
+import medicineService from "../../services/medicineService";
 import ExaminationForm from "../../features/doctor/components/ExaminationForm";
 import AddMedicineForm from "@/features/doctor/components/AddMedicineForm";
 import PrescriptionList from "@/features/doctor/components/PrescriptionList";
 import { formatCurrency } from "@/utils/format";
 import { AuthContext } from "@/features/auth/context/AuthContext";
 
-import { useState, useEffect } from "react";
-import medicineService from "../../services/medicineService";
-import ExaminationForm from "../../features/doctor/components/ExaminationForm";
-import AddMedicineForm from "@/features/doctor/components/AddMedicineForm";
-import { formatCurrency } from "@/utils/format";
 // Mock pet data (in real app, this would come from route params or context)
 
 const DoctorPrescriptionPage = () => {
