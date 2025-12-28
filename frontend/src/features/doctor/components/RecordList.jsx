@@ -46,62 +46,71 @@ const RecordList = ({ petId }) => {
 
       {(type === "all" || type === "0") && (
         <div className="space-y-4">
-          {recordList.map((record, index) => {
-            return (
-              <div
-                key={record.mahoso}
-                onClick={() => setSelectedRecord(record)}
-                className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100 flex justify-between items-center group"
-              >
-                <div key={record.mahoso}>
-                  <h4 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                    {record.mahoso}
-                  </h4>
-                  <p className="text-xs text-gray-500">
-                    Ngày khám: {formatDateVN(record.ngaykham)}
-                  </p>
-                </div>
+          {
+            recordList ?
+            recordList.map((record, index) => {
+              return (
+                <div
+                  key={record.mahoso}
+                  onClick={() => setSelectedRecord(record)}
+                  className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100 flex justify-between items-center group"
+                >
+                  <div key={record.mahoso}>
+                    <h4 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                      {record.mahoso}
+                    </h4>
+                    <p className="text-xs text-gray-500">
+                      Ngày khám: {formatDateVN(record.ngaykham)}
+                    </p>
+                  </div>
 
-                <div className="font-bold text-blue-600 text-lg">
-                  Hồ sơ {index + 1}
+                  <div className="font-bold text-blue-600 text-lg">
+                    Hồ sơ {index + 1}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          : <></>
+        }
         </div>
       )}
 
       {(type === "all" || type === "1") && (
         <div className="space-y-4">
-          {vaccineList.map((vaccine, index) => {
-            return (
-              <div
-                key={vaccine.malichsutiem}
-                onClick={() => setSelectedVaccine(vaccine)}
-                className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100 flex justify-between items-center group"
-              >
-                <div key={vaccine.malichsutiem}>
-                  <h4 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                    {vaccine.malichsutiem}
-                  </h4>
-                  <p className="text-xs text-gray-500">
-                    Ngày tiêm: {formatDateVN(vaccine.ngaytiem)}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Mã sản phẩm: {vaccine.masanpham}
-                  </p>
-                </div>
+          {
+            vaccineList ?
+            vaccineList.map((vaccine, index) => {
+              return (
+                <div
+                  key={vaccine.malichsutiem}
+                  onClick={() => setSelectedVaccine(vaccine)}
+                  className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100 flex justify-between items-center group"
+                >
+                  <div key={vaccine.malichsutiem}>
+                    <h4 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                      {vaccine.malichsutiem}
+                    </h4>
+                    <p className="text-xs text-gray-500">
+                      Ngày tiêm: {formatDateVN(vaccine.ngaytiem)}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Mã sản phẩm: {vaccine.masanpham}
+                    </p>
+                  </div>
 
-                <div className="font-bold text-blue-600 text-lg">
-                  Tiêm chủng {index + 1}
+                  <div className="font-bold text-blue-600 text-lg">
+                    Tiêm chủng {index + 1}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          
+          : <></>
+        }
         </div>
       )}
 
-      {!recordList.length && !vaccineList.length && (
+      {!recordList || !vaccineList || (!recordList.length && !vaccineList.length) && (
         <div className="flex justify-center py-4">
           No medical records or vaccination history were found.
         </div>

@@ -33,7 +33,10 @@ const MainLayout = () => {
           { path: "/client/branches", icon: MapPin, label: "Branches" },
         ]
       case ROLES.DOCTOR:
-        return [{ path: "/doctor/pets", icon: Stethoscope, label: "Pets Examination" }, ]
+        return [
+          { path: "/doctor/pets", icon: Stethoscope, label: "Pets Examination" }, 
+          { path: "/doctor/prescription", icon: Stethoscope, label: "Prescription" }, 
+        ]
       case ROLES.MANAGER:
         return [{ path: "/manager/dashboard", icon: BarChart3, label: "Dashboard" }]
       case ROLES.RECEPTIONIST:
