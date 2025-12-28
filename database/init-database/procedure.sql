@@ -1,11 +1,7 @@
 USE PETCAREX
 GO
 
--- =======================================================
--- NHÓM 1: QUẢN LÝ LỊCH HẸN & TIẾP NHẬN
--- =======================================================
-
--- 1. Tạo lịch hẹn [cite: 3]
+-- 1. Tạo lịch hẹn 
 GO
 CREATE OR ALTER PROCEDURE sp_TraCuuLichHenTheoSDT
     @SDT CHAR(10),  
@@ -29,20 +25,12 @@ CREATE OR ALTER PROCEDURE sp_DatLichKham
     @ThoiGianDen TIME(0) -- Đã sửa từ TIMESTAMP sang TIME để khớp với bảng PHIEUDATLICH
 AS
 BEGIN
-    -- Kiểm tra logic: Nếu đặt lịch cho ngày hôm nay mà giờ đã qua thì lỗi
-    -- IF @ThoiGianDen < CAST(GETDATE() AS TIMESTAMP)
-    -- BEGIN
-    --     THROW 50001, N'Giờ đặt lịch không hợp lệ (nhỏ hơn giờ hiện tại).', 1;
-    -- END
-
-    -- Tạo mã phiếu (Tự động hoặc xử lý ở backend, ở đây giả sử trigger tự sinh hoặc truyền vào)
-    -- Demo insert đơn giản theo source
     INSERT INTO PHIEUDATLICH (maphieudatlich, machinhanh, mathucung, ngaydat, ngayden, thoigianden)
     VALUES (@MaPhieuDatLich, @MaChiNhanh, @MaThuCung, CAST(GETDATE() AS DATE), CAST(@NgayDen AS DATE), @ThoiGianDen);
 END;
 GO
 
--- 2. Ghi nhận khám bệnh (Tạo hồ sơ bệnh án) [cite: 5]
+-- 2. Ghi nhận khám bệnh (Tạo hồ sơ bệnh án) 
 GO
 CREATE OR ALTER PROCEDURE sp_GhiNhanKham
     @MaHoSo CHAR(15), -- Thêm tham số này để khớp với PK
@@ -67,11 +55,7 @@ BEGIN
 END;
 GO
 
--- =======================================================
--- NHÓM 2: QUẢN LÝ THUỐC & TOA THUỐC
--- =======================================================
-
--- 3. Kê toa thuốc [cite: 6]
+-- 3. Kê toa thuốc 
 GO
 CREATE OR ALTER PROCEDURE sp_KeToaThuoc
     @MaToa CHAR(15),
@@ -81,21 +65,17 @@ CREATE OR ALTER PROCEDURE sp_KeToaThuoc
 AS
 BEGIN
     SET NOCOUNT ON;
-    -- 1. Kiểm tra thuốc có trong kho hay không (Kiểm tra chung bảng SANPHAMTONKHO hoặc bảng THUOC)
-    -- Lưu ý: Logic này cần check kho của Chi Nhánh cụ thể, ở đây check tạm bảng THUOC theo source
     IF NOT EXISTS (SELECT 1 FROM THUOC WHERE masanpham = @MaThuoc)
     BEGIN
         THROW 50001, N'Mã thuốc không tồn tại trong danh mục.', 1;
     END;
 
-    -- 2. Nếu toa chưa tồn tại --> tạo mới toa thuốc header
     IF NOT EXISTS (SELECT 1 FROM TOATHUOC WHERE matoathuoc = @MaToa)
     BEGIN
         INSERT INTO TOATHUOC (matoathuoc, ngayketoa, gia) 
         VALUES (@MaToa, GETDATE(), 0); -- Giá sẽ tính sau
     END;
 
-    -- 3. Thêm chi tiết toa thuốc
     INSERT INTO CHITIETTOATHUOC (matoathuoc, masanpham, soluong, ghichu)
     VALUES (@MaToa, @MaThuoc, @SoLuong, @GhiChu);
 END;
@@ -149,12 +129,7 @@ BEGIN
 END;
 GO
 
-
--- =======================================================
--- NHÓM 3: QUẢN LÝ HÓA ĐƠN & THANH TOÁN
--- =======================================================
-
--- 4. Khởi tạo hóa đơn mới [cite: 7]
+-- 4. Khởi tạo hóa đơn mới 
 GO
 CREATE OR ALTER PROCEDURE sp_KhoiTaoHoaDon
     @MaHoaDon CHAR(15),
@@ -189,7 +164,7 @@ BEGIN
 END;
 GO
 
--- 5. Thêm chi tiết bán lẻ vào hóa đơn [cite: 8]
+-- 5. Thêm chi tiết bán lẻ vào hóa đơn 
 GO
 CREATE OR ALTER PROCEDURE sp_ThemChiTietHoaDon_BanLe
     @MaChiTiet CHAR(15),
@@ -218,7 +193,7 @@ BEGIN
 END;
 GO
 
--- 6. Thêm chi tiết khám bệnh vào hóa đơn [cite: 9]
+-- 6. Thêm chi tiết khám bệnh vào hóa đơn 
 GO
 CREATE OR ALTER PROCEDURE sp_ThemChiTietHoaDon_KhamBenh
     @MaChiTiet CHAR(15),
@@ -242,8 +217,7 @@ BEGIN
 END;
 GO
 
--- 7. Thêm chi tiết gói tiêm vào hóa đơn [cite: 10]
--- (Đổi tên từ sp_ThemChiTietGoiTiem trong doc để tránh trùng lặp với thủ tục quản lý gói tiêm)
+-- 7. Thêm chi tiết gói tiêm vào hóa đơn 
 GO
 CREATE OR ALTER PROCEDURE sp_ThemChiTietHoaDon_GoiTiem
     @MaChiTiet CHAR(15),
@@ -287,7 +261,7 @@ BEGIN
 END;
 GO
 
--- 8. Chốt hóa đơn (Tính tổng tiền & Áp dụng giảm giá hội viên) [cite: 11]
+-- 8. Chốt hóa đơn (Tính tổng tiền & Áp dụng giảm giá hội viên) 
 GO
 CREATE OR ALTER PROCEDURE sp_ChotHoaDon
     @MaHoaDon CHAR(15)
@@ -317,7 +291,7 @@ BEGIN
 END;
 GO
 
--- 9. Hoàn tất thanh toán [cite: 12]
+-- 9. Hoàn tất thanh toán 
 GO
 CREATE OR ALTER PROCEDURE sp_HoanTatThanhToan
     @MaHoaDon CHAR(15)
@@ -372,11 +346,7 @@ BEGIN
 END
 GO
 
--- =======================================================
--- NHÓM 4: TRA CỨU & NHẮC NHỞ
--- =======================================================
-
--- 10.1. Tra cứu lịch sử khám bệnh & tiêm [cite: 4]
+-- 10.1. Tra cứu lịch sử khám bệnh & tiêm 
 GO
 CREATE OR ALTER PROCEDURE sp_TraCuuThuCung_SDT
     @SDT CHAR(10)
@@ -388,7 +358,7 @@ BEGIN
 END;
 GO
 
--- 10.2. Tra cứu lịch sử khám bệnh & tiêm [cite: 4]
+-- 10.2. Tra cứu lịch sử khám bệnh & tiêm 
 GO
 CREATE OR ALTER PROCEDURE sp_TraCuuHosoBenhAn
     @MaThuCung CHAR(15),
@@ -435,9 +405,7 @@ BEGIN
 END;
 GO
 
-
-
--- 11. Nhắc lịch tái khám ngày mai [cite: 13]
+-- 11. Nhắc lịch tái khám ngày mai 
 GO
 CREATE OR ALTER PROCEDURE sp_NhacLichTaiKhamNgayMai
 AS
@@ -457,7 +425,7 @@ BEGIN
 END;
 GO
 
--- 12. Nhắc lịch tiêm chủng sắp tới [cite: 14]
+-- 12. Nhắc lịch tiêm chủng sắp tới 
 GO
 CREATE OR ALTER PROCEDURE sp_NhacLichTiemChungSapToi
 AS
@@ -483,11 +451,7 @@ BEGIN
 END;
 GO
 
--- =======================================================
--- NHÓM 5: QUẢN LÝ GÓI TIÊM
--- =======================================================
-
--- 13. Tạo gói tiêm mới [cite: 20]
+-- 13. Tạo gói tiêm mới 
 GO
 CREATE OR ALTER PROCEDURE sp_KhoiTaoGoiTiem
     @MaGoi CHAR(15),
@@ -502,7 +466,7 @@ BEGIN
 END;
 GO
 
--- 14. Thêm chi tiết mũi tiêm vào gói (Cấu hình gói) [cite: 21]
+-- 14. Thêm chi tiết mũi tiêm vào gói (Cấu hình gói) 
 GO
 CREATE OR ALTER PROCEDURE sp_ThemChiTietGoiTiem
     @MaChiTiet CHAR(15), -- Thêm tham số PK
@@ -547,7 +511,7 @@ BEGIN
 END;
 GO
 
--- 15. Tra cứu tình trạng gói tiêm [cite: 22]
+-- 15. Tra cứu tình trạng gói tiêm 
 GO
 CREATE OR ALTER PROCEDURE sp_TraCuuTinhTrangGoiTiem
     @MaThuCung CHAR(15)
@@ -580,7 +544,7 @@ BEGIN
 END;
 GO
 
--- 16. Thực hiện tiêm (Cập nhật trạng thái) [cite: 23]
+-- 16. Thực hiện tiêm (Cập nhật trạng thái) 
 GO
 CREATE OR ALTER PROCEDURE sp_ThucHienTiem
     @MaLichSu CHAR(15), -- PK cho LICHSUTIEM
@@ -612,11 +576,7 @@ BEGIN
 END;
 GO
 
--- =======================================================
--- NHÓM 6: BÁO CÁO THỐNG KÊ
--- =======================================================
-
--- 17. Báo cáo doanh thu chi nhánh [cite: 15]
+-- 17. Báo cáo doanh thu chi nhánh 
 GO
 CREATE OR ALTER PROCEDURE sp_BaoCaoDoanhThuChiNhanh
     @NgayBatDau DATETIME,
@@ -635,7 +595,7 @@ BEGIN
 END;
 GO
 
--- 18. Báo cáo doanh thu theo dịch vụ [cite: 16]
+-- 18. Báo cáo doanh thu theo dịch vụ 
 GO
 CREATE OR ALTER PROCEDURE sp_BaoCaoDoanhThuDichVu
     @NgayBatDau DATETIME,
@@ -659,7 +619,7 @@ BEGIN
 END;
 GO
 
--- 19. Tổng doanh thu hệ thống [cite: 17]
+-- 19. Tổng doanh thu hệ thống 
 GO
 CREATE OR ALTER PROCEDURE sp_TongDoanhThu
     @NgayBatDau DATETIME,
@@ -692,7 +652,7 @@ BEGIN
 END;
 GO
 
--- 20. Top dịch vụ doanh thu cao nhất 6 tháng [cite: 18]
+-- 20. Top dịch vụ doanh thu cao nhất 6 tháng 
 GO
 CREATE OR ALTER PROCEDURE sp_TopDichVu
     @MaChiNhanh CHAR(15) = NULL
@@ -713,10 +673,6 @@ BEGIN
     ORDER BY SUM(ct.soluong * ct.giamoidonvi) DESC;
 END;
 GO
-
--- =======================================================
--- NHÓM X: ĐĂNG KÝ THÚ CƯNG
--- =======================================================
 
 GO
 CREATE OR ALTER PROCEDURE sp_DangKyThuCung
