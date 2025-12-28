@@ -94,9 +94,17 @@ def BundleData():
                 ma_goi = id_gen.get_id('GT')
                 ma_hd = id_gen.get_id('HD')
                 
+                #Random ngày
+                start_date = datetime(2023, 1, 1)
+                end_date   = datetime(2025, 12, 31)
+                delta_days = (end_date - start_date).days
+
+                ngay_tao = start_date + timedelta(days=random.randint(0, delta_days))
+
+                
                 try:
                     # 1. Tạo Gói Tiêm (sp_KhoiTaoGoiTiem)
-                    ngay_het_han = datetime.now() + timedelta(days=30*duration_months)
+                    ngay_het_han = ngay_tao + timedelta(days=30*duration_months)
                     # Params: @MaGoi, @NgayHetHan, @PhanTramGiamGia, @MaThuCung, @MaChiNhanh
                     cursor.execute("EXEC sp_KhoiTaoGoiTiem %s, %s, %s, %s, %s",
                                     (ma_goi, ngay_het_han, discount, ma_thucung, ma_cn))
@@ -113,8 +121,8 @@ def BundleData():
 
                     # 3. Tạo Hóa Đơn Mua Gói (sp_KhoiTaoHoaDon)
                     # Params: @MaHoaDon, @MaNhanVien, @MaKhachHang, @MaChiNhanh
-                    cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s",
-                                    (ma_hd, ma_nv, ma_khachhang, ma_cn))
+                    cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s, %s",
+                                    (ma_hd, ma_nv, ma_khachhang, ma_cn, ngay_tao))
 
                     # 4. Thêm Gói vào Hóa Đơn (sp_ThemChiTietHoaDon_GoiTiem)
                     ma_ct_hd = id_gen.get_id('CT')

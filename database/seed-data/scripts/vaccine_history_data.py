@@ -1,6 +1,6 @@
 import pymssql
 import random
-
+from datetime import date, timedelta
 # Import config
 try:
     from config import DB_CONFIG, id_gen
@@ -83,7 +83,13 @@ def VaccineHistoryData():
         for pet in pets:
             ma_thucung = pet[0]
             ma_khachhang = pet[1]
-            
+
+            # Random ngày 
+            start_date = date(2023, 1, 1)
+            end_date   = date(2025, 12, 31)
+            delta_days = (end_date - start_date).days
+
+            ngay_tiem = start_date + timedelta(days=random.randint(0, delta_days))
             # Random dữ liệu cho lượt tiêm này
             ma_vaccine = random.choice(vaccines)
             ma_bacsi = random.choice(doctors)
@@ -103,16 +109,16 @@ def VaccineHistoryData():
                 # (Lưu ý: sp_ThucHienTiem trong file trước dành cho Gói Tiêm, còn đây là tiêm lẻ)
                 cursor.execute("""
                     INSERT INTO LICHSUTIEM (malichsutiem, ngaytiem, mathucung, masanpham, manhanvien, machinhanh)
-                    VALUES (%s, GETDATE(), %s, %s, %s, %s)
-                """, (ma_lichsu, ma_thucung, ma_vaccine, ma_bacsi, ma_chinhanh))
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """, (ma_lichsu, ngay_tiem, ma_thucung, ma_vaccine, ma_bacsi, ma_chinhanh))
 
                 # ----------------------------------------
                 # B. TẠO HÓA ĐƠN THANH TOÁN (HOADON)
                 # ----------------------------------------
                 
                 # 1. Khởi tạo hóa đơn
-                cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s",
-                              (ma_hoadon, ma_nv_banhang, ma_khachhang, ma_chinhanh))
+                cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s, %s",
+                              (ma_hoadon, ma_nv_banhang, ma_khachhang, ma_chinhanh, ngay_tiem))
 
                 # 2. Thêm chi tiết hóa đơn (Bán lẻ Vaccine)
                 # Sử dụng sp_ThemChiTietHoaDon_BanLe như yêu cầu

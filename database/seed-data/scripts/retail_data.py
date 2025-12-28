@@ -1,6 +1,6 @@
 import pymssql
 import random
-
+from datetime import date, timedelta
 # Import config
 try:
     from config import DB_CONFIG, id_gen
@@ -73,8 +73,13 @@ def RetailData():
             try:
                 # 2. Gọi SP Tạo Hóa Đơn (sp_KhoiTaoHoaDon)
                 # @MaHoaDon, @MaNhanVien, @MaKhachHang, @MaChiNhanh
-                cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s", 
-                              (ma_hd, ma_nv, ma_kh, ma_cn))
+                start_date = date(2023, 1, 1)
+                end_date   = date(2025, 12, 31)
+
+                delta_days = (end_date - start_date).days
+                ngay_lap = start_date + timedelta(days=random.randint(0, delta_days))
+                cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s, %s", 
+                              (ma_hd, ma_nv, ma_kh, ma_cn, ngay_lap))
 
                 # 3. Loop thêm 3 sản phẩm (Chi tiết hóa đơn)
                 # Mỗi lần lặp thêm 1 chi tiết

@@ -175,6 +175,19 @@ BEGIN
     VALUES (@MaHoaDon, @NgayLap, @MaNhanVien, @MaKhachHang, @MaChiNhanh, 0); -- 0: Processing
 END;
 GO
+CREATE OR ALTER PROCEDURE sp_KhoiTaoHoaDon
+    @MaHoaDon     CHAR(15),
+    @MaNhanVien   CHAR(15),
+    @MaKhachHang  CHAR(15),
+    @MaChiNhanh   CHAR(15),
+    @NgayLap      DATE        -- ngày tạo hóa đơn truyền từ ngoài vào
+AS
+BEGIN
+    SET NOCOUNT ON;
+  INSERT INTO HOADON (mahoadon, ngaylap, manhanvien, makhachhang, machinhanh, trangthai)
+    VALUES (@MaHoaDon, @NgayLap, @MaNhanVien, @MaKhachHang, @MaChiNhanh, 0); -- 0: Processing
+END;
+GO
 
 -- 5. Thêm chi tiết bán lẻ vào hóa đơn [cite: 8]
 GO
