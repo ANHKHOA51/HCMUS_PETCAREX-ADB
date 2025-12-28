@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAdminStats } from '../hooks/useAdminStats';
 import TotalRevenueCard from './TotalRevenueCard';
+import ExaminationCountCard from './ExaminationCountCard';
 import RevenueTrendChart from './RevenueTrendChart';
 import ServiceDistributionChart from './ServiceDistributionChart';
 import BranchPerformanceChart from './BranchPerformanceChart';
@@ -25,6 +26,7 @@ const AdminDashboard = () => {
     }
     // Fetch all stats
     stats.fetchTotalRevenue(dates.startDate, dates.endDate);
+    stats.fetchExaminationCount(dates.startDate, dates.endDate);
     stats.fetchRevenueTrend(dates.startDate, dates.endDate);
     stats.fetchServiceDistribution(dates.startDate, dates.endDate);
     stats.fetchBranchPerformance(dates.startDate, dates.endDate);
@@ -66,6 +68,10 @@ const AdminDashboard = () => {
           <TotalRevenueCard
             data={stats.totalRevenue}
             loading={stats.totalRevenue.loading}
+          />
+          <ExaminationCountCard
+            data={stats.examinationCount}
+            loading={stats.examinationCount.loading}
           />
         </div>
 

@@ -140,4 +140,37 @@ router.get("/revenue/trend", async (req, res) => {
     }
 });
 
+// 22) Count Examinations (Raw SQL)
+router.get("/examinations/count", async (req, res) => {
+    const { NgayBatDau, NgayKetThuc } = req.query;
+    if (!NgayBatDau || !NgayKetThuc)
+        return res.status(400).json({ message: "Missing query params: NgayBatDau, NgayKetThuc" });
+
+    try {
+        let parsedNgayBatDau;
+        let parsedNgayKetThuc;
+        try {
+            parsedNgayBatDau = parseSqlDateTime(NgayBatDau, "NgayBatDau");
+            parsedNgayKetThuc = parseSqlDateTime(NgayKetThuc, "NgayKetThuc");
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+
+        const result = await db
+            .request()
+            .input("NgayBatDau", sql.DateTime, parsedNgayBatDau)
+            .input("NgayKetThuc", sql.DateTime, parsedNgayKetThuc)
+            .query(`
+                SELECT COUNT(*) AS count 
+                FROM HOSOBENHAN 
+                WHERE ngaykham BETWEEN @NgayBatDau AND @NgayKetThuc
+            `);
+
+        res.json(result.recordset[0]);
+    } catch (err) {
+        console.error("Error GET /examinations/count:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 export default router;

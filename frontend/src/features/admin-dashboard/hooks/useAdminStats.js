@@ -149,6 +149,26 @@ export const useAdminStats = () => {
     }
   }, []);
 
+  const [examinationCount, setExaminationCount] = useState({
+    value: 0,
+    loading: false,
+    error: ""
+  });
+
+  const fetchExaminationCount = useCallback(async (startDate, endDate) => {
+    setExaminationCount(prev => ({ ...prev, loading: true, error: "" }));
+    try {
+      const data = await statsService.fetchExaminationCount(startDate, endDate);
+      setExaminationCount({
+        value: Number(data?.count ?? 0),
+        loading: false,
+        error: ""
+      });
+    } catch (err) {
+      setExaminationCount(prev => ({ ...prev, loading: false, error: err.message }));
+    }
+  }, []);
+
   return {
     totalRevenue,
     fetchTotalRevenue,
@@ -159,6 +179,8 @@ export const useAdminStats = () => {
     branchPerformance,
     fetchBranchPerformance,
     serviceRevenueByBranch,
-    fetchServiceRevenueByBranch
+    fetchServiceRevenueByBranch,
+    examinationCount,
+    fetchExaminationCount
   };
 };
