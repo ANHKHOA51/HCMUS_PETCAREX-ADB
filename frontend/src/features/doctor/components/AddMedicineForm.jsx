@@ -98,22 +98,22 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
 
     // Validate medicine selection
     if (!selectedMedicine) {
-      newErrors.medicine = "Please select a medicine";
+      newErrors.medicine = "Vui lòng chọn thuốc";
     }
 
     // Validate quantity
     const qty = Number.parseInt(quantity);
     if (!quantity || isNaN(qty) || qty <= 0) {
-      newErrors.quantity = "Quantity must be a positive integer";
+      newErrors.quantity = "Số lượng phải là số nguyên dương";
     } else if (selectedMedicineData) {
       if (qty > selectedMedicineData.soluongtonkho) {
-        newErrors.quantity = `Insufficient stock. Available: ${selectedMedicineData.soluongtonkho}`;
+        newErrors.quantity = `Không đủ hàng tồn kho. Có sẵn: ${selectedMedicineData.soluongtonkho}`;
       }
     }
 
     // Validate note
     if (!note.trim()) {
-      newErrors.note = "Usage instructions are required";
+      newErrors.note = "Hướng dẫn sử dụng là bắt buộc";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -126,7 +126,7 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
       (item) => item.masanpham === selectedMedicine
     );
     if (existingItem) {
-      newErrors.medicine = "Medicine already added to prescription";
+      newErrors.medicine = "Thuốc đã được thêm vào đơn thuốc";
       setErrors(newErrors);
       return;
     }
@@ -163,7 +163,7 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
     >
       <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-5">
         <Pill className="h-5 w-5" />
-        Add Medicine
+        Thêm thuốc
       </h2>
 
       <div
@@ -176,7 +176,7 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
         {/* Medicine Selection */}
         <div className="flex flex-col gap-2">
           <label className="block text-sm font-medium text-gray-700">
-            Select Medicine *
+            Chọn thuốc *
           </label>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -188,7 +188,7 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
               >
                 {selectedMedicine
                   ? medicines.find((m) => m.masanpham === selectedMedicine)?.ten
-                  : "Select medicine..."}
+                  : "Chọn thuốc..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -201,13 +201,13 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
                 className="border border-gray-100 rounded-md"
               >
                 <CommandInput
-                  placeholder="Search medicine..."
+                  placeholder="Tìm kiếm thuốc..."
                   value={searchTerm}
                   onValueChange={setSearchTerm}
                   className="border-b border-gray-100"
                 />
                 <CommandList>
-                  <CommandEmpty>No medicine found.</CommandEmpty>
+                  <CommandEmpty>Không tìm thấy thuốc.</CommandEmpty>
                   <CommandGroup>
                     {medicines.map((medicine) => (
                       <CommandItem
@@ -252,7 +252,7 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
               fontWeight: "500",
             }}
           >
-            Available Stock
+            Tồn kho có sẵn
           </label>
           <div
             style={{
@@ -274,8 +274,8 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
             }}
           >
             {selectedMedicineData
-              ? `${selectedMedicineData.soluongtonkho} units`
-              : "Select a medicine"}
+              ? `${selectedMedicineData.soluongtonkho} đơn vị`
+              : "Chọn một loại thuốc"}
           </div>
         </div>
 
@@ -288,7 +288,7 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
               fontWeight: "500",
             }}
           >
-            Quantity *
+            Số lượng *
           </label>
           <input
             type="number"
@@ -309,7 +309,7 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
                 if (numVal > selectedMedicineData.soluongtonkho) {
                   setErrors((prev) => ({
                     ...prev,
-                    quantity: `Max available: ${selectedMedicineData.soluongtonkho}`,
+                    quantity: `Tối đa có sẵn: ${selectedMedicineData.soluongtonkho}`,
                   }));
                 } else {
                   setErrors((prev) => {
@@ -320,7 +320,7 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
                 }
               }
             }}
-            placeholder="Enter quantity"
+            placeholder="Nhập số lượng"
             style={{
               width: "100%",
               padding: "10px 12px",
@@ -351,13 +351,13 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
               fontWeight: "500",
             }}
           >
-            Usage Instructions *
+            Hướng dẫn sử dụng *
           </label>
           <input
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="e.g., 2 times/day after meals"
+            placeholder="Ví dụ: 2 lần/ngày sau ăn"
             style={{
               width: "100%",
               padding: "10px 12px",
@@ -396,7 +396,7 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
         onMouseOver={(e) => (e.target.style.background = "#5568d3")}
         onMouseOut={(e) => (e.target.style.background = "#667eea")}
       >
-        Add to Prescription
+        Thêm vào đơn thuốc
       </button>
     </div>
   );

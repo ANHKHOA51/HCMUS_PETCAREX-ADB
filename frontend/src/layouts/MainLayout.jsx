@@ -27,20 +27,20 @@ const MainLayout = () => {
     switch (currentRole) {
       case ROLES.CUSTOMER:
         return [
-          { path: "/client/dashboard", icon: PawPrint, label: "My Pets" },
-          { path: "/client/booking", icon: Calendar, label: "Book Appointment" },
-          { path: "/client/products", icon: Box, label: "Products" },
-          { path: "/client/branches", icon: MapPin, label: "Branches" },
+          { path: "/client/dashboard", icon: PawPrint, label: "Thú cưng của tôi" },
+          { path: "/client/booking", icon: Calendar, label: "Đặt lịch hẹn" },
+          { path: "/client/products", icon: Box, label: "Sản phẩm" },
+          { path: "/client/branches", icon: MapPin, label: "Chi nhánh" },
         ]
       case ROLES.DOCTOR:
         return [
-          { path: "/doctor/pets", icon: Stethoscope, label: "Pets Examination" }, 
-          { path: "/doctor/prescription", icon: Stethoscope, label: "Prescription" }, 
+          { path: "/doctor/pets", icon: Stethoscope, label: "Khám bệnh" }, 
+          { path: "/doctor/prescription", icon: Stethoscope, label: "Đơn thuốc" }, 
         ]
       case ROLES.MANAGER:
-        return [{ path: "/manager/dashboard", icon: BarChart3, label: "Dashboard" }]
+        return [{ path: "/manager/dashboard", icon: BarChart3, label: "Bảng điều khiển" }]
       case ROLES.RECEPTIONIST:
-        return [{ path: "/receptionist/dashboard", icon: Calendar, label: "Reception" }]
+        return [{ path: "/receptionist/dashboard", icon: Calendar, label: "Tiếp tân" }]
       default:
         return []
     }
@@ -124,7 +124,7 @@ const MainLayout = () => {
               className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
             >
               <LogOut className="w-4 h-4" />
-              <span className="font-medium">Logout</span>
+              <span className="font-medium">Đăng xuất</span>
             </button>
           </div>
         </div>

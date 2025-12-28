@@ -68,9 +68,9 @@ const RecordList = ({ petId }) => {
           onChange={(e) => setType(e.target.value)}
           className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
         >
-          <option value="all">All Types</option>
-          <option value="0">Hồ sơ</option>
-          <option value="1">Lịch sử tiêm</option>
+          <option value="all">Tất cả</option>
+          <option value="0">Hồ sơ bệnh án</option>
+          <option value="1">Lịch sử tiêm phòng</option>
         </select>
       </div>
 
@@ -127,7 +127,7 @@ const RecordList = ({ petId }) => {
 
       {!loading && recordList.length === 0 && vaccineList.length === 0 && (
         <div className="flex justify-center py-4 text-gray-500">
-          No medical records or vaccination history found.
+          Không tìm thấy hồ sơ bệnh án hoặc lịch sử tiêm phòng.
         </div>
       )}
 
@@ -144,7 +144,7 @@ const RecordList = ({ petId }) => {
             onClick={() => loadRecords(false)}
             className="w-full sm:w-auto"
           >
-            Load More
+            Tải thêm
           </Button>
         </div>
       )}

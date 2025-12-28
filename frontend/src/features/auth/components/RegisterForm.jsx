@@ -28,7 +28,7 @@ const RegisterForm = ({ onSuccess }) => {
       const user = await register(formData);
       if (onSuccess) onSuccess(user);
     } catch (err) {
-      setError(err.message || "Registration failed");
+      setError(err.message || "Đăng ký thất bại");
     } finally {
       setLoading(false);
     }
@@ -45,7 +45,7 @@ const RegisterForm = ({ onSuccess }) => {
 
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
-          Full Name
+          Họ và tên
         </label>
         <div className="relative">
           <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
@@ -56,14 +56,14 @@ const RegisterForm = ({ onSuccess }) => {
             value={formData.HoVaTen}
             onChange={handleChange}
             className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-            placeholder="Enter your name"
+            placeholder="Nhập họ và tên"
           />
         </div>
       </div>
 
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
-          Phone Number
+          Số điện thoại
         </label>
         <div className="relative">
           <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
@@ -74,14 +74,14 @@ const RegisterForm = ({ onSuccess }) => {
             value={formData.SoDienThoai}
             onChange={handleChange}
             className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-            placeholder="Enter your phone number"
+            placeholder="Nhập số điện thoại"
           />
         </div>
       </div>
 
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
-          Birth
+          Ngày sinh
         </label>
         <div className="relative">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
@@ -92,14 +92,14 @@ const RegisterForm = ({ onSuccess }) => {
             value={formData.NgaySinh}
             onChange={handleChange}
             className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-            placeholder="Enter your birthday"
+            placeholder="Nhập ngày sinh"
           />
         </div>
       </div>
 
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
-          Address
+          Địa chỉ
         </label>
         <div className="relative">
           <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
@@ -110,14 +110,14 @@ const RegisterForm = ({ onSuccess }) => {
             value={formData.DiaChi}
             onChange={handleChange}
             className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-            placeholder="Enter your address"
+            placeholder="Nhập địa chỉ"
           />
         </div>
       </div>
 
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
-          Password
+          Mật khẩu
         </label>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
@@ -128,7 +128,7 @@ const RegisterForm = ({ onSuccess }) => {
             value={formData.MatKhau}
             onChange={handleChange}
             className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-            placeholder="Enter your password"
+            placeholder="Nhập mật khẩu"
           />
         </div>
       </div>
@@ -138,7 +138,7 @@ const RegisterForm = ({ onSuccess }) => {
         disabled={loading}
         className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? "Loading..." : "Sign Up"}
+        {loading ? "Đang xử lý..." : "Đăng ký"}
       </button>
     </form>
   );

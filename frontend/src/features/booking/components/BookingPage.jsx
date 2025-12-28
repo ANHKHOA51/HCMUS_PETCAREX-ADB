@@ -29,16 +29,16 @@ const BookingPage = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            My Appointments
+            Lịch hẹn của tôi
           </h1>
-          <p className="text-gray-500 mt-2">Manage your pet's health schedule</p>
+          <p className="text-gray-500 mt-2">Quản lý lịch trình sức khỏe thú cưng của bạn</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
           className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-all shadow-lg hover:shadow-indigo-200"
         >
           <Plus size={20} />
-          <span>New Appointment</span>
+          <span>Đặt lịch hẹn mới</span>
         </button>
       </div>
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 
-const SearchBar = ({ onSearch, placeholder = "Search...", debounceTime = 500, className = "" }) => {
+const SearchBar = ({ onSearch, placeholder = "Tìm kiếm...", debounceTime = 500, className = "" }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {

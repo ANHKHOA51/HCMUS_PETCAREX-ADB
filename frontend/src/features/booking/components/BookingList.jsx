@@ -6,8 +6,8 @@ const BookingList = ({ appointments, loading, lastElementRef }) => {
     return (
       <div className="text-center py-16 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
         <Calendar size={48} className="mx-auto text-gray-300 mb-4" />
-        <h3 className="text-lg font-semibold text-gray-900">No appointments yet</h3>
-        <p className="text-gray-500">Book your first appointment to get started</p>
+        <h3 className="text-lg font-semibold text-gray-900">Chưa có lịch hẹn nào</h3>
+        <p className="text-gray-500">Đặt lịch hẹn đầu tiên để bắt đầu</p>
       </div>
     );
   }

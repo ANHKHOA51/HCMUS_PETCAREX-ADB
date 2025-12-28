@@ -60,7 +60,7 @@ const VaccineDetail = ({ vaccine, onClose }) => {
               </div>
 
               <span className="font-medium text-gray-700">
-                <b>Vaccine:</b>
+                <b>Vắc-xin:</b>
               </span>
               {product && (
                 <div className="bg-gray-50 p-3 rounded-md text-sm text-gray-700">

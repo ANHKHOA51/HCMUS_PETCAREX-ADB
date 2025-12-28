@@ -6,15 +6,27 @@ import { useBranches } from "../../branch/hooks/useBranches";
 import { bookingService } from "../services/bookingService";
 import CustomDropdown from "../../../components/CustomDropdown";
 
+const pad2 = (n) => String(n).padStart(2, "0");
+
+const getNowDateTimeStrings = () => {
+  const now = new Date();
+  const date = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
+  const time = `${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
+  return { date, time };
+};
+
 const BookingModal = ({ isOpen, onClose, onSuccess }) => {
   const { pets, loading: loadingPets } = useClientPets();
   const { branches, loading: loadingBranches } = useBranches();
 
-  const [formData, setFormData] = useState({
-    petId: "",
-    branchId: "",
-    date: "",
-    time: "",
+  const [formData, setFormData] = useState(() => {
+    const { date, time } = getNowDateTimeStrings();
+    return {
+      petId: "",
+      branchId: "",
+      date,
+      time,
+    };
   });
 
   const [loading, setLoading] = useState(false);
@@ -22,21 +34,22 @@ const BookingModal = ({ isOpen, onClose, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.petId || !formData.branchId || !formData.time || !formData.date) {
-      toast.error("Please fill in all required fields");
+      toast.error("Vui lòng điền đầy đủ thông tin");
       return;
     }
 
     setLoading(true);
     try {
+      const fullDateTime = `${formData.date} ${formData.time}:00`;
       const payload = {
         MaThuCung: formData.petId,
         MaChiNhanh: formData.branchId,
-        ThoiGianHen: formData.time, // Format "HH:mm"
-        NgayDen: formData.date
+        ThoiGianDen: fullDateTime,
+        NgayDen: fullDateTime
       };
 
       await bookingService.createAppointment(payload);
-      toast.success("Appointment booked successfully!");
+      toast.success("Đặt lịch hẹn thành công!");
 
       if (onSuccess) onSuccess();
       onClose(); // Close modal on success
@@ -44,7 +57,7 @@ const BookingModal = ({ isOpen, onClose, onSuccess }) => {
       setFormData({ ...formData, petId: "", branchId: "", time: "" });
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "Failed to book appointment");
+      toast.error(err.response?.data?.message || "Đặt lịch hẹn thất bại");
     } finally {
       setLoading(false);
     }
@@ -89,24 +102,24 @@ const BookingModal = ({ isOpen, onClose, onSuccess }) => {
         </button>
 
         <div className="p-6">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Schedule Appointment</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">Đặt lịch hẹn</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Pet Selection */}
             <div>
               <CustomDropdown
-                label="Select Pet"
+                label="Chọn thú cưng"
                 options={pets}
                 value={formData.petId}
                 onChange={(val) => setFormData({ ...formData, petId: val })}
                 valueKey="mathucung"
                 labelKey="ten"
-                placeholder={loadingPets ? "Loading pets..." : "Choose your pet"}
+                placeholder={loadingPets ? "Đang tải danh sách thú cưng..." : "Chọn thú cưng của bạn"}
                 renderOption={renderPetOption}
               />
               {pets.length === 0 && !loadingPets && (
                 <p className="mt-2 text-sm text-red-500">
-                  You don't have any pets registered. Please register a pet first in your dashboard.
+                  Bạn chưa có thú cưng nào. Vui lòng đăng ký thú cưng trước trong bảng điều khiển.
                 </p>
               )}
             </div>
@@ -114,13 +127,13 @@ const BookingModal = ({ isOpen, onClose, onSuccess }) => {
             {/* Branch Selection */}
             <div>
               <CustomDropdown
-                label="Select Clinic Branch"
+                label="Chọn chi nhánh phòng khám"
                 options={branches}
                 value={formData.branchId}
                 onChange={(val) => setFormData({ ...formData, branchId: val })}
                 valueKey="machinhanh"
                 labelKey="tenchinhanh"
-                placeholder={loadingBranches ? "Loading branches..." : "Choose a nearby clinic"}
+                placeholder={loadingBranches ? "Đang tải danh sách chi nhánh..." : "Chọn phòng khám gần bạn"}
                 renderOption={renderBranchOption}
               />
             </div>
@@ -129,7 +142,7 @@ const BookingModal = ({ isOpen, onClose, onSuccess }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Preferred Date
+                  Ngày mong muốn
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -146,7 +159,7 @@ const BookingModal = ({ isOpen, onClose, onSuccess }) => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Preferred Time
+                  Giờ mong muốn
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -176,10 +189,10 @@ const BookingModal = ({ isOpen, onClose, onSuccess }) => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Booking...
+                    Đang đặt...
                   </span>
                 ) : (
-                  "Confirm Appointment"
+                  "Xác nhận đặt lịch"
                 )}
               </button>
             </div>

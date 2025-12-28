@@ -20,7 +20,7 @@ const ClientDashboard = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this pet?")) {
+    if (window.confirm("Bạn có chắc chắn muốn xóa thú cưng này không?")) {
       deletePet(id);
     }
   };
@@ -53,9 +53,9 @@ const ClientDashboard = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Pets</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Thú cưng của tôi</h1>
           <p className="text-gray-600">
-            Manage your pet profiles and book appointments
+            Quản lý hồ sơ thú cưng và đặt lịch hẹn
           </p>
         </div>
 
@@ -66,14 +66,14 @@ const ClientDashboard = () => {
             className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus className="w-5 h-5" />
-            <span className="font-medium">Register New Pet</span>
+            <span className="font-medium">Đăng ký thú cưng mới</span>
           </button>
           <button
             onClick={() => navigate("/client/booking")}
             className="flex items-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             <Calendar className="w-5 h-5" />
-            <span className="font-medium">Book Appointment</span>
+            <span className="font-medium">Đặt lịch hẹn</span>
           </button>
         </div>
 

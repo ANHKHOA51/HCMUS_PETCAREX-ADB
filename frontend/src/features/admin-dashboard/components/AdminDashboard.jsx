@@ -44,12 +44,12 @@ const AdminDashboard = () => {
         {/* Header with Date Filter */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">Overview of PETCAREX performance and analytics</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Bảng điều khiển quản trị</h1>
+            <p className="text-gray-600">Tổng quan về hiệu suất và phân tích của PETCAREX</p>
           </div>
 
           <div className="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm">
-            <span className="text-sm font-medium text-gray-700">Filter by Date:</span>
+            <span className="text-sm font-medium text-gray-700">Lọc theo ngày:</span>
             <DateFilter
               startDate={dates.startDate}
               endDate={dates.endDate}
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
               onClick={handleFilter}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
             >
-              Apply Filter
+              Áp dụng bộ lọc
             </button>
           </div>
         </div>
@@ -94,12 +94,12 @@ const AdminDashboard = () => {
           loading={stats.branchPerformance.loading}
         />
 
-        <div className="mt-6">
+        {/* <div className="mt-6">
           <ServiceRevenueByBranchChart
             data={stats.serviceRevenueByBranch}
             loading={stats.serviceRevenueByBranch.loading}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -44,13 +44,13 @@ const PetFormModal = ({ isOpen, onClose, onSubmit, editingPet }) => {
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900">
-            {editingPet ? "Edit Pet" : "Register New Pet"}
+            {editingPet ? "Sửa thông tin thú cưng" : "Đăng ký thú cưng mới"}
           </h2>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Pet Name
+              Tên thú cưng
             </label>
             <input
               type="text"
@@ -60,12 +60,12 @@ const PetFormModal = ({ isOpen, onClose, onSubmit, editingPet }) => {
                 setFormData({ ...formData, ten: e.target.value })
               }
               className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-              placeholder="e.g., Buddy"
+              placeholder="Ví dụ: Buddy"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Species
+              Loài
             </label>
             <select
               value={formData.loai}
@@ -74,16 +74,16 @@ const PetFormModal = ({ isOpen, onClose, onSubmit, editingPet }) => {
               }
               className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             >
-              <option value="dog">Dog</option>
-              <option value="cat">Cat</option>
-              <option value="bird">Bird</option>
-              <option value="rabbit">Rabbit</option>
-              <option value="other">Other</option>
+              <option value="dog">Chó</option>
+              <option value="cat">Mèo</option>
+              <option value="bird">Chim</option>
+              <option value="rabbit">Thỏ</option>
+              <option value="other">Khác</option>
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Breed
+              Giống
             </label>
             <input
               type="text"
@@ -93,13 +93,13 @@ const PetFormModal = ({ isOpen, onClose, onSubmit, editingPet }) => {
                 setFormData({ ...formData, giong: e.target.value })
               }
               className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-              placeholder="e.g., Golden Retriever"
+              placeholder="Ví dụ: Golden Retriever"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Birthday
+                Ngày sinh
               </label>
               <input
                 type="date"
@@ -112,7 +112,7 @@ const PetFormModal = ({ isOpen, onClose, onSubmit, editingPet }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Weight (kg)
+                Cân nặng (kg)
               </label>
               <input
                 type="number"
@@ -133,13 +133,13 @@ const PetFormModal = ({ isOpen, onClose, onSubmit, editingPet }) => {
               onClick={onClose}
               className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
             >
-              Cancel
+              Hủy
             </button>
             <button
               type="submit"
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
-              {editingPet ? "Update Pet" : "Register Pet"}
+              {editingPet ? "Cập nhật" : "Đăng ký"}
             </button>
           </div>
         </form>

@@ -53,7 +53,7 @@ const SearchPets = memo(({ onSelectedPet }) => {
   return (
     <div className="lg:col-span-1">
       <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Find the pets</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Tìm kiếm thú cưng</h2>
 
         {/* Search Input */}
         <div className="relative mb-4">
@@ -70,7 +70,7 @@ const SearchPets = memo(({ onSelectedPet }) => {
                 onEnter();
               }
             }}
-            placeholder="Search by the customer phone"
+            placeholder="Tìm kiếm theo số điện thoại khách hàng"
             className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           />
         </div>

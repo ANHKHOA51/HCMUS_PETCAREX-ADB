@@ -23,7 +23,7 @@ const DoctorPrescriptionPage = () => {
 
   const handleSavePrescription = async () => {
     if (prescriptionItems.length === 0) {
-      setErrors({ submit: "Please add at least one medicine" });
+      setErrors({ submit: "Vui lòng thêm ít nhất một loại thuốc" });
       return;
     }
 
@@ -34,7 +34,7 @@ const DoctorPrescriptionPage = () => {
     ) {
       setErrors({
         submit:
-          "Please fill in all examination details (Symptoms, Diagnosis, Re-examination Date)",
+          "Vui lòng điền đầy đủ thông tin khám bệnh (Triệu chứng, Chẩn đoán, Ngày tái khám)",
       });
       return;
     }
@@ -71,8 +71,8 @@ const DoctorPrescriptionPage = () => {
       const result = await medicineService.createExamination(examData);
 
       setSuccessMessage(
-        `Saved successfully! Medical Record: ${result.MaHoSo}${
-          maToaThuoc ? `, Prescription: ${maToaThuoc}` : ""
+        `Lưu thành công! Hồ sơ bệnh án: ${result.MaHoSo}${
+          maToaThuoc ? `, Đơn thuốc: ${maToaThuoc}` : ""
         }`
       );
       setPrescriptionItems([]);
@@ -113,12 +113,12 @@ const DoctorPrescriptionPage = () => {
         }}
       >
         <h1 style={{ margin: 0, fontSize: "28px", marginBottom: "8px" }}>
-          Examination
+          Khám bệnh
         </h1>
         <div style={{ fontSize: "16px", opacity: 0.9 }}>
-          <strong>Pet:</strong> {selectedPet?.ten || "Unknown"} |{" "}
-          <strong>Owner:</strong>
-          {selectedPet?.hovaten || "Unknown"}
+          <strong>Thú cưng:</strong> {selectedPet?.ten || "Không xác định"} |{" "}
+          <strong>Chủ sở hữu:</strong>
+          {selectedPet?.hovaten || "Không xác định"}
         </div>
       </div>
 
@@ -173,7 +173,7 @@ const DoctorPrescriptionPage = () => {
             }}
           >
             <div style={{ fontSize: "20px", fontWeight: "600", color: "#333" }}>
-              Total Price:
+              Tổng tiền:
             </div>
             <div
               style={{
@@ -216,7 +216,7 @@ const DoctorPrescriptionPage = () => {
               cursor: loading ? "not-allowed" : "pointer",
             }}
           >
-            {loading ? "Saving..." : "Save Prescription"}
+            {loading ? "Đang lưu..." : "Lưu đơn thuốc"}
           </button>
         </div>
       )}

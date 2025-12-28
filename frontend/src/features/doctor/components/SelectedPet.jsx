@@ -30,19 +30,19 @@ const SelectedPet = ({ pet }) => {
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="font-medium text-gray-700">
-                  <b>Pet ID:</b>
+                  <b>Mã thú cưng:</b>
                 </span>
                 <span className="ml-2 text-gray-900">{pet.mathucung}</span>
               </div>
               <div>
                 <span className="font-medium text-gray-700">
-                  <b>Owner:</b>
+                  <b>Chủ sở hữu:</b>
                 </span>
                 <span className="ml-2 text-gray-900">{pet.hovaten}</span>
               </div>
               <div>
                 <span className="font-medium text-gray-700">
-                  <b>Phone:</b>
+                  <b>Số điện thoại:</b>
                 </span>
                 <span className="ml-2 text-gray-900">{pet.sodienthoai}</span>
               </div>
@@ -54,7 +54,7 @@ const SelectedPet = ({ pet }) => {
                 className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <Plus className="w-4 h-4" />
-                <span className="font-medium">Create Prescription</span>
+                <span className="font-medium">Tạo đơn thuốc</span>
               </button>
             </div>
           </div>
@@ -64,11 +64,10 @@ const SelectedPet = ({ pet }) => {
         <div className="bg-white rounded-xl shadow-md p-12 text-center">
           <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-700 mb-2">
-            No Pet Selected
+            Chưa chọn thú cưng
           </h3>
           <p className="text-gray-500">
-            Please search and select a Pet from the left panel to begin check
-            the Records
+            Vui lòng tìm kiếm và chọn một thú cưng từ bảng bên trái để bắt đầu xem hồ sơ
           </p>
         </div>
       )}

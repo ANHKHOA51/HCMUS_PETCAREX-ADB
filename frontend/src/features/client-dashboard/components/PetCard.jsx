@@ -10,20 +10,20 @@ const PetCard = ({ pet, onEdit, onDelete }) => {
         <h3 className="text-xl font-bold text-gray-900 mb-2">{pet.ten}</h3>
         <div className="space-y-1 text-sm text-gray-600 mb-4">
           <p>
-            <span className="font-medium">Species:</span> {pet.loai}
+            <span className="font-medium">Loài:</span> {pet.loai}
           </p>
           <p>
-            <span className="font-medium">Breed:</span> {pet.giong}
+            <span className="font-medium">Giống:</span> {pet.giong}
           </p>
           {pet.ngaysinh && (
             <p>
-              <span className="font-medium">Birthday:</span>{" "}
+              <span className="font-medium">Ngày sinh:</span>{" "}
               {new Date(pet.ngaysinh).toLocaleDateString()}
             </p>
           )}
           {pet.weight && (
             <p>
-              <span className="font-medium">Weight:</span> {pet.weight} kg
+              <span className="font-medium">Cân nặng:</span> {pet.weight} kg
             </p>
           )}
         </div>
@@ -33,14 +33,14 @@ const PetCard = ({ pet, onEdit, onDelete }) => {
             className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
           >
             <Edit2 className="w-4 h-4" />
-            <span className="text-sm font-medium">Edit</span>
+            <span className="text-sm font-medium">Sửa</span>
           </button>
           <button
             onClick={() => onDelete(pet.mathucung)}
             className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
           >
             <Trash2 className="w-4 h-4" />
-            <span className="text-sm font-medium">Delete</span>
+            <span className="text-sm font-medium">Xóa</span>
           </button>
         </div>
       </div>

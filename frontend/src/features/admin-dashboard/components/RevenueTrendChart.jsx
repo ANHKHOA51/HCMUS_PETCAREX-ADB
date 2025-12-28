@@ -14,7 +14,7 @@ const RevenueTrendChart = ({ data, loading }) => {
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-900">Revenue Trend</h2>
+        <h2 className="text-xl font-bold text-gray-900">Xu hướng doanh thu</h2>
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
@@ -29,7 +29,7 @@ const RevenueTrendChart = ({ data, loading }) => {
             dataKey="revenue"
             stroke="#3b82f6"
             strokeWidth={3}
-            name="Revenue (VND)"
+            name="Doanh thu (VND)"
           />
         </LineChart>
       </ResponsiveContainer>

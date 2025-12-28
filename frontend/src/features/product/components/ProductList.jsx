@@ -35,12 +35,12 @@ const ProductList = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-sm border border-blue-100">
         <div className="w-full sm:w-1/2">
-          <SearchBar onSearch={setSearch} placeholder="Search products..." />
+          <SearchBar onSearch={setSearch} placeholder="Tìm kiếm sản phẩm..." />
         </div>
         <div className="w-full sm:w-48">
           <select value={type} onChange={(e) => setType(e.target.value)} className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1">
-            <option value="all">Filter by Type</option>
-            <option value="all">All Types</option>
+            <option value="all">Lọc theo loại</option>
+            <option value="all">Tất cả các loại</option>
             <option value="0">Thuốc</option>
             <option value="1">Vaccine</option>
             <option value="2">Bán lẻ</option>
@@ -50,7 +50,7 @@ const ProductList = () => {
 
       {error && (
         <div className="bg-red-50 text-red-600 p-4 rounded-lg border border-red-200">
-          Error: {error}
+          Lỗi: {error}
         </div>
       )}
 
@@ -84,7 +84,7 @@ const ProductList = () => {
 
       {!loading && products.length === 0 && !error && (
         <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-          No products found.
+          Không tìm thấy sản phẩm.
         </div>
       )}
 

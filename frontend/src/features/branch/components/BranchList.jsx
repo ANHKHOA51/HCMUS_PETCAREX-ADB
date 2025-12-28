@@ -31,7 +31,7 @@ const BranchList = () => {
 
       {error && (
         <div className="bg-red-50 text-red-600 p-4 rounded-lg border border-red-200">
-          Error: {error}
+          Lỗi: {error}
         </div>
       )}
 

@@ -11,7 +11,7 @@ const BookingItem = ({ appointment, innerRef }) => {
           <Calendar className="text-indigo-600" size={24} />
         </div>
         <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-          Confirmed
+          Đã xác nhận
         </span>
       </div>
 

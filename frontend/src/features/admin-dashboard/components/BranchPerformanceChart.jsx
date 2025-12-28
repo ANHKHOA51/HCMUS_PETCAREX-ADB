@@ -5,7 +5,7 @@ const BranchPerformanceChart = ({ data, loading }) => {
   return (
     <div className="bg-white rounded-xl shadow-md p-6 mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-900">Branch Performance Comparison</h2>
+        <h2 className="text-xl font-bold text-gray-900">So sánh hiệu suất chi nhánh</h2>
       </div>
 
       <ResponsiveContainer width="100%" height={400}>
@@ -33,7 +33,7 @@ const BranchPerformanceChart = ({ data, loading }) => {
               marginTop: "20px"
             }}
           />
-          <Bar dataKey="revenue" fill="#3b82f6" name="Revenue (VND)" />
+          <Bar dataKey="revenue" fill="#3b82f6" name="Doanh thu (VND)" />
         </BarChart>
       </ResponsiveContainer>
     </div>

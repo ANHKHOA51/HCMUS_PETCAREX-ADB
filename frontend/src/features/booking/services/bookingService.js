@@ -12,7 +12,9 @@ export const bookingService = {
     return response;
   },
 
-  getTodayAppointments: (params = {}) => {
-    return axiosClient.get("/appointments/tra-cuu-hen", { params });
+  getTodayAppointments: async (params = {}) => {
+    const response = await axiosClient.get("/appointments/tra-cuu-hen", { params });
+    console.log("getTodayAppointments response:", response);
+    return response;
   }
 };

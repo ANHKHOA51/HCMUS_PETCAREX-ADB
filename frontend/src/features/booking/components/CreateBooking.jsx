@@ -34,6 +34,10 @@ const getNowDateTimeStrings = () => {
 const formatTimeDisplay = (value) => {
     if (!value) return "--:--";
     if (typeof value === "string") {
+        // Extract HH:mm from ISO string (e.g. ...T20:37:...)
+        const isoMatch = value.match(/T(\d{2}):(\d{2})/);
+        if (isoMatch) return `${isoMatch[1]}:${isoMatch[2]}`;
+
         const match = value.match(/^\d{2}:\d{2}/);
         if (match) return match[0];
         const asDate = new Date(value);
@@ -200,6 +204,15 @@ const CreateBooking = () => {
             });
 
             toast.success("Đặt lịch thành công");
+            
+            // Refresh today's appointments
+            setLoadingToday(true);
+            const params = { SoDienThoai: phone, NgayHen: new Date() };
+            const data = await bookingService.getTodayAppointments(params);
+            const appointments = Array.isArray(data) ? data : [];
+            setTodayAppointments(appointments);
+            setLoadingToday(false);
+
         } catch (e) {
             toast.error(typeof e === "string" ? e : "Đặt lịch thất bại");
         } finally {
@@ -211,16 +224,16 @@ const CreateBooking = () => {
         <div className="w-full max-w-4xl mx-auto p-6 space-y-6">
             <div>
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    Create Booking
+                    Tạo lịch hẹn
                 </h1>
                 <p className="text-gray-500 mt-2">
-                    Lookup customer by phone → select/create pet → book now
+                    Tra cứu khách hàng theo số điện thoại → chọn/tạo thú cưng → đặt lịch ngay
                 </p>
             </div>
 
             {/* Phone Lookup */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Customer phone</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Số điện thoại khách hàng</h2>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
@@ -247,7 +260,7 @@ const CreateBooking = () => {
                         className="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-all shadow-lg hover:shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <Search size={18} />
-                        {loadingLookup ? "Looking up..." : "Lookup"}
+                        {loadingLookup ? "Đang tra cứu..." : "Tra cứu"}
                     </button>
                 </form>
 
@@ -261,14 +274,14 @@ const CreateBooking = () => {
                 {customer && (
                     <div className="mt-4 flex items-start justify-between gap-4 bg-gray-50 border border-gray-100 rounded-2xl p-4">
                         <div>
-                            <div className="text-sm text-gray-500">Customer</div>
+                            <div className="text-sm text-gray-500">Khách hàng</div>
                             <div className="font-semibold text-gray-900">{customer.hovaten || "(Không có tên)"}</div>
                             <div className="text-sm text-gray-600">{customer.sodienthoai}</div>
                             <div className="text-xs text-gray-400 mt-1">MaKhachHang: {customer.makhachhang}</div>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-green-700">
                             <CheckCircle className="h-5 w-5" />
-                            Ready
+                            Sẵn sàng
                         </div>
                     </div>
                 )}
@@ -326,15 +339,15 @@ const CreateBooking = () => {
             {/* Pets */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold text-gray-900">Pets</h2>
-                    <div className="text-sm text-gray-500">Found: {pets.length}</div>
+                    <h2 className="text-lg font-semibold text-gray-900">Thú cưng</h2>
+                    <div className="text-sm text-gray-500">Tìm thấy: {pets.length}</div>
                 </div>
 
                 {pets.length === 0 ? (
                     <div className="text-center py-10 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
                         <PawPrint className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-                        <div className="font-medium text-gray-900">No pets</div>
-                        <div className="text-sm text-gray-500">Create a new pet below</div>
+                        <div className="font-medium text-gray-900">Không có thú cưng</div>
+                        <div className="text-sm text-gray-500">Tạo thú cưng mới bên dưới</div>
                     </div>
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2">
@@ -376,14 +389,14 @@ const CreateBooking = () => {
             {/* Create Pet */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold text-gray-900">Create new pet</h2>
-                    <div className="text-sm text-gray-500">For customer by phone</div>
+                    <h2 className="text-lg font-semibold text-gray-900">Tạo thú cưng mới</h2>
+                    <div className="text-sm text-gray-500">Cho khách hàng theo số điện thoại</div>
                 </div>
 
                 <form onSubmit={handleCreatePet} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Tên *</label>
                             <input
                                 value={petForm.Ten}
                                 onChange={(e) => setPetForm((p) => ({ ...p, Ten: e.target.value }))}
@@ -392,7 +405,7 @@ const CreateBooking = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Birth date</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Ngày sinh</label>
                             <input
                                 type="date"
                                 value={petForm.NgaySinh}
@@ -401,16 +414,16 @@ const CreateBooking = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Species</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Loài</label>
                             <input
                                 value={petForm.Loai}
                                 onChange={(e) => setPetForm((p) => ({ ...p, Loai: e.target.value }))}
                                 className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all"
-                                placeholder="Dog/Cat"
+                                placeholder="Chó/Mèo"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Breed</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Giống</label>
                             <input
                                 value={petForm.Giong}
                                 onChange={(e) => setPetForm((p) => ({ ...p, Giong: e.target.value }))}
@@ -426,7 +439,7 @@ const CreateBooking = () => {
                         className="inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-xl hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <Plus size={18} />
-                        {loadingCreatePet ? "Creating..." : "Create pet"}
+                        {loadingCreatePet ? "Đang tạo..." : "Tạo thú cưng"}
                     </button>
 
                     {!customer?.makhachhang && (
@@ -441,9 +454,9 @@ const CreateBooking = () => {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-lg font-semibold text-gray-900">Book now</h2>
+                        <h2 className="text-lg font-semibold text-gray-900">Đặt lịch ngay</h2>
                         <p className="text-sm text-gray-500">
-                            Uses current time and receptionist branch.
+                            Sử dụng thời gian hiện tại và chi nhánh của lễ tân.
                         </p>
                     </div>
 
@@ -453,7 +466,7 @@ const CreateBooking = () => {
                         disabled={loadingBooking || !selectedPetId}
                         className="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-all shadow-lg hover:shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loadingBooking ? "Booking..." : "Book now"}
+                        {loadingBooking ? "Đang đặt..." : "Đặt lịch ngay"}
                     </button>
                 </div>
             </div>

@@ -6,7 +6,7 @@ const PetList = ({ pets, loading, onEdit, onDelete, onRegister }) => {
     return (
       <div className="text-center py-12">
         <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-gray-600">Loading pets...</p>
+        <p className="mt-4 text-gray-600">Đang tải danh sách thú cưng...</p>
       </div>
     );
   }
@@ -16,15 +16,15 @@ const PetList = ({ pets, loading, onEdit, onDelete, onRegister }) => {
       <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-300">
         <PawPrint className="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <h3 className="text-xl font-semibold text-gray-700 mb-2">
-          No pets registered yet
+          Chưa có thú cưng nào được đăng ký
         </h3>
-        <p className="text-gray-500 mb-6">Start by adding your first pet</p>
+        <p className="text-gray-500 mb-6">Bắt đầu bằng cách thêm thú cưng đầu tiên của bạn</p>
         <button
           onClick={onRegister}
           className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
-          <span className="font-medium">Register Your First Pet</span>
+          <span className="font-medium">Đăng ký thú cưng đầu tiên</span>
         </button>
       </div>
     );

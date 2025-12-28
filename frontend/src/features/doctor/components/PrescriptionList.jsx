@@ -16,7 +16,7 @@ const PrescriptionList = ({ items, onRemove }) => {
     >
       <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-5">
         <Pill className="h-5 w-5" />
-        Prescription Items
+        Danh sách thuốc
       </h2>
 
       <div className="overflow-x-auto">
@@ -24,22 +24,22 @@ const PrescriptionList = ({ items, onRemove }) => {
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
               <th className="p-3 text-left font-semibold text-gray-700">
-                Medicine Name
+                Tên thuốc
               </th>
               <th className="p-3 text-center font-semibold text-gray-700">
-                Quantity
+                Số lượng
               </th>
               <th className="p-3 text-left font-semibold text-gray-700">
-                Usage Instructions
+                Hướng dẫn sử dụng
               </th>
               <th className="p-3 text-right font-semibold text-gray-700">
-                Unit Price
+                Đơn giá
               </th>
               <th className="p-3 text-right font-semibold text-gray-700">
-                Total
+                Thành tiền
               </th>
               <th className="p-3 text-center font-semibold text-gray-700">
-                Action
+                Hành động
               </th>
             </tr>
           </thead>
@@ -64,7 +64,7 @@ const PrescriptionList = ({ items, onRemove }) => {
                   <button
                     onClick={() => onRemove(item.masanpham)}
                     className="p-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition-colors"
-                    title="Remove"
+                    title="Xóa"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

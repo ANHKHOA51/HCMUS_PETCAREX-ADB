@@ -16,9 +16,9 @@ import { ChevronDown, Check } from "lucide-react";
 const CustomDropdown = ({
   label,
   options = [],
-  value,
+  value, 
   onChange,
-  placeholder = "Select an option",
+  placeholder = "Chọn một tùy chọn",
   valueKey = "id",
   labelKey = "name",
   renderOption,
@@ -110,7 +110,7 @@ const CustomDropdown = ({
               })
             ) : (
               <li className="px-4 py-3 text-gray-400 text-center text-sm">
-                No options available
+                Không có tùy chọn nào
               </li>
             )}
           </ul>

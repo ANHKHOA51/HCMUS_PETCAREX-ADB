@@ -5,7 +5,7 @@ const ExaminationCountCard = ({ data, loading }) => {
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-900">Total Examinations</h2>
+        <h2 className="text-xl font-bold text-gray-900">Tổng số lượt khám</h2>
       </div>
 
       <div className="flex items-center gap-4">
@@ -14,7 +14,7 @@ const ExaminationCountCard = ({ data, loading }) => {
         </div>
         <div>
           {loading ? (
-            <p className="text-gray-500">Loading...</p>
+            <p className="text-gray-500">Đang tải...</p>
           ) : (
             <p className="text-2xl font-bold text-purple-600">
               {data?.value?.toLocaleString() ?? 0}

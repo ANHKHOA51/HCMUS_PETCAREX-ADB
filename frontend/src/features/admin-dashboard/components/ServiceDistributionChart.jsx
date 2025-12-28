@@ -12,7 +12,7 @@ const ServiceDistributionChart = ({ data, loading }) => {
     <div className="bg-white rounded-xl shadow-md p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-900">
-          Service Distribution
+          Phân bổ dịch vụ
         </h2>
       </div>
 

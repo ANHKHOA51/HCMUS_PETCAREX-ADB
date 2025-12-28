@@ -20,7 +20,7 @@ const AuthPage = () => {
     if (roles.includes(ROLES.ADMIN)) {
       navigate("/admin/dashboard");
     } else if (roles.includes(ROLES.DOCTOR)) {
-      navigate("/doctor/exam");
+      navigate("/doctor/pets");
     } else if (roles.includes(ROLES.MANAGER)) {
       navigate("/manager/dashboard");
     } else if (roles.includes(ROLES.RECEPTIONIST)) {
@@ -39,7 +39,7 @@ const AuthPage = () => {
             <PawPrint className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">PETCAREX</h1>
-          <p className="text-gray-600 mt-2">Pet Care Management System</p>
+          <p className="text-gray-600 mt-2">Hệ thống quản lý chăm sóc thú cưng</p>
         </div>
 
         {/* Form Card */}
@@ -50,14 +50,14 @@ const AuthPage = () => {
               className={`flex-1 py-2 rounded-md font-medium transition-colors ${isLogin ? "bg-white text-blue-600 shadow-sm" : "text-gray-600"
                 }`}
             >
-              Sign In
+              Đăng nhập
             </button>
             <button
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 rounded-md font-medium transition-colors ${!isLogin ? "bg-white text-blue-600 shadow-sm" : "text-gray-600"
                 }`}
             >
-              Sign Up
+              Đăng ký
             </button>
           </div>
 
