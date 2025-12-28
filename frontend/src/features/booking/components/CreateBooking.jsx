@@ -316,7 +316,7 @@ const CreateBooking = () => {
                             >
                                 <div className="flex flex-col">
                                     <div className="font-semibold text-gray-900">
-                                        {formatTimeDisplay(appointment.thoigianden)} &middot; {appointment.tenThuCung || "(Không tên)"}
+                                        {formatTimeDisplay(appointment.thoigianden)} &middot; {appointment.ten || "(Không tên)"}
                                     </div>
                                     <div className="text-sm text-gray-500">
                                         {appointment.tenKhachHang || "Khách lẻ"}

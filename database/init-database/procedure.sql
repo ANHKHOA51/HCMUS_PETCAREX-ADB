@@ -13,7 +13,7 @@ CREATE OR ALTER PROCEDURE sp_TraCuuLichHenTheoSDT
 AS
 BEGIN
     -- Procedure logic here
-    SELECT PDL.* FROM PHIEUDATLICH PDL
+    SELECT PDL.*, TC.ten FROM PHIEUDATLICH PDL
     JOIN THUCUNG TC ON PDL.mathucung = TC.mathucung
     JOIN KHACHHANG KH ON TC.makhachhang = KH.makhachhang
     WHERE KH.sodienthoai = @SDT
