@@ -7,7 +7,6 @@ import { calculateAge } from "../../../utils/format.js";
 
 const SelectedPet = ({ pet }) => {
   const navigate = useNavigate();
-
   return (
     <div className="lg:col-span-2">
       {pet ? (

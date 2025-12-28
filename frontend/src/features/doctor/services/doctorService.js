@@ -10,18 +10,22 @@ export const doctorService = {
   },
 
   /**
-   * Get pet records 
+   * Get pet records
    * @param {string} pet_id
-   * @param {string} num
+   * @param {number} limit
+   * @param {number} cursorMaHoSo
+   * @param {number} cursorMaLichSuTiem
    */
-  getPetRecords: (pet_id, num = 10) => {
+  getPetRecords: (pet_id, limit = 10, cursorMaHoSo = null, cursorMaLichSuTiem = null) => {
+    const params = {
+      id: pet_id,
+      limit: limit,
+    };
+    if (cursorMaHoSo) params.cursorMaHoSo = cursorMaHoSo;
+    if (cursorMaLichSuTiem) params.cursorMaLichSuTiem = cursorMaLichSuTiem;
+
     return axiosClient.get("medical/history", {
-      params: {
-        id: pet_id,
-        num: num,
-      },
+      params: params,
     });
   },
-
-
 };

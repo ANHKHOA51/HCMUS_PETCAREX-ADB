@@ -84,7 +84,6 @@ const CreateBooking = () => {
     const [loadingToday, setLoadingToday] = useState(false);
     const [todayError, setTodayError] = useState("");
 
-
     const [petForm, setPetForm] = useState({
         Ten: "",
         NgaySinh: "",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useContext } from "react";
-import medicineService from "../../features/doctor/services/medicalService";
+import medicineService from "../../services/medicineService";
 import ExaminationForm from "../../features/doctor/components/ExaminationForm";
 import AddMedicineForm from "@/features/doctor/components/AddMedicineForm";
 import PrescriptionList from "@/features/doctor/components/PrescriptionList";

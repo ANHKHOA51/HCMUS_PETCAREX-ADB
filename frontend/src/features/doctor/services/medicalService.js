@@ -35,13 +35,14 @@ const medicineService = {
   getPrescriptionById: async (id) => {
     const response = await axiosClient.get("/medical/tim-toa-thuoc", {
       params: { id },
-    });
+    });  
     // The backend returns recordsets, so we take the first one (which is an array of rows)
     return response[0];
   },
 
   getMedicines: async (params) => {
-    return await axiosClient.get("/product", { params });
+    // params: { name, limit, cursorMaSanPham }
+    return await axiosClient.get("/product/medicines/search", { params });
   },
 
   getPrescriptionDetails: async (id) => {
