@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import medicineService from "../../services/medicineService";
 import ExaminationForm from "../../features/doctor/components/ExaminationForm";
 import AddMedicineForm from "@/features/doctor/components/AddMedicineForm";
