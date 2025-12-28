@@ -1,7 +1,7 @@
 import pymssql
 import random
 from faker import Faker
-
+from datetime import date, timedelta
 # Import config
 try:
     from config import DB_CONFIG, id_gen
@@ -69,7 +69,12 @@ def MedicalData():
                 ma_hoso = id_gen.get_id('HS')
                 trieu_chung = random.choice(symptoms) + ", " + fake.sentence(nb_words=3)
                 chuan_doan = random.choice(diagnoses)
-                ngay_kham = fake.date_between(start_date='-1y', end_date='today')
+                start_date = date(2023, 1, 1)
+                end_date   = date(2025, 12, 31)
+                delta_days = (end_date - start_date).days
+
+                ngay_kham = start_date + timedelta(days=random.randint(0, delta_days))
+                # ngay_kham = fake.date_between(start_date='-1y', end_date='today')
                 
                 # Insert HOSOBENHAN (chưa có mã toa thuốc)
                 cursor.execute("""
@@ -98,8 +103,8 @@ def MedicalData():
                 ma_hd = id_gen.get_id('HD')
                 
                 # Khởi tạo hóa đơn
-                cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s",
-                              (ma_hd, ma_nv_banhang, ma_kh, ma_cn))
+                cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s, %s",
+                              (ma_hd, ma_nv_banhang, ma_kh, ma_cn, ngay_kham))
 
                 # Thêm chi tiết: KHÁM BỆNH
                 gia_kham = random.randint(50, 100) * 1000
