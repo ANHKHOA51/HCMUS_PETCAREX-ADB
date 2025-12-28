@@ -121,13 +121,13 @@ CREATE OR ALTER PROCEDURE sp_TimThuocTheoTen
     -- Cursor
     @CursorMaSanPham CHAR(15) = NULL,
 
-    @SoLuong INT = 20
+    @SoLuong INT = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
     IF @SoLuong IS NULL OR @SoLuong <= 0
-        SET @SoLuong = 20;
+        SET @SoLuong = 2147483647;
 
     SELECT TOP (@SoLuong)
         sp.*
