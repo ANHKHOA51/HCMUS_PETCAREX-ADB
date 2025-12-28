@@ -103,7 +103,7 @@ def MedicalData():
                 ma_hd = id_gen.get_id('HD')
                 
                 # Khởi tạo hóa đơn
-                cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s, %s",
+                cursor.execute("EXEC sp_KhoiTaoHoaDonTest %s, %s, %s, %s, %s",
                               (ma_hd, ma_nv_banhang, ma_kh, ma_cn, ngay_kham))
 
                 # Thêm chi tiết: KHÁM BỆNH

@@ -117,7 +117,7 @@ def VaccineHistoryData():
                 # ----------------------------------------
                 
                 # 1. Khởi tạo hóa đơn
-                cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s, %s",
+                cursor.execute("EXEC sp_KhoiTaoHoaDonTest %s, %s, %s, %s, %s",
                               (ma_hoadon, ma_nv_banhang, ma_khachhang, ma_chinhanh, ngay_tiem))
 
                 # 2. Thêm chi tiết hóa đơn (Bán lẻ Vaccine)

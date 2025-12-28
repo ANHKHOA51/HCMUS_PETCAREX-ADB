@@ -121,7 +121,7 @@ def BundleData():
 
                     # 3. Tạo Hóa Đơn Mua Gói (sp_KhoiTaoHoaDon)
                     # Params: @MaHoaDon, @MaNhanVien, @MaKhachHang, @MaChiNhanh
-                    cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s, %s",
+                    cursor.execute("EXEC sp_KhoiTaoHoaDonTest %s, %s, %s, %s, %s",
                                     (ma_hd, ma_nv, ma_khachhang, ma_cn, ngay_tao))
 
                     # 4. Thêm Gói vào Hóa Đơn (sp_ThemChiTietHoaDon_GoiTiem)

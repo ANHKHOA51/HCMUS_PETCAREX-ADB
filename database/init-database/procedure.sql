@@ -175,7 +175,7 @@ BEGIN
     VALUES (@MaHoaDon, @NgayLap, @MaNhanVien, @MaKhachHang, @MaChiNhanh, 0); -- 0: Processing
 END;
 GO
-CREATE OR ALTER PROCEDURE sp_KhoiTaoHoaDon
+CREATE OR ALTER PROCEDURE sp_KhoiTaoHoaDonTest
     @MaHoaDon     CHAR(15),
     @MaNhanVien   CHAR(15),
     @MaKhachHang  CHAR(15),
@@ -184,7 +184,7 @@ CREATE OR ALTER PROCEDURE sp_KhoiTaoHoaDon
 AS
 BEGIN
     SET NOCOUNT ON;
-  INSERT INTO HOADON (mahoadon, ngaylap, manhanvien, makhachhang, machinhanh, trangthai)
+    INSERT INTO HOADON (mahoadon, ngaylap, manhanvien, makhachhang, machinhanh, trangthai)
     VALUES (@MaHoaDon, @NgayLap, @MaNhanVien, @MaKhachHang, @MaChiNhanh, 0); -- 0: Processing
 END;
 GO

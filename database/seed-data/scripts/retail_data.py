@@ -78,7 +78,7 @@ def RetailData():
 
                 delta_days = (end_date - start_date).days
                 ngay_lap = start_date + timedelta(days=random.randint(0, delta_days))
-                cursor.execute("EXEC sp_KhoiTaoHoaDon %s, %s, %s, %s, %s", 
+                cursor.execute("EXEC sp_KhoiTaoHoaDonTest %s, %s, %s, %s, %s", 
                               (ma_hd, ma_nv, ma_kh, ma_cn, ngay_lap))
 
                 # 3. Loop thêm 3 sản phẩm (Chi tiết hóa đơn)
