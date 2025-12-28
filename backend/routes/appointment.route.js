@@ -4,44 +4,66 @@ import sql from "mssql";
 import { generatePrimaryKey } from "../utils/keyGenerator.js";
 import { requireFields } from "../utils/checkValid.js";
 import { parseSqlTime, parseSqlDate } from "../utils/dateTime.js";
+import { timeFromEpoch } from "../utils/dateTime.js";
 
 const router = express.Router();
 
 // 1) sp_DatLichKham -> Schedule Appointment
 router.post("/", async (req, res) => {
-  const { MaThuCung, MaChiNhanh, ThoiGianHen, NgayDen } = req.body;
-  const missing = requireFields(req.body, ["MaThuCung", "MaChiNhanh", "ThoiGianHen", "NgayDen"]);
+  const { MaThuCung, MaChiNhanh, ThoiGianDen, NgayDen } = req.body;
+  const missing = requireFields(req.body, ["MaThuCung", "MaChiNhanh", "ThoiGianDen", "NgayDen"]);
   if (missing.length) return res.status(400).json({ message: "Missing fields", missing });
 
   // Parse separate Date and Time inputs
   try {
-    let parsedThoiGianHen;
+    let parsedThoiGianDen;
     try {
-      parsedThoiGianHen = parseSqlTime(ThoiGianHen, "ThoiGianHen");
+      parsedThoiGianDen = timeFromEpoch(ThoiGianDen);
+      console.log("RAW ThoiGianDen:", ThoiGianDen);
+      console.log("PARSED ThoiGianDen:", parsedThoiGianDen);
     } catch (e) {
+      console.error("Error parsing ThoiGianDen:", e);
       return res.status(400).json({ message: e.message });
     }
 
-    let parsedNgayDen;
-    try {
-      parsedNgayDen = parseSqlDate(NgayDen, "NgayDen");
-    } catch (e) {
-      return res.status(400).json({ message: e.message });
-    }
-
+    // let parsedNgayDen;
+    // try {
+    //   const NgayDenDate = new Date(NgayDen);
+    //   parsedNgayDen = parseSqlDate(NgayDenDate, "NgayDen");
+    // } catch (e) {
+    //   console.error("Error parsing NgayDen:", e);
+    //   return res.status(400).json({ message: e.message });
+    // }
+    const sqlDatetime = new Date(NgayDen);
     const MaPhieuDatLich = await generatePrimaryKey("PD");
     const result = await db
       .request()
       .input("MaPhieuDatLich", sql.Char(15), MaPhieuDatLich)
       .input("MaThuCung", sql.Char(15), MaThuCung)
       .input("MaChiNhanh", sql.Char(15), MaChiNhanh)
-      .input("NgayDen", sql.Date, parsedNgayDen)
-      .input("ThoiGianDen", sql.Time(0), parsedThoiGianHen)
+      .input("NgayDen", sql.Date, sqlDatetime)
+      .input("ThoiGianDen", sql.Time(0), parsedThoiGianDen)
       .execute("sp_DatLichKham");
 
     res.json({ MaPhieuDatLich, rowsAffected: result.rowsAffected, recordsets: result.recordsets });
   } catch (err) {
     console.error("Error POST /appointments:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/tra-cuu-hen", async (req, res) => {
+  const { SoDienThoai, NgayHen } = req.query;
+  if (!SoDienThoai) return res.status(400).json({ message: "Missing query param: SoDienThoai" });
+  try {
+    const result = await db
+      .request()
+      .input("SDT", sql.Char(10), SoDienThoai)
+      .input("NgayHen", sql.Date, NgayHen)
+      .execute("sp_TraCuuLichHenTheoSDT");
+    res.json(result.recordset ?? result.recordsets);
+  } catch (err) {
+    console.error("Error GET /appointments/tra-cuu-hen:", err);
     res.status(500).send("Internal Server Error");
   }
 });

@@ -129,3 +129,19 @@ export const parseSqlTime = (value, fieldName = "time") => {
     // For mssql Time, passing a Date is safest (driver extracts time portion)
     return new Date(Date.UTC(1970, 0, 1, hour, minute, second, 0));
 };
+
+export const timeFromEpoch = (value) => {
+  const [datePart, timePart] = value.split(" ");
+  if (!timePart) throw new Error("Invalid time format");
+
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hour, minute, second] = timePart.split(":").map(Number);
+
+  // SỬA TẠI ĐÂY:
+  // Sử dụng Date.UTC để ép buộc giờ tạo ra là giờ UTC, không bị trừ 7 tiếng offset
+  const d = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+
+  if (isNaN(d.getTime())) throw new Error("Invalid time");
+  
+  return d;
+};

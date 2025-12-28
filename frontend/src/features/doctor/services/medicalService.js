@@ -37,7 +37,15 @@ const medicineService = {
       params: { id },
     });
     // The backend returns recordsets, so we take the first one (which is an array of rows)
-    return response[0]; 
+    return response[0];
+  },
+
+  getMedicines: async (params) => {
+    return await axiosClient.get("/product", { params });
+  },
+
+  getPrescriptionDetails: async (id) => {
+    return await axiosClient.get(`/medical/prescriptions/${id}`);
   },
 };
 
