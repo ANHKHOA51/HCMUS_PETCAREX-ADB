@@ -43,13 +43,13 @@ const AddMedicineForm = ({ prescriptionItems, setPrescriptionItems }) => {
   const loadMedicines = async (search = "") => {
     try {
       const data = await medicineService.getMedicines({
-        search: searchTerm, // Từ khóa tìm kiếm
+        name: search, // Changed from 'search' to 'name' to match backend
         limit: 20,
-        type: 0, // Only fetch medicines
+        // type: 0, // Removed 'type' as the new endpoint is specific for medicines
       });
 
       setMedicines(data.items);
-      setNextCursor(data.nextCursor);
+      setNextCursor(data.nextCursorMaSanPham); // Changed from 'nextCursor' to 'nextCursorMaSanPham'
     } catch (error) {
       console.error("Error loading medicines:", error);
     }
