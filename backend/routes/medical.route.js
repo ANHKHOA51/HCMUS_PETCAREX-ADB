@@ -140,10 +140,10 @@ router.post("/prescriptions", async (req, res) => {
     }
 
     await transaction.commit();
-    res.json({ 
-      message: "Prescriptions processed successfully", 
+    res.json({
+      message: "Prescriptions processed successfully",
       status: "ok",
-      MaToa: batchMaToa || chitiet[0]?.MaToa 
+      MaToa: batchMaToa || chitiet[0]?.MaToa
     });
 
   } catch (err) {
@@ -164,41 +164,76 @@ router.get("/reminders/tomorrow", async (_req, res) => {
   }
 });
 
-// 10) sp_TraCuuHosoBenhAn -> Get Medical & Vaccine History
+// 10) sp_TraCuuHosoBenhAn -> Get Medical & Vaccine History (cursor by IDs)
 // Query params:
 //   id: MaThuCung (required)
-//   cursorNgayKham: optional, YYYY-MM-DD, paginate medical records
-//   cursorNgayTiem: optional, YYYY-MM-DD, paginate vaccine history
+//   cursorMaHoSo: optional, last "mahoso" for paging medical records
+//   cursorMaLichSuTiem: optional, last "malichsutiem" for paging vaccine history
+//   limit: optional, number of records per type (default: unlimited)
 router.get("/history", async (req, res) => {
-  const { id, cursorNgayKham, cursorNgayTiem } = req.query;
+  const { id, cursorMaHoSo, cursorMaLichSuTiem, limit } = req.query;
 
   if (!id) {
-    return res.status(400).json({ message: "Missing query param: id (MaThuCung)" });
+    return res
+      .status(400)
+      .json({ message: "Missing query param: id (MaThuCung)" });
   }
 
   try {
     const request = db.request();
     request.input("MaThuCung", sql.Char(15), id);
 
-    if (cursorNgayKham) {
-      request.input("CursorNgayKham", sql.Date, cursorNgayKham);
-    }
+    request.input("CursorMaHoSo", sql.Char(15), cursorMaHoSo ?? null);
+    request.input(
+      "CursorMaLichSuTiem",
+      sql.Char(15),
+      cursorMaLichSuTiem ?? null
+    );
 
-    if (cursorNgayTiem) {
-      request.input("CursorNgayTiem", sql.Date, cursorNgayTiem);
+    let parsedLimit = null;
+    if (limit !== undefined) {
+      const tmp = parseInt(limit, 10);
+      if (!Number.isNaN(tmp) && tmp > 0) {
+        parsedLimit = tmp;
+        // Lấy dư thêm 1 để biết còn trang tiếp hay không
+        request.input("SoLuong", sql.Int, parsedLimit + 1);
+      }
     }
 
     const result = await request.execute("sp_TraCuuHosoBenhAn");
 
-    const medicalRecords = result.recordsets?.[0] ?? [];
-    const vaccineHistory = result.recordsets?.[1] ?? [];
+    let medicalRecords = result.recordsets?.[0] ?? [];
+    let vaccineHistory = result.recordsets?.[1] ?? [];
 
-    res.json({ medicalRecords, vaccineHistory });
+    let nextCursorMaHoSo = null;
+    let nextCursorMaLichSuTiem = null;
+
+    if (parsedLimit && parsedLimit > 0) {
+      if (medicalRecords.length > parsedLimit) {
+        medicalRecords = medicalRecords.slice(0, parsedLimit);
+        const last = medicalRecords[medicalRecords.length - 1];
+        nextCursorMaHoSo = last?.mahoso ?? null;
+      }
+
+      if (vaccineHistory.length > parsedLimit) {
+        vaccineHistory = vaccineHistory.slice(0, parsedLimit);
+        const last = vaccineHistory[vaccineHistory.length - 1];
+        nextCursorMaLichSuTiem = last?.malichsutiem ?? null;
+      }
+    }
+
+    res.json({
+      medicalRecords,
+      vaccineHistory,
+      nextCursorMaHoSo,
+      nextCursorMaLichSuTiem,
+    });
   } catch (err) {
     console.error("Error GET /history:", err);
     res.status(500).send("Internal Server Error");
   }
 });
+
 // 12) sp_TimToaThuocTheoMa -> Get Prescription by ID
 router.get("/tim-toa-thuoc", async (req, res) => {
   const maToa = req.query.id;
