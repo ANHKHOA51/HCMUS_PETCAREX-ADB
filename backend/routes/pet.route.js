@@ -30,7 +30,7 @@ router.get("/phone/:phone", async (req, res) => {
       .request()
       .input("SDT", sql.Char(10), phone)
       .execute("sp_TraCuuThuCung_SDT");
-
+    console.log("sp_TraCuuThuCung_SDT result:", result.recordset);
     res.json(result.recordset);
   } catch (err) {
     console.error("Error GET /pet/phone/:phone:", err);
@@ -41,6 +41,7 @@ router.get("/phone/:phone", async (req, res) => {
 // Create new pet
 router.post("/", async (req, res) => {
   const { Ten, NgaySinh, Loai, Giong, MaKhachHang, CanNang } = req.body;
+  console.log(req.body);
   // Basic validation
   if (!Ten || !MaKhachHang) {
     return res.status(400).json({ message: "Missing required fields: Ten, MaKhachHang" });

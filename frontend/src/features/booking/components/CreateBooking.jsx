@@ -84,6 +84,8 @@ const CreateBooking = () => {
     const [loadingBooking, setLoadingBooking] = useState(false);
     const [error, setError] = useState("");
 
+    const [successMessage, setSuccessMessage] = useState("");
+
     const [todayAppointments, setTodayAppointments] = useState([]);
     const [loadingToday, setLoadingToday] = useState(false);
     const [todayError, setTodayError] = useState("");
@@ -115,14 +117,14 @@ const CreateBooking = () => {
             const petsData = await clientService.getPetsByPhone(p);
             const list = Array.isArray(petsData) ? petsData : [];
             setPets(list);
-            
+
             setLoadingToday(true);
             const params = { SoDienThoai: p, NgayHen: new Date() };
             const data = await bookingService.getTodayAppointments(params);
             const appointments = Array.isArray(data) ? data : [];
             setTodayAppointments(appointments);
             setLoadingToday(false);
-            
+
             if (list.length > 0) {
                 const first = list[0];
                 setCustomer({
@@ -173,6 +175,7 @@ const CreateBooking = () => {
             if (created?.MaThuCung) setSelectedPetId(created.MaThuCung);
             setPetForm({ Ten: "", NgaySinh: "", Loai: "", Giong: "" });
             toast.success("Đăng ký thú cưng thành công");
+            setSuccessMessage("Đăng ký thú cưng thành công");
         } catch (e) {
             toast.error(typeof e === "string" ? e : "Đăng ký thú cưng thất bại");
         } finally {
@@ -204,7 +207,8 @@ const CreateBooking = () => {
             });
 
             toast.success("Đặt lịch thành công");
-            
+            setSuccessMessage("Đặt lịch hẹn thành công");
+
             // Refresh today's appointments
             setLoadingToday(true);
             const params = { SoDienThoai: phone, NgayHen: new Date() };
@@ -222,6 +226,21 @@ const CreateBooking = () => {
 
     return (
         <div className="w-full max-w-4xl mx-auto p-6 space-y-6">
+            {successMessage && (
+                <div className="fixed top-4 right-4 z-50 flex items-center justify-between px-4 py-3 rounded-xl bg-green-50 border border-green-200 text-sm text-green-800 shadow-lg max-w-sm">
+                    <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>{successMessage}</span>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setSuccessMessage("")}
+                        className="text-xs text-green-700 hover:text-green-900 ml-2 justify-center rounded-full focus:outline-none"
+                    >
+                        Đóng
+                    </button>
+                </div>
+            )}
             <div>
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                     Tạo lịch hẹn
@@ -359,8 +378,8 @@ const CreateBooking = () => {
                                     key={pet.mathucung}
                                     onClick={() => setSelectedPetId(pet.mathucung)}
                                     className={`text-left p-4 rounded-2xl border transition-all ${selected
-                                            ? "border-indigo-600 bg-indigo-50"
-                                            : "border-gray-200 hover:border-gray-300 bg-white"
+                                        ? "border-indigo-600 bg-indigo-50"
+                                        : "border-gray-200 hover:border-gray-300 bg-white"
                                         }`}
                                 >
                                     <div className="flex items-start gap-3">
