@@ -1,10 +1,17 @@
 import sql from 'mssql';
 
+// console.log("Database configuration:", {
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_NAME,
+//   server: process.env.DB_SERVER
+// });
+
 const config = {
-  user: "sa",
-  password: "Truong123@",
-  database: "PETCAREX",
-  server: "localhost", 
+  user: process.env.DB_USER || "sa",
+  password: process.env.DB_PASSWORD || "Truong123@",
+  database: process.env.DB_NAME || "PETCAREX",
+  server: process.env.DB_SERVER || "localhost", 
   options: {
     encrypt: false, 
     trustServerCertificate: true

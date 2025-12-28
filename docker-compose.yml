@@ -16,6 +16,31 @@ services:
     networks:
       - sqlnet
 
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_SERVER=sqlserverdb
+      - DB_USER=sa
+      - DB_PASSWORD=Truong123@
+      - DB_NAME=PETCAREX
+    depends_on:
+      - sqlserverdb
+    networks:
+      - sqlnet
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "4173:4173"
+    depends_on:
+      - backend
+    networks:
+      - sqlnet
+
 volumes:
   sqlserverdata:
 networks:
