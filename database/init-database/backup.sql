@@ -3,7 +3,7 @@ USE master
 GO
 
 BACKUP DATABASE PETCAREX
-TO DISK = '/backups/PETCAREX_FULL_VER2.bak'
+TO DISK = '/backups/PETCAREX_FULL_VER4.bak'
 WITH INIT, SKIP, STATS = 10;
 GO
 
@@ -12,7 +12,7 @@ USE master
 GO
 
 RESTORE DATABASE PETCAREX
-FROM DISK = '/backups/PETCAREX_FULL_NEW.bak'
+FROM DISK = '/backups/PETCAREX_FULL_VER3.bak'
 WITH 
     MOVE 'PETCAREX' TO '/var/opt/mssql/data/PETCAREX_Data.mdf',
     MOVE 'PETCAREX_log' TO '/var/opt/mssql/data/PETCAREX_Log.ldf',

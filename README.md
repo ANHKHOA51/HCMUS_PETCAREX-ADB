@@ -6,7 +6,9 @@ This project contains the source code for the PetCareX system, including a Node.
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [Node.js](https://nodejs.org/) (v18+)
-- npm or pnpm
+- npm
+
+> **Database Setup:** For detailed instructions on how to restore the database from a backup file or run data seeding scripts, please refer to the [Database README](database/README.md).
 
 ---
 
