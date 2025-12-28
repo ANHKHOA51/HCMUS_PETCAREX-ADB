@@ -1,0 +1,6 @@
+Rows,Executes,StmtText,PhysicalOp,LogicalOp,TotalSubtreeCost
+1,1,"SELECT SUM(CONVERT([bigint],[hd].[sotienphaitra])) [TongDoanhThu] FROM [HOADON] [hd] WHERE [hd].[trangthai]=@1 AND [hd].[ngaylap]>=@2 AND [hd].[ngaylap]<=@3",NULL,NULL,2.1116195
+0,0,  |--Compute Scalar(DEFINE:([Expr1001]=CASE WHEN [Expr1009]=(0) THEN NULL ELSE [Expr1010] END)),Compute Scalar,Compute Scalar,2.1116195
+1,1,"       |--Stream Aggregate(DEFINE:([Expr1009]=COUNT_BIG([Expr1004]), [Expr1010]=SUM([Expr1004])))",Stream Aggregate,Aggregate,2.1116195
+0,0,"            |--Compute Scalar(DEFINE:([Expr1004]=CONVERT(bigint,[PETCAREX].[dbo].[HOADON].[sotienphaitra] as [hd].[sotienphaitra],0)))",Compute Scalar,Compute Scalar,1.7823191
+185000,1,"                 |--Clustered Index Scan(OBJECT:([PETCAREX].[dbo].[HOADON].[PK__HOADON__8C708E0C42990757] AS [hd]), WHERE:([PETCAREX].[dbo].[HOADON].[trangthai] as [hd].[trangthai]=(2) AND [PETCAREX].[dbo].[HOADON].[ngaylap] as [hd].[ngaylap]>='2024-01-01 00:00:00.000' AND [PETCAREX].[dbo].[HOADON].[ngaylap] as [hd].[ngaylap]<='2025-12-31 00:00:00.000'))",Clustered Index Scan,Clustered Index Scan,1.763819

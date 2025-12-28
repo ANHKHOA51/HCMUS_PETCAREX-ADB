@@ -1,0 +1,5 @@
+Rows,Executes,StmtText,PhysicalOp,LogicalOp,TotalSubtreeCost
+0,1,"SELECT ngaytaikham, mathucung, trieuchung 
+FROM HOSOBENHAN
+WHERE ngaytaikham = GETDATE()",NULL,NULL,0.005276044
+0,1,"  |--Index Seek(OBJECT:([PETCAREX].[dbo].[HOSOBENHAN].[IX_HOSOBENHAN_NgayTaiKham]), SEEK:([PETCAREX].[dbo].[HOSOBENHAN].[ngaytaikham]=getdate()) ORDERED FORWARD)",Index Seek,Index Seek,0.005276044

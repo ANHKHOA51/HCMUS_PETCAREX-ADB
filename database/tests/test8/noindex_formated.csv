@@ -1,0 +1,6 @@
+Rows,Executes,StmtText,PhysicalOp,LogicalOp,TotalSubtreeCost
+10,1,"SELECT TOP 10 * FROM HOSOBENHAN 
+WHERE mathucung = 'TC2512211735000' 
+ORDER BY ngaykham DESC",NULL,NULL,1.6853293
+10,1,"  |--Sort(TOP 10, ORDER BY:([PETCAREX].[dbo].[HOSOBENHAN].[ngaykham] DESC))",Sort,TopN Sort,1.6853293
+20,1,"       |--Clustered Index Scan(OBJECT:([PETCAREX].[dbo].[HOSOBENHAN].[PK__HOSOBENH__69D3E1649862D6CB]), WHERE:([PETCAREX].[dbo].[HOSOBENHAN].[mathucung]='TC2512211735000'))",Clustered Index Scan,Clustered Index Scan,1.6258746

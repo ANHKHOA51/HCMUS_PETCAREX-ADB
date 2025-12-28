@@ -1,0 +1,11 @@
+Rows,Executes,StmtText,PhysicalOp,LogicalOp,TotalSubtreeCost
+4,1,"SELECT * FROM THUCUNG TC
+JOIN KHACHHANG KH ON TC.makhachhang = KH.makhachhang
+WHERE KH.sodienthoai = '0936922252'",NULL,NULL,0.019665198
+4,1,"  |--Nested Loops(Inner Join, OUTER REFERENCES:([TC].[mathucung]))",Nested Loops,Inner Join,0.019665198
+4,1,"       |--Nested Loops(Inner Join, OUTER REFERENCES:([KH].[makhachhang]))",Nested Loops,Inner Join,0.0098735
+1,1,"       |    |--Nested Loops(Inner Join, OUTER REFERENCES:([KH].[makhachhang]))",Nested Loops,Inner Join,0.00657038
+1,1,"       |    |    |--Index Seek(OBJECT:([PETCAREX].[dbo].[KHACHHANG].[UQ__KHACHHAN__637438C5B4FC4D41] AS [KH]), SEEK:([KH].[sodienthoai]='0936922252') ORDERED FORWARD)",Index Seek,Index Seek,0.0032831
+1,1,"       |    |    |--Clustered Index Seek(OBJECT:([PETCAREX].[dbo].[KHACHHANG].[PK__KHACHHAN__52F5E838211386DF] AS [KH]), SEEK:([KH].[makhachhang]=[PETCAREX].[dbo].[KHACHHANG].[makhachhang] as [KH].[makhachhang]) LOOKUP ORDERED FORWARD)",Clustered Index Seek,Clustered Index Seek,0.0032831
+4,1,"       |    |--Index Seek(OBJECT:([PETCAREX].[dbo].[THUCUNG].[IX_THUCUNG_MaKhachHang] AS [TC]), SEEK:([TC].[makhachhang]=[PETCAREX].[dbo].[KHACHHANG].[makhachhang] as [KH].[makhachhang]) ORDERED FORWARD)",Index Seek,Index Seek,0.0032864
+4,4,"       |--Clustered Index Seek(OBJECT:([PETCAREX].[dbo].[THUCUNG].[PK__THUCUNG__CED5B0037708E71A] AS [TC]), SEEK:([TC].[mathucung]=[PETCAREX].[dbo].[THUCUNG].[mathucung] as [TC].[mathucung]) LOOKUP ORDERED FORWARD)",Clustered Index Seek,Clustered Index Seek,0.009774978

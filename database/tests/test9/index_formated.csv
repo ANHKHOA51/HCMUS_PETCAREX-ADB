@@ -1,0 +1,6 @@
+Rows,Executes,StmtText,PhysicalOp,LogicalOp,TotalSubtreeCost
+1,1,"SELECT SUM(CONVERT([bigint],[hd].[sotienphaitra])) [TongDoanhThu] FROM [HOADON] [hd] WHERE [hd].[trangthai]=@1 AND [hd].[ngaylap]>=@2 AND [hd].[ngaylap]<=@3",NULL,NULL,1.1518381
+0,0,  |--Compute Scalar(DEFINE:([Expr1001]=CASE WHEN [Expr1009]=(0) THEN NULL ELSE [Expr1010] END)),Compute Scalar,Compute Scalar,1.1518381
+1,1,"       |--Stream Aggregate(DEFINE:([Expr1009]=COUNT_BIG([Expr1004]), [Expr1010]=SUM([Expr1004])))",Stream Aggregate,Aggregate,1.1518381
+0,0,"            |--Compute Scalar(DEFINE:([Expr1004]=CONVERT(bigint,[PETCAREX].[dbo].[HOADON].[sotienphaitra] as [hd].[sotienphaitra],0)))",Compute Scalar,Compute Scalar,1.0408375
+185000,1,"                 |--Index Seek(OBJECT:([PETCAREX].[dbo].[HOADON].[IX_HOADON_Completed_Report] AS [hd]), SEEK:([hd].[ngaylap] >= '2024-01-01 00:00:00.000' AND [hd].[ngaylap] <= '2025-12-31 00:00:00.000') ORDERED FORWARD)",Index Seek,Index Seek,1.0223376
