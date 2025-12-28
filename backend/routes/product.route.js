@@ -4,36 +4,41 @@ import sql from "mssql";
 
 const router = express.Router();
 
-// 10) sp_TimThuocTheoTen -> Search Medicines with cursor pagination
+// 10) sp_TimThuocTheoTen -> Search Medicines with cursor pagination (by masanpham)
 // Query:
 //   name: optional, partial medicine name
-//   limit: optional, default 20 (maps to @SoLuong)
-//   cursorTen: optional, last "ten" value from previous page
+//   limit: optional, number of items per page
 //   cursorMaSanPham: optional, last "masanpham" from previous page
 router.get("/medicines/search", async (req, res) => {
-  const { name, limit, cursorTen, cursorMaSanPham } = req.query;
-  const pageSize = parseInt(limit, 10) || 20;
+  const { name, limit, cursorMaSanPham } = req.query;
 
   try {
     const request = db.request();
 
     request.input("Ten", sql.NVarChar(100), name ?? null);
-    request.input("CursorTen", sql.NVarChar(255), cursorTen ?? null);
     request.input("CursorMaSanPham", sql.Char(15), cursorMaSanPham ?? null);
-    request.input("SoLuong", sql.Int, pageSize);
 
-    const result = await request.execute("sp_TimThuocTheoTen");
-    const items = result.recordset ?? result.recordsets?.[0] ?? [];
-
-    let nextCursorTen = null;
-    let nextCursorMaSanPham = null;
-    if (items.length > 0) {
-      const last = items[items.length - 1];
-      nextCursorTen = last.ten ?? null;
-      nextCursorMaSanPham = last.masanpham ?? null;
+    let parsedLimit = null;
+    if (limit !== undefined) {
+      const tmp = parseInt(limit, 10);
+      if (!Number.isNaN(tmp) && tmp > 0) {
+        parsedLimit = tmp;
+        // Lấy dư thêm 1 để biết còn trang tiếp hay không
+        request.input("SoLuong", sql.Int, parsedLimit + 1);
+      }
     }
 
-    res.json({ items, nextCursorTen, nextCursorMaSanPham });
+    const result = await request.execute("sp_TimThuocTheoTen");
+    let items = result.recordset ?? result.recordsets?.[0] ?? [];
+
+    let nextCursorMaSanPham = null;
+    if (parsedLimit && parsedLimit > 0 && items.length > parsedLimit) {
+      items = items.slice(0, parsedLimit);
+      const last = items[items.length - 1];
+      nextCursorMaSanPham = last?.masanpham ?? null;
+    }
+
+    res.json({ items, nextCursorMaSanPham });
   } catch (err) {
     console.error("Error GET /medicines/search:", err);
     res.status(500).send("Internal Server Error");
