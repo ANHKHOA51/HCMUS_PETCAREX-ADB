@@ -382,7 +382,7 @@ CREATE OR ALTER PROCEDURE sp_TraCuuThuCung_SDT
     @SDT CHAR(10)
 AS
 BEGIN
-    SELECT * FROM THUCUNG TC
+    SELECT TC.mathucung, TC.ten, TC.ngaysinh, TC.loai, TC.giong, TC.ngaydangky, KH.* FROM THUCUNG TC
     JOIN KHACHHANG KH ON TC.makhachhang = KH.makhachhang
     WHERE KH.sodienthoai = @SDT;
 END;
