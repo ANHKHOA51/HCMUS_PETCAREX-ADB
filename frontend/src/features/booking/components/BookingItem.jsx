@@ -1,5 +1,23 @@
 import { Calendar, Clock, MapPin } from "lucide-react";
 
+const formatTimeDisplay = (value) => {
+  if (!value) return "--:--";
+  if (typeof value === "string") {
+      // Extract HH:mm from ISO string (e.g. ...T20:37:...)
+      const isoMatch = value.match(/T(\d{2}):(\d{2})/);
+      if (isoMatch) return `${isoMatch[1]}:${isoMatch[2]}`;
+
+      const match = value.match(/^\d{2}:\d{2}/);
+      if (match) return match[0];
+  }
+  
+  const asDate = new Date(value);
+  if (!Number.isNaN(asDate.getTime())) {
+      return asDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  return String(value);
+};
+
 const BookingItem = ({ appointment, innerRef }) => {
   return (
     <div
@@ -22,7 +40,7 @@ const BookingItem = ({ appointment, innerRef }) => {
       <div className="space-y-3 text-gray-600">
         <div className="flex items-center gap-3">
           <Clock size={16} className="text-gray-400" />
-          <span>{new Date(appointment.thoigianden).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+          <span>{formatTimeDisplay(appointment.thoigianden)}</span>
         </div>
         <div className="flex items-center gap-3">
           <MapPin size={16} className="text-gray-400" />
